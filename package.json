@@ -1,0 +1,27 @@
+{
+  "name": "franbirds",
+  "version": "1.0.0",
+  "description": "Manage your birds easily",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danigonlinea/FranBirds.git"
+  },
+  "keywords": [
+    "birds",
+    "expo",
+    "app"
+  ],
+  "author": "Daniel González Jiménez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danigonlinea/FranBirds/issues"
+  },
+  "homepage": "https://github.com/danigonlinea/FranBirds#readme",
+  "dependencies": {
+    "expo-cli": "^3.4.1"
+  }
+}
