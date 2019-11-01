@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { AppLoading } from 'expo';
-import { Container, Text } from 'native-base';
+import { Container, Text, Header } from 'native-base';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
+import { AppNavigation } from './src/navigation';
 
 const App = props => {
   const [isReady, setReady] = useState(false);
@@ -28,7 +29,7 @@ const App = props => {
 
   return (
     <Container>
-      <Text>Open up App.js to start working on your app!</Text>
+      <AppNavigation />
     </Container>
   );
 };
