@@ -15,8 +15,11 @@ import {
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { NavStyle } from '../components';
+import { NavStyle, BirdPhotoDialog } from '../components';
 import { Colors, Mock, Strings, Constants } from '../utils';
+import { withNavigation } from 'react-navigation';
+
+import { NavKeys } from '.';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -51,8 +54,9 @@ const FabPlus = styled(Fab)`
   background-color: ${Colors.secondary};
 `;
 
-const BirdListScreen = props => {
+const BirdListScreen = ({ navigation }) => {
   const [birds, setBirds] = useState(Mock.birdsData);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     console.log('BirdDetails');
@@ -68,6 +72,7 @@ const BirdListScreen = props => {
 
   return (
     <Container>
+      <BirdPhotoDialog></BirdPhotoDialog>
       <Content padder>
         {birds.map(bird => {
           return (
@@ -78,7 +83,7 @@ const BirdListScreen = props => {
                     <Col size={0.5}>
                       <LineBirdType type={bird.gender} />
                     </Col>
-                    <CenterCol size={3}>
+                    <CenterCol size={3} onPress={() => setShowModal(true)}>
                       <Thumbnail
                         large
                         source={{
@@ -87,12 +92,16 @@ const BirdListScreen = props => {
                       />
                     </CenterCol>
 
-                    <InfoCol size={6}>
+                    <InfoCol
+                      size={6}
+                      onPress={() => navigation.navigate(NavKeys.birdDetails, { id: bird.id })}>
                       <TextBird fontSize={16}>{bird.id}</TextBird>
                       {bird.type && <TextBird>{bird.type}</TextBird>}
                       {bird.notes && <TextBird note>{bird.notes}</TextBird>}
                     </InfoCol>
-                    <CenterCol size={1}>
+                    <CenterCol
+                      size={1}
+                      onPress={() => navigation.navigate(NavKeys.birdDetails, { id: bird.id })}>
                       <Icon
                         type="Entypo"
                         name="chevron-right"
@@ -110,7 +119,7 @@ const BirdListScreen = props => {
           active
           containerStyle={{}}
           position="bottomRight"
-          onPress={() => this.setState({ active: !this.state.active })}>
+          onPress={() => navigation.navigate(NavKeys.birdDetails)}>
           <Icon type="Entypo" name="plus" />
         </FabPlus>
       </View>
@@ -124,4 +133,4 @@ BirdListScreen.navigationOptions = {
   headerTitle: 'Birds List',
 };
 
-export default BirdListScreen;
+export default withNavigation(BirdListScreen);

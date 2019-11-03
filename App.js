@@ -4,6 +4,7 @@ import { Container, Text, Header } from 'native-base';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { AppNavigation } from './src/navigation';
+import GlobalContext from './src/context';
 
 const App = props => {
   const [isReady, setReady] = useState(false);
@@ -29,7 +30,9 @@ const App = props => {
 
   return (
     <Container>
-      <AppNavigation />
+      <GlobalContext>
+        <AppNavigation />
+      </GlobalContext>
     </Container>
   );
 };

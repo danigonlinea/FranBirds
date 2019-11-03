@@ -6,7 +6,7 @@ export default {
   },
   headerTintColor: Colors.tint,
   headerTitleStyle: {
-    color: Colors.white,
+    color: Colors.textPrimary,
   },
   headerBackTitleStyle: {
     color: Colors.white,
