@@ -16,7 +16,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { NavStyle } from '../components';
-import { Colors, Mock, Strings } from '../utils';
+import { Colors, Mock, Strings, Constants } from '../utils';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -47,8 +47,8 @@ const InfoCol = styled(Col)`
   padding-bottom: 8px;
 `;
 
-const Content2 = styled(Content)`
-  flex: 1;
+const FabPlus = styled(Fab)`
+  background-color: ${Colors.secondary};
 `;
 
 const BirdListScreen = props => {
@@ -82,8 +82,7 @@ const BirdListScreen = props => {
                       <Thumbnail
                         large
                         source={{
-                          uri:
-                            'https://cdn3.vectorstock.com/i/1000x1000/50/57/canary-bird-yellow-feather-white-background-vector-8255057.jpg',
+                          uri: Constants.defaultAvatar,
                         }}
                       />
                     </CenterCol>
@@ -107,14 +106,13 @@ const BirdListScreen = props => {
         })}
       </Content>
       <View>
-        <Fab
+        <FabPlus
           active
           containerStyle={{}}
-          style={{ backgroundColor: Colors.secondary }}
           position="bottomRight"
           onPress={() => this.setState({ active: !this.state.active })}>
           <Icon type="Entypo" name="plus" />
-        </Fab>
+        </FabPlus>
       </View>
     </Container>
   );
