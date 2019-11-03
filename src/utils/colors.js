@@ -7,4 +7,6 @@ export default {
   tint: '#FFF9C4',
   textPrimary: black,
   textSecundary: white,
+  male: '#303F9F',
+  female: '#C2185B',
 };

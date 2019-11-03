@@ -11,6 +11,7 @@
     "expo": "^35.0.0",
     "expo-cli": "^3.4.1",
     "expo-font": "~7.0.0",
+    "lodash": "^4.17.15",
     "native-base": "^2.13.8",
     "react": "16.8.3",
     "react-dom": "16.8.3",
@@ -19,7 +20,8 @@
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.7",
     "react-navigation": "^4.0.10",
-    "react-navigation-stack": "^1.10.3"
+    "react-navigation-stack": "^1.10.3",
+    "styled-components": "^4.4.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
