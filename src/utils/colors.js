@@ -1,5 +1,6 @@
 const white = '#FFF';
 const black = '#000';
+const grey = '#9E9E9E';
 
 export default {
   primary: '#FFEB3B',
@@ -9,4 +10,5 @@ export default {
   textSecundary: white,
   male: '#303F9F',
   female: '#C2185B',
+  defaultIcon: grey,
 };

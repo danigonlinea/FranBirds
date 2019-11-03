@@ -1,32 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import { isEmpty } from 'lodash';
 import {
-  Container,
-  Header,
-  Content,
+  Body,
   Card,
   CardItem,
-  Body,
-  Text,
-  View,
+  Container,
+  Content,
+  Icon,
   Left,
-  Thumbnail,
   Right,
+  Text,
+  Thumbnail,
+  View,
+  Grid,
+  Col,
 } from 'native-base';
-import { NavStyle } from '../components';
-import { Strings, Colors, Mock } from '../utils';
-import { isEmpty } from 'lodash';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import { NavStyle } from '../components';
+import { Colors, Mock, Strings } from '../utils';
 
 const LineBirdType = styled(View)`
-  width: 20px;
-  height: 100%;
-  background-color: ${props => (props.type === 'Macho' ? Colors.male : Colors.female)};
+  width: 10px;
+  height: 100px;
+  background: ${props => (props.type === 'Macho' ? Colors.male : Colors.female)};
 `;
 const TextBird = styled(Text)`
   ${({ colors, fontSize }) => css`
     color: ${colors ? colors : Colors.textPrimary};
     font-size: ${fontSize ? fontSize : 14}px;
   `}
+`;
+
+const CardItemBird = styled(CardItem)`
+  padding: 0;
+`;
+
+const CenterCol = styled(Col)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const BodyBird = styled(Body)``;
+
+const InfoCol = styled(Col)`
+  padding-top: 8px;
+  padding-bottom: 8px;
 `;
 
 const BirdListScreen = props => {
@@ -50,23 +69,36 @@ const BirdListScreen = props => {
         {birds.map(bird => {
           return (
             <Card key={bird.id}>
-              <CardItem>
-                <Left>
-                  <LineBirdType type={bird.gender} />
-                  <Thumbnail
-                    source={{
-                      uri:
-                        'https://cdn3.vectorstock.com/i/1000x1000/50/57/canary-bird-yellow-feather-white-background-vector-8255057.jpg',
-                    }}
-                  />
-                </Left>
-                <Body>
-                  <TextBird fontSize={16}>{bird.id}</TextBird>
-                  {bird.type && <TextBird>{bird.type}</TextBird>}
-                  {bird.notes && <TextBird note>{bird.notes}</TextBird>}
-                </Body>
-                <Right></Right>
-              </CardItem>
+              <CardItemBird>
+                <BodyBird>
+                  <Grid>
+                    <Col size={0.5}>
+                      <LineBirdType type={bird.gender} />
+                    </Col>
+                    <CenterCol size={3}>
+                      <Thumbnail
+                        large
+                        source={{
+                          uri:
+                            'https://cdn3.vectorstock.com/i/1000x1000/50/57/canary-bird-yellow-feather-white-background-vector-8255057.jpg',
+                        }}
+                      />
+                    </CenterCol>
+
+                    <InfoCol size={6}>
+                      <TextBird fontSize={16}>{bird.id}</TextBird>
+                      {bird.type && <TextBird>{bird.type}</TextBird>}
+                      {bird.notes && <TextBird note>{bird.notes}</TextBird>}
+                    </InfoCol>
+                    <CenterCol size={1}>
+                      <Icon
+                        type="Entypo"
+                        name="chevron-right"
+                        style={{ color: Colors.defaultIcon }}></Icon>
+                    </CenterCol>
+                  </Grid>
+                </BodyBird>
+              </CardItemBird>
             </Card>
           );
         })}
