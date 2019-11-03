@@ -6,13 +6,12 @@ import {
   Container,
   Content,
   Icon,
-  Left,
-  Right,
   Text,
   Thumbnail,
   View,
   Grid,
   Col,
+  Fab,
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -46,6 +45,10 @@ const BodyBird = styled(Body)``;
 const InfoCol = styled(Col)`
   padding-top: 8px;
   padding-bottom: 8px;
+`;
+
+const Content2 = styled(Content)`
+  flex: 1;
 `;
 
 const BirdListScreen = props => {
@@ -103,6 +106,16 @@ const BirdListScreen = props => {
           );
         })}
       </Content>
+      <View>
+        <Fab
+          active
+          containerStyle={{}}
+          style={{ backgroundColor: Colors.secondary }}
+          position="bottomRight"
+          onPress={() => this.setState({ active: !this.state.active })}>
+          <Icon type="Entypo" name="plus" />
+        </Fab>
+      </View>
     </Container>
   );
 };
