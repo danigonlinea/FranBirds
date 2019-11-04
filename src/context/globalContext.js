@@ -6,15 +6,18 @@ export const useGlobalCtx = () => {
   return useContext(GlobalCtx);
 };
 
-const GlobalContext = () => {
-  const [show, setShow] = useState(false);
+const GlobalContext = ({ children }) => {
+  const [dataModal, setDataModa] = useState({
+    isDialogShowing: false,
+    bird: undefined,
+  });
 
   return (
     <GlobalCtx.Provider
       value={{
-        isDialogShowing: show,
-        setDialogShowing: value => {
-          setShow(value);
+        dataModal,
+        setDataModal: data => {
+          setDataModa(data);
         },
       }}>
       {children}

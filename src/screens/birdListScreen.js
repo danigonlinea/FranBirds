@@ -18,8 +18,8 @@ import styled, { css } from 'styled-components';
 import { NavStyle, BirdPhotoDialog } from '../components';
 import { Colors, Mock, Strings, Constants } from '../utils';
 import { withNavigation } from 'react-navigation';
-
 import { NavKeys } from '.';
+import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -56,7 +56,8 @@ const FabPlus = styled(Fab)`
 
 const BirdListScreen = ({ navigation }) => {
   const [birds, setBirds] = useState(Mock.birdsData);
-  const [showModal, setShowModal] = useState(false);
+
+  const { setDataModal } = useGlobalCtx();
 
   useEffect(() => {
     console.log('BirdDetails');
@@ -72,7 +73,7 @@ const BirdListScreen = ({ navigation }) => {
 
   return (
     <Container>
-      <BirdPhotoDialog></BirdPhotoDialog>
+      <BirdPhotoDialog />
       <Content padder>
         {birds.map(bird => {
           return (
@@ -83,11 +84,18 @@ const BirdListScreen = ({ navigation }) => {
                     <Col size={0.5}>
                       <LineBirdType type={bird.gender} />
                     </Col>
-                    <CenterCol size={3} onPress={() => setShowModal(true)}>
+                    <CenterCol
+                      size={3}
+                      onPress={() =>
+                        setDataModal({
+                          bird,
+                          isDialogShowing: true,
+                        })
+                      }>
                       <Thumbnail
                         large
                         source={{
-                          uri: Constants.defaultAvatar,
+                          uri: bird.photo,
                         }}
                       />
                     </CenterCol>
