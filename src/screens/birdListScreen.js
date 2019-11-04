@@ -57,7 +57,7 @@ const FabPlus = styled(Fab)`
 const BirdListScreen = ({ navigation }) => {
   const [birds, setBirds] = useState(Mock.birdsData);
 
-  const { setDataModal } = useGlobalCtx();
+  const { dataModal, setDataModal } = useGlobalCtx();
 
   useEffect(() => {
     console.log('BirdDetails');
@@ -86,12 +86,12 @@ const BirdListScreen = ({ navigation }) => {
                     </Col>
                     <CenterCol
                       size={3}
-                      onPress={() =>
+                      onPress={() => {
                         setDataModal({
                           bird,
-                          isDialogShowing: true,
-                        })
-                      }>
+                          toggleDialog: !dataModal.toggleDialog,
+                        });
+                      }}>
                       <Thumbnail
                         large
                         source={{

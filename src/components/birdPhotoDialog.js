@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, Image } from 'react-native';
 import { Button } from 'native-base';
 import Modal from 'react-native-modal';
@@ -38,14 +38,15 @@ const BtnText = styled(Text)`
 
 const BirdPhotoDialog = ({ navigation }) => {
   const {
-    dataModal: { bird, isDialogShowing },
+    dataModal: { bird, toggleDialog },
     setDataModal,
   } = useGlobalCtx();
 
-  const hideModal = {
-    bird: undefined,
-    isDialogShowing: false,
-  };
+  const [showModal, setShowModal] = useState(toggleDialog);
+
+  useEffect(() => {
+    setShowModal(true);
+  }, [toggleDialog]);
 
   if (!bird) {
     return null;
@@ -54,12 +55,19 @@ const BirdPhotoDialog = ({ navigation }) => {
   return (
     <Modal
       backdropOpacity={0.5}
-      isVisible={isDialogShowing}
+      isVisible={showModal}
+      animationIn="zoomIn"
+      animationInTiming={230}
+      backdropTransitionInTiming={230}
+      animationOut="zoomOut"
+      animationOutTiming={230}
+      backdropTransitionOutTiming={230}
+      useNativeDriver={true}
       onBackButtonPress={() => {
-        setDataModal(hideModal);
+        setShowModal(false);
       }}
       onBackdropPress={() => {
-        setDataModal(hideModal);
+        setShowModal(false);
       }}>
       <ModalBody>
         <Photo source={{ uri: bird.photo }} />
@@ -68,12 +76,11 @@ const BirdPhotoDialog = ({ navigation }) => {
           <BirdInfo>
             <Text>{bird.id}</Text>
             <Text>{bird.type}</Text>
-            <Text>{bird.gender}</Text>
           </BirdInfo>
           <Btn
             type={bird.gender}
             onPress={() => {
-              setDataModal(hideModal);
+              setShowModal(false);
               navigation.navigate(NavKeys.birdDetails, { id: bird.id });
             }}>
             <BtnText>Ver Más Detalles</BtnText>

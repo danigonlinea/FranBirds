@@ -8,7 +8,7 @@ export const useGlobalCtx = () => {
 
 const GlobalContext = ({ children }) => {
   const [dataModal, setDataModa] = useState({
-    isDialogShowing: false,
+    toggleDialog: false,
     bird: undefined,
   });
 
