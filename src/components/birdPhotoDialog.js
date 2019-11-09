@@ -39,7 +39,6 @@ const BtnText = styled(Text)`
 const BirdPhotoDialog = ({ navigation }) => {
   const {
     dataModal: { bird, toggleDialog },
-    setDataModal,
   } = useGlobalCtx();
 
   const [showModal, setShowModal] = useState(toggleDialog);

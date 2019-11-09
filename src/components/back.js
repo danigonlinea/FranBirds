@@ -1,6 +1,7 @@
 import { Button, Icon } from 'native-base';
 import React from 'react';
 import { withNavigation } from 'react-navigation';
+import { HeaderBackButton } from 'react-navigation-stack';
 import { Colors } from '../utils';
 
 const HeaderBack = withNavigation(({ navigation }) => {
@@ -8,11 +9,7 @@ const HeaderBack = withNavigation(({ navigation }) => {
     return null;
   }
 
-  return (
-    <Button icon transparent onPress={() => navigation.goBack(null)}>
-      <Icon name="ios-arrow-back" style={{ color: Colors.headerIcon }} />
-    </Button>
-  );
+  return <HeaderBackButton onPress={() => navigation.goBack(null)}></HeaderBackButton>;
 });
 
 export default HeaderBack;
