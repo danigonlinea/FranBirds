@@ -4,6 +4,7 @@ const grey = '#9E9E9E';
 
 export default {
   white,
+  black,
   primary: '#FFEB3B',
   secondary: '#FFA726',
   tint: '#FFF9C4',

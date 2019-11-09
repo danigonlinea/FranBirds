@@ -102,14 +102,14 @@ const BirdListScreen = ({ navigation }) => {
 
                     <InfoCol
                       size={6}
-                      onPress={() => navigation.navigate(NavKeys.birdDetails, { id: bird.id })}>
+                      onPress={() => navigation.navigate(NavKeys.birdDetails, { ...bird })}>
                       <TextBird fontSize={16}>{bird.id}</TextBird>
                       {bird.type && <TextBird>{bird.type}</TextBird>}
                       {bird.notes && <TextBird note>{bird.notes}</TextBird>}
                     </InfoCol>
                     <CenterCol
                       size={1}
-                      onPress={() => navigation.navigate(NavKeys.birdDetails, { id: bird.id })}>
+                      onPress={() => navigation.navigate(NavKeys.birdDetails, { ...bird })}>
                       <Icon
                         type="Entypo"
                         name="chevron-right"
