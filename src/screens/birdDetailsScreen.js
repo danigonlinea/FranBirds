@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Text, Button, Icon, Content } from 'native-base';
-import { Back, NavStyle, HeaderDetailsRight } from '../components';
+import { Container, Content, Input, Button, Item, Label, Text, Fab, Icon } from 'native-base';
+import React, { useEffect } from 'react';
+import { Image, View, TextInput } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { StyleSheet, Image, View } from 'react-native';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import { Back, HeaderDetailsRight, NavStyle } from '../components';
+import { Formik } from 'formik';
 import { Colors } from '../utils';
 
 const DetailsContainer = styled(Container)`
   margin-top: 180px;
+`;
+
+const FabSave = styled(Fab)`
+  background-color: ${Colors.fabSave};
+`;
+
+const FabIcon = styled(Icon)`
+  font-size: 28px;
+  color: ${Colors.white};
 `;
 
 const BirdDetails = ({ navigation }) => {
@@ -20,8 +30,74 @@ const BirdDetails = ({ navigation }) => {
   return (
     <DetailsContainer>
       <Content>
-        <Text>Bird Details</Text>
+        <Formik initialValues={{ email: '' }} onSubmit={values => console.log(values)}>
+          {({ handleChange, handleBlur, handleSubmit, values }) => (
+            <View>
+              <Item floatingLabel>
+                <Label>Identificador</Label>
+                <Input
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>Identificador</Label>
+                <Input
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>Identificador</Label>
+                <Input
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>Identificador</Label>
+                <Input
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>Identificador</Label>
+                <Input
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>Identificador</Label>
+                <Input
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+              </Item>
+
+              {/* <Button onPress={handleSubmit} title="Submit">
+                <Text>Submit</Text>
+              </Button> */}
+            </View>
+          )}
+        </Formik>
       </Content>
+      <View>
+        <FabSave
+          active
+          containerStyle={{}}
+          position="bottomRight"
+          onPress={() => navigation.navigate(NavKeys.birdDetails)}>
+          <FabIcon name="ios-save" />
+        </FabSave>
+      </View>
     </DetailsContainer>
   );
 };

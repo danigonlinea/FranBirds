@@ -10,16 +10,16 @@ const App = props => {
   const [isReady, setReady] = useState(false);
 
   useEffect(() => {
-    async () => {
-      await Font.loadAsync({
+    async function loadFonts() {
+      return await Font.loadAsync({
         Roboto: require('native-base/Fonts/Roboto.ttf'),
         Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
         ...Ionicons.font,
       });
-    };
+    }
 
     if (!isReady) {
-      // await loadFonts();
+      loadFonts();
       setReady(true);
     }
   }, []);

@@ -70,7 +70,6 @@ const BirdPhotoDialog = ({ navigation }) => {
       }}>
       <ModalBody>
         <Photo source={{ uri: bird.photo }} />
-
         <View>
           <BirdInfo>
             <Text>{bird.id}</Text>
