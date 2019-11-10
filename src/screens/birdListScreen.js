@@ -115,7 +115,7 @@ const BirdListScreen = ({ navigation }) => {
                         navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })
                       }>
                       <Icon
-                        type="Entypo"
+                        type="MaterialIcons"
                         name="chevron-right"
                         style={{ color: Colors.defaultIcon }}></Icon>
                     </CenterCol>
@@ -132,7 +132,7 @@ const BirdListScreen = ({ navigation }) => {
           containerStyle={{}}
           position="bottomRight"
           onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { gender: 'Macho' } })}>
-          <Icon type="Entypo" name="plus" />
+          <Icon type="MaterialIcons" name="add" />
         </FabPlus>
       </View>
     </Container>

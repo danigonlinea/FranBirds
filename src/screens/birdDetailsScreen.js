@@ -56,7 +56,7 @@ const birdFormValues = bird => {
 };
 
 const FormItem = styled(Item)`
-  margin-bottom: 16px;
+  margin: 0 8px 16px 8px;
 `;
 
 const GenderSwitch = styled(Segment)``;
@@ -88,6 +88,20 @@ const NotasField = styled(Textarea)`
 
 const VerticalSpace = styled(View)`
   padding: 8px;
+`;
+
+const SelectBirdBtn = styled(Button)`
+  margin: 12px 0;
+  height: 30px;
+  border-color: ${props => (props.father ? Colors.male : Colors.female)};
+`;
+
+const SelectBirdIcon = styled(Icon)`
+  color: ${props => (props.father ? Colors.male : Colors.female)};
+`;
+
+const SelectBirdText = styled(Text)`
+  color: ${props => (props.father ? Colors.male : Colors.female)};
 `;
 
 const birdValidationSchema = () => {
@@ -169,11 +183,31 @@ const BirdDetails = ({ navigation }) => {
                         <Col>
                           <FormItem stackedLabel>
                             <Label>Padre</Label>
+                            <SelectBirdBtn
+                              bordered
+                              iconLeft
+                              rounded
+                              active
+                              father
+                              onPress={() => console.log('padre')}>
+                              <SelectBirdIcon type="MaterialIcons" name="add" father />
+                              <SelectBirdText father>Añadir</SelectBirdText>
+                            </SelectBirdBtn>
                           </FormItem>
                         </Col>
                         <Col>
                           <FormItem stackedLabel>
                             <Label>Madre</Label>
+                            <SelectBirdBtn
+                              bordered
+                              iconLeft
+                              rounded
+                              active
+                              mother
+                              onPress={() => console.log('padre')}>
+                              <SelectBirdIcon type="MaterialIcons" name="add" mother />
+                              <SelectBirdText mother>Añadir</SelectBirdText>
+                            </SelectBirdBtn>
                           </FormItem>
                         </Col>
                       </Row>
