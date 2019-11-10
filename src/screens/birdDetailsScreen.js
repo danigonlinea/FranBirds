@@ -1,11 +1,24 @@
-import { Container, Content, Input, Button, Item, Label, Text, Fab, Icon } from 'native-base';
-import React, { useEffect } from 'react';
+import {
+  Container,
+  Content,
+  Input,
+  Button,
+  Item,
+  Label,
+  Text,
+  Fab,
+  Icon,
+  Segment,
+} from 'native-base';
+import React, { useState, useEffect } from 'react';
 import { Image, View, TextInput } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Back, HeaderDetailsRight, NavStyle } from '../components';
 import { Formik } from 'formik';
-import { Colors } from '../utils';
+import { Colors, Constants } from '../utils';
+import * as Yup from 'yup';
+import { kMaxLength } from 'buffer';
 
 const DetailsContainer = styled(Container)`
   margin-top: 180px;
@@ -20,90 +33,148 @@ const FabIcon = styled(Icon)`
   color: ${Colors.white};
 `;
 
+const FormContainer = styled(View)`
+  padding: 24px;
+`;
+
+const birdFormValues = bird => {
+  return bird
+    ? { ...bird }
+    : {
+        id: undefined,
+        type: undefined,
+        notes: undefined,
+        gender: 'Macho',
+        photo: Constants.defaultAvatar,
+      };
+};
+
+const FormItem = styled(Item)`
+  margin-bottom: 16px;
+`;
+
+const GenderSwitch = styled(Segment)``;
+// border-color: ${props.active ? (props.first ? Colors.male : Colors.female) : Colors.female};
+const GenderButton = styled(Button)(
+  props => css`
+    border-color: ${props.active
+      ? props.first
+        ? Colors.male
+        : Colors.female
+      : props.first
+      ? Colors.female
+      : Colors.male};
+    background-color: ${props.active ? (props.first ? Colors.male : Colors.female) : Colors.white};
+  `
+);
+
+const GenderText = styled(Text)(
+  props => css`
+    color: ${props.active ? Colors.white : props.first ? Colors.female : Colors.male};
+  `
+);
+
+const VerticalSpace = styled(View)`
+  padding: 12px;
+`;
+
+const birdValidationSchema = () => {
+  return Yup.object().shape({
+    id: Yup.string().required('Identificator is required'),
+    type: Yup.string(),
+    notes: Yup.string(),
+    gender: Yup.string(),
+    photo: Yup.string(),
+  });
+};
+
 const BirdDetails = ({ navigation }) => {
-  const id = navigation.getParam('id');
+  const [birdData, setBirdData] = useState(navigation.getParam('bird'));
 
   useEffect(() => {
-    console.log('BirdDetails: ', id ? id : 'New Bird');
-  }, []);
+    console.log('BirdData: ', birdData);
+  }, [birdData]);
+
+  const { id, type, notes, gender, photo } = birdData;
+
+  console.log(birdData);
 
   return (
     <DetailsContainer>
-      <Content>
-        <Formik initialValues={{ email: '' }} onSubmit={values => console.log(values)}>
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
-            <View>
-              <Item floatingLabel>
-                <Label>Identificador</Label>
-                <Input
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Identificador</Label>
-                <Input
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Identificador</Label>
-                <Input
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Identificador</Label>
-                <Input
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Identificador</Label>
-                <Input
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Identificador</Label>
-                <Input
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                />
-              </Item>
+      <Formik
+        initialValues={birdFormValues(birdData)}
+        validationSchema={birdValidationSchema()}
+        onSubmit={values => console.log(values)}>
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
+          <>
+            <Content padder>
+              <FormContainer>
+                <GenderSwitch>
+                  <GenderButton
+                    first
+                    active={gender === 'Macho'}
+                    onPress={() => setBirdData({ ...birdData, gender: 'Macho' })}>
+                    <GenderText first active={gender === 'Macho'}>
+                      Macho
+                    </GenderText>
+                  </GenderButton>
+                  <GenderButton
+                    last
+                    active={gender === 'Hembra'}
+                    onPress={() => setBirdData({ ...birdData, gender: 'Hembra' })}>
+                    <GenderText last active={gender === 'Hembra'}>
+                      Hembra
+                    </GenderText>
+                  </GenderButton>
+                </GenderSwitch>
+                <VerticalSpace></VerticalSpace>
 
-              {/* <Button onPress={handleSubmit} title="Submit">
-                <Text>Submit</Text>
-              </Button> */}
+                <FormItem floatingLabel>
+                  <Label>Identificador</Label>
+                  <Input
+                    onChangeText={handleChange('id')}
+                    onBlur={handleBlur('id')}
+                    value={values.id}
+                  />
+                </FormItem>
+                <FormItem floatingLabel>
+                  <Label>Tipo</Label>
+                  <Input
+                    onChangeText={handleChange('type')}
+                    onBlur={handleBlur('type')}
+                    value={values.type}
+                  />
+                </FormItem>
+
+                <FormItem floatingLabel>
+                  <Label>Notas</Label>
+                  <Input
+                    numberOfLines={3}
+                    onChangeText={handleChange('notes')}
+                    onBlur={handleBlur('notes')}
+                    value={values.notes}
+                  />
+                </FormItem>
+              </FormContainer>
+            </Content>
+            <View>
+              <FabSave
+                active
+                containerStyle={{}}
+                position="bottomRight"
+                onPress={() => handleSubmit()}>
+                <FabIcon name="ios-save" />
+              </FabSave>
             </View>
-          )}
-        </Formik>
-      </Content>
-      <View>
-        <FabSave
-          active
-          containerStyle={{}}
-          position="bottomRight"
-          onPress={() => navigation.navigate(NavKeys.birdDetails)}>
-          <FabIcon name="ios-save" />
-        </FabSave>
-      </View>
+          </>
+        )}
+      </Formik>
     </DetailsContainer>
   );
 };
 
 BirdDetails.navigationOptions = ({ navigation }) => {
-  const photo = navigation.getParam('photo');
+  const { photo = Constants.defaultAvatar } = navigation.getParam('bird');
   return {
     ...NavStyle,
     headerLeft: <Back></Back>,

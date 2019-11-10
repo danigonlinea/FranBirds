@@ -16,7 +16,7 @@ const HorizontalContainer = styled(View)`
 const TakePhotoBtn = styled(TouchableOpacity)`
   width: 60px;
   height: 60px;
-  background-color: ${Colors.primary};
+  background-color: ${Colors.secondary};
   border-radius: 50;
   display: flex;
   flex-direction: row;
@@ -25,9 +25,13 @@ const TakePhotoBtn = styled(TouchableOpacity)`
 `;
 
 const HeaderMaterialBtn = styled(View)`
-  right: 30px;
+  right: 20px;
   top: 200px;
   position: absolute;
+`;
+
+const TakePhotoIcon = styled(Icon)`
+  color: ${Colors.white};
 `;
 
 const HeaderIcon = styled(Icon)`
@@ -62,7 +66,7 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
             elevation: 10,
           }}
           onPress={() => console.log('yes')}>
-          <Icon name="ios-camera" type="Ionicons" />
+          <TakePhotoIcon name="ios-camera" type="Ionicons" />
         </TakePhotoBtn>
       </HeaderMaterialBtn>
       <HeaderIconBtn

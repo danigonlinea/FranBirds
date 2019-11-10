@@ -79,7 +79,7 @@ const BirdPhotoDialog = ({ navigation }) => {
             type={bird.gender}
             onPress={() => {
               setShowModal(false);
-              navigation.navigate(NavKeys.birdDetails, { ...bird });
+              navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } });
             }}>
             <BtnText>Ver Más Detalles</BtnText>
           </Btn>
