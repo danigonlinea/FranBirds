@@ -9,6 +9,12 @@ import {
   Fab,
   Icon,
   Segment,
+  Grid,
+  Col,
+  Card,
+  CardItem,
+  Row,
+  Textarea,
 } from 'native-base';
 import React, { useState, useEffect } from 'react';
 import { Image, View, TextInput } from 'react-native';
@@ -74,8 +80,14 @@ const GenderText = styled(Text)(
   `
 );
 
+const NotasField = styled(Textarea)`
+  width: 100%;
+  padding: 8px 0;
+  margin: 0;
+`;
+
 const VerticalSpace = styled(View)`
-  padding: 12px;
+  padding: 8px;
 `;
 
 const birdValidationSchema = () => {
@@ -107,7 +119,7 @@ const BirdDetails = ({ navigation }) => {
         onSubmit={values => console.log(values)}>
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <>
-            <Content padder>
+            <Content>
               <FormContainer>
                 <GenderSwitch>
                   <GenderButton
@@ -128,33 +140,57 @@ const BirdDetails = ({ navigation }) => {
                   </GenderButton>
                 </GenderSwitch>
                 <VerticalSpace></VerticalSpace>
-
-                <FormItem floatingLabel>
-                  <Label>Identificador</Label>
-                  <Input
-                    onChangeText={handleChange('id')}
-                    onBlur={handleBlur('id')}
-                    value={values.id}
-                  />
-                </FormItem>
-                <FormItem floatingLabel>
-                  <Label>Tipo</Label>
-                  <Input
-                    onChangeText={handleChange('type')}
-                    onBlur={handleBlur('type')}
-                    value={values.type}
-                  />
-                </FormItem>
-
-                <FormItem floatingLabel>
-                  <Label>Notas</Label>
-                  <Input
-                    numberOfLines={3}
-                    onChangeText={handleChange('notes')}
-                    onBlur={handleBlur('notes')}
-                    value={values.notes}
-                  />
-                </FormItem>
+                <Card>
+                  <CardItem>
+                    <Grid>
+                      <Row>
+                        <Col>
+                          <FormItem stackedLabel>
+                            <Label>Identificador</Label>
+                            <Input
+                              onChangeText={handleChange('id')}
+                              onBlur={handleBlur('id')}
+                              value={values.id}
+                            />
+                          </FormItem>
+                        </Col>
+                        <Col>
+                          <FormItem stackedLabel>
+                            <Label>Tipo</Label>
+                            <Input
+                              onChangeText={handleChange('type')}
+                              onBlur={handleBlur('type')}
+                              value={values.type}
+                            />
+                          </FormItem>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FormItem stackedLabel>
+                            <Label>Padre</Label>
+                          </FormItem>
+                        </Col>
+                        <Col>
+                          <FormItem stackedLabel>
+                            <Label>Madre</Label>
+                          </FormItem>
+                        </Col>
+                      </Row>
+                      <Row style={{ flex: 1 }}>
+                        <FormItem style={{ flex: 1 }} stackedLabel>
+                          <Label>Notas</Label>
+                          <NotasField
+                            rowSpan={3}
+                            onChangeText={handleChange('notes')}
+                            onBlur={handleBlur('notes')}
+                            value={values.notes}
+                          />
+                        </FormItem>
+                      </Row>
+                    </Grid>
+                  </CardItem>
+                </Card>
               </FormContainer>
             </Content>
             <View>
