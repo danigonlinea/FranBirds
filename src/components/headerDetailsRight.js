@@ -26,7 +26,7 @@ const TakePhotoBtn = styled(TouchableOpacity)`
 
 const HeaderMaterialBtn = styled(View)`
   right: 20px;
-  top: 200px;
+  top: 140px;
   position: absolute;
 `;
 
