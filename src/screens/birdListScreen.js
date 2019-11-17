@@ -19,6 +19,7 @@ import { NavStyle, BirdPhotoDialog } from '../components';
 import { Colors, Mock, Strings, Constants } from '../utils';
 import { withNavigation } from 'react-navigation';
 import { NavKeys } from '.';
+import { FlatList } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 
 const LineBirdType = styled(View)`
@@ -63,68 +64,73 @@ const BirdListScreen = ({ navigation }) => {
     console.log('BirdDetails');
   }, []);
 
-  if (Array.isArray(birds) && isEmpty(birds)) {
+  const _renderItem = ({ item: bird }) => {
     return (
-      <Container>
-        <Text>{Strings.noBirdsRegistered}</Text>
-      </Container>
+      <Card key={bird.id}>
+        <CardItemBird>
+          <BodyBird>
+            <Grid>
+              <Col size={0.5}>
+                <LineBirdType type={bird.gender} />
+              </Col>
+              <CenterCol
+                size={3}
+                onPress={() => {
+                  setDataModal({
+                    bird,
+                    toggleDialog: !dataModal.toggleDialog,
+                  });
+                }}>
+                <Thumbnail
+                  large
+                  source={{
+                    uri: bird.photo,
+                  }}
+                />
+              </CenterCol>
+
+              <InfoCol
+                size={6}
+                onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })}>
+                <TextBird fontSize={16}>{bird.id}</TextBird>
+                {bird.type && <TextBird>{bird.type}</TextBird>}
+                {bird.notes && <TextBird note>{bird.notes}</TextBird>}
+              </InfoCol>
+              <CenterCol
+                size={1}
+                onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })}>
+                <Icon
+                  type="MaterialIcons"
+                  name="chevron-right"
+                  style={{ color: Colors.defaultIcon }}></Icon>
+              </CenterCol>
+            </Grid>
+          </BodyBird>
+        </CardItemBird>
+      </Card>
     );
-  }
+  };
 
   return (
     <Container>
       <BirdPhotoDialog />
       <Content padder>
-        {birds.map(bird => {
-          return (
-            <Card key={bird.id}>
-              <CardItemBird>
-                <BodyBird>
-                  <Grid>
-                    <Col size={0.5}>
-                      <LineBirdType type={bird.gender} />
-                    </Col>
-                    <CenterCol
-                      size={3}
-                      onPress={() => {
-                        setDataModal({
-                          bird,
-                          toggleDialog: !dataModal.toggleDialog,
-                        });
-                      }}>
-                      <Thumbnail
-                        large
-                        source={{
-                          uri: bird.photo,
-                        }}
-                      />
-                    </CenterCol>
+        <FlatList
+          enableAutomaticScroll
+          enableOnAndroid
+          scrollEnabled
+          key={birds.length}
+          data={birds}
+          renderItem={_renderItem}
+          keyExtractor={({ id }) => id}
+          ListEmptyComponent={
+            <Container>
+              <Text>{Strings.noBirdsRegistered}</Text>
+            </Container>
+          }
+        />
 
-                    <InfoCol
-                      size={6}
-                      onPress={() =>
-                        navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })
-                      }>
-                      <TextBird fontSize={16}>{bird.id}</TextBird>
-                      {bird.type && <TextBird>{bird.type}</TextBird>}
-                      {bird.notes && <TextBird note>{bird.notes}</TextBird>}
-                    </InfoCol>
-                    <CenterCol
-                      size={1}
-                      onPress={() =>
-                        navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })
-                      }>
-                      <Icon
-                        type="MaterialIcons"
-                        name="chevron-right"
-                        style={{ color: Colors.defaultIcon }}></Icon>
-                    </CenterCol>
-                  </Grid>
-                </BodyBird>
-              </CardItemBird>
-            </Card>
-          );
-        })}
+        {birds.map(bird => {})}
       </Content>
       <View>
         <FabPlus

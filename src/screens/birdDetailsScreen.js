@@ -206,7 +206,7 @@ const BirdDetails = ({ navigation }) => {
                                   rounded
                                   active
                                   mother
-                                  onPress={() => console.log('padre')}>
+                                  onPress={() => console.log('madre')}>
                                   <SelectBirdIcon type="MaterialIcons" name="add" mother />
                                   <SelectBirdText mother>Añadir</SelectBirdText>
                                 </SelectBirdBtn>
