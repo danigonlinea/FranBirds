@@ -2,6 +2,7 @@ import { Button, Form, Input, View, Item } from 'native-base';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useGlobalCtx } from '../context/globalContext';
+import colors from '../utils/colors';
 
 const SearchContainer = styled(View)`
   display: flex;
@@ -12,6 +13,12 @@ const SearchContainer = styled(View)`
   margin: 8px;
 `;
 
+const SearchInput = styled(Input)`
+  border-color: ${colors.primary};
+  border-width: 1px;
+  border-radius: 25px;
+`;
+
 const SearchBar = () => {
   const [textSearch, setTextSearch] = useState('');
   const { showSearchBar, searchBirdsByText } = useGlobalCtx();
@@ -19,8 +26,7 @@ const SearchBar = () => {
   return showSearchBar ? (
     <SearchContainer>
       <Item rounded>
-        <Input
-          rounded
+        <SearchInput
           autoFocus
           onEndEditing={() => searchBirdsByText(textSearch)}
           onChangeText={setTextSearch}
