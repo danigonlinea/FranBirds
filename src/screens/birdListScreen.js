@@ -15,7 +15,7 @@ import {
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { NavStyle, BirdPhotoDialog, Filter } from '../components';
+import { NavStyle, BirdPhotoDialog, Filter, SearchAction, SearchBar } from '../components';
 import { Colors, Mock, Strings, Constants } from '../utils';
 import { withNavigation } from 'react-navigation';
 import { NavKeys } from '.';
@@ -60,7 +60,7 @@ const BirdListScreen = ({ navigation }) => {
   const [allBirds, setAllBirds] = useState([]);
   const [birdsList, setBirdsList] = useState([]);
 
-  const { dataModal, setDataModal, filterSelected } = useGlobalCtx();
+  const { dataModal, setDataModal, filterSelected, textToSearch } = useGlobalCtx();
 
   useEffect(() => {
     // Load all Birds from database
@@ -87,6 +87,50 @@ const BirdListScreen = ({ navigation }) => {
         break;
     }
   };
+
+  // Only search on id, type and notes
+  const isTextSearchFound = bird => {
+    const allWordsToSearch = textToSearch.split(' ');
+    return Object.values(bird).some(fieldValue => {
+      return allWordsToSearch.some(singleTextToSearch => {
+        return fieldValue.toLowerCase().includes(singleTextToSearch.toLowerCase());
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (!textToSearch) {
+      filterChange(filterSelected);
+    } else {
+      switch (filterSelected) {
+        case strings.filter.male:
+          setBirdsList(
+            allBirds.filter(
+              ({ gender, photo, ...bird }) => gender === 'Macho' && isTextSearchFound(bird)
+            )
+          );
+          break;
+
+        case strings.filter.female:
+          setBirdsList(
+            allBirds.filter(
+              ({ gender, photo, ...bird }) => gender === 'Hembra' && isTextSearchFound(bird)
+            )
+          );
+          break;
+        default:
+          setBirdsList(
+            allBirds.filter(({ gender, ...bird }) => {
+              console.log('--- Bird: ', bird);
+              console.log('IsFound? ', isTextSearchFound(bird));
+
+              return isTextSearchFound(bird);
+            })
+          );
+          break;
+      }
+    }
+  }, [textToSearch]);
 
   const _renderItem = ({ item: bird }) => {
     return (
@@ -138,6 +182,7 @@ const BirdListScreen = ({ navigation }) => {
   return (
     <Container>
       <BirdPhotoDialog />
+      <SearchBar></SearchBar>
       <Content padder>
         <FlatList
           enableAutomaticScroll
@@ -171,6 +216,7 @@ BirdListScreen.navigationOptions = {
   ...NavStyle,
   headerLeft: undefined,
   headerTitle: <Filter></Filter>,
+  headerRight: <SearchAction></SearchAction>,
 };
 
 export default withNavigation(BirdListScreen);

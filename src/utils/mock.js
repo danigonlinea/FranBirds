@@ -12,7 +12,7 @@ export default {
     {
       id: '2-2019',
       type: 'Canario',
-      notes: 'Alas amarillas, ojos negros.',
+      notes: 'Alas verdes, ojos negros.',
       gender: 'Macho',
       photo: Constants.defaultAvatar,
     },
@@ -45,7 +45,7 @@ export default {
     },
     {
       id: '7-2019',
-      type: 'Verdín',
+      type: 'Verdin',
       notes: 'Alas amarillas, ojos negros.',
       gender: 'Hembra',
       photo: Constants.defaultAvatar,
@@ -53,7 +53,7 @@ export default {
     {
       id: '8-2019',
       type: 'Canario',
-      notes: 'Alas amarillas, ojos negros.',
+      notes: 'Alas amarillas, ojos marrones.',
       gender: 'Macho',
       photo: Constants.defaultAvatar,
     },

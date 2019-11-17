@@ -8,6 +8,8 @@ export const useGlobalCtx = () => {
 
 const GlobalContext = ({ children }) => {
   const [filterSelected, setFilterSelected] = useState(0);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [textToSearch, setTextToSearch] = useState('');
   const [dataModal, setDataModa] = useState({
     toggleDialog: false,
     bird: undefined,
@@ -23,6 +25,14 @@ const GlobalContext = ({ children }) => {
         filterSelected,
         setFilter: newFilterOption => {
           setFilterSelected(newFilterOption);
+        },
+        showSearchBar,
+        setSearchBar: value => {
+          setShowSearchBar(value);
+        },
+        textToSearch,
+        searchBirdsByText: text => {
+          setTextToSearch(text);
         },
       }}>
       {children}
