@@ -68,7 +68,9 @@ const BirdListScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    filterChange(filterSelected);
+    if (!isEmpty(allBirds)) {
+      filterChange(filterSelected);
+    }
   }, [allBirds, filterSelected]);
 
   const filterChange = filterSelected => {
