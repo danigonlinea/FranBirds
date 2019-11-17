@@ -15,12 +15,13 @@ import {
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { NavStyle, BirdPhotoDialog } from '../components';
+import { NavStyle, BirdPhotoDialog, Filter } from '../components';
 import { Colors, Mock, Strings, Constants } from '../utils';
 import { withNavigation } from 'react-navigation';
 import { NavKeys } from '.';
 import { FlatList } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
+import strings from '../utils/strings';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -56,13 +57,34 @@ const FabPlus = styled(Fab)`
 `;
 
 const BirdListScreen = ({ navigation }) => {
-  const [birds, setBirds] = useState(Mock.birdsData);
+  const [allBirds, setAllBirds] = useState([]);
+  const [birdsList, setBirdsList] = useState([]);
 
-  const { dataModal, setDataModal } = useGlobalCtx();
+  const { dataModal, setDataModal, filterSelected } = useGlobalCtx();
 
   useEffect(() => {
-    console.log('BirdDetails');
+    // Load all Birds from database
+    setAllBirds(Mock.birdsData);
   }, []);
+
+  useEffect(() => {
+    filterChange(filterSelected);
+  }, [allBirds, filterSelected]);
+
+  const filterChange = filterSelected => {
+    switch (filterSelected) {
+      case strings.filter.male:
+        setBirdsList(allBirds.filter(bird => bird.gender === 'Macho'));
+        break;
+
+      case strings.filter.female:
+        setBirdsList(allBirds.filter(bird => bird.gender === 'Hembra'));
+        break;
+      default:
+        setBirdsList(allBirds);
+        break;
+    }
+  };
 
   const _renderItem = ({ item: bird }) => {
     return (
@@ -119,8 +141,8 @@ const BirdListScreen = ({ navigation }) => {
           enableAutomaticScroll
           enableOnAndroid
           scrollEnabled
-          key={birds.length}
-          data={birds}
+          key={birdsList.length}
+          data={birdsList}
           renderItem={_renderItem}
           keyExtractor={({ id }) => id}
           ListEmptyComponent={
@@ -129,8 +151,6 @@ const BirdListScreen = ({ navigation }) => {
             </Container>
           }
         />
-
-        {birds.map(bird => {})}
       </Content>
       <View>
         <FabPlus
@@ -148,7 +168,7 @@ const BirdListScreen = ({ navigation }) => {
 BirdListScreen.navigationOptions = {
   ...NavStyle,
   headerLeft: undefined,
-  headerTitle: 'Birds List',
+  headerTitle: <Filter></Filter>,
 };
 
 export default withNavigation(BirdListScreen);

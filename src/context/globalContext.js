@@ -7,6 +7,7 @@ export const useGlobalCtx = () => {
 };
 
 const GlobalContext = ({ children }) => {
+  const [filterSelected, setFilterSelected] = useState(0);
   const [dataModal, setDataModa] = useState({
     toggleDialog: false,
     bird: undefined,
@@ -18,6 +19,10 @@ const GlobalContext = ({ children }) => {
         dataModal,
         setDataModal: data => {
           setDataModa(data);
+        },
+        filterSelected,
+        setFilter: newFilterOption => {
+          setFilterSelected(newFilterOption);
         },
       }}>
       {children}
