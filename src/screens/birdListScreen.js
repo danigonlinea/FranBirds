@@ -121,9 +121,6 @@ const BirdListScreen = ({ navigation }) => {
         default:
           setBirdsList(
             allBirds.filter(({ gender, ...bird }) => {
-              console.log('--- Bird: ', bird);
-              console.log('IsFound? ', isTextSearchFound(bird));
-
               return isTextSearchFound(bird);
             })
           );
