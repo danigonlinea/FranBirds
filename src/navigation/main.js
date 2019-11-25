@@ -1,12 +1,15 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { NavKeys, BirdDetails } from '../screens';
+import { NavKeys } from '../screens';
 import birdListScreen from '../screens/birdListScreen';
+import birdDetailsScreen from '../screens/birdDetailsScreen';
+import birdSelectParentScreen from '../screens/birdSelectParentScreen';
 
 const MainNavigator = createStackNavigator(
   {
     [NavKeys.birdList]: { screen: birdListScreen },
-    [NavKeys.birdDetails]: { screen: BirdDetails },
+    [NavKeys.birdDetails]: { screen: birdDetailsScreen },
+    [NavKeys.birdSelectParent]: { screen: birdSelectParentScreen },
   },
   {
     initialRouteName: NavKeys.birdList,

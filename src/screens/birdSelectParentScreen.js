@@ -56,7 +56,7 @@ const FabPlus = styled(Fab)`
   background-color: ${Colors.secondary};
 `;
 
-const BirdListScreen = ({ navigation }) => {
+const BirdSelectParent = ({ navigation }) => {
   const [allBirds, setAllBirds] = useState([]);
   const [birdsList, setBirdsList] = useState([]);
 
@@ -135,9 +135,6 @@ const BirdListScreen = ({ navigation }) => {
         <CardItemBird>
           <BodyBird>
             <Grid>
-              <Col size={0.5}>
-                <LineBirdType type={bird.gender} />
-              </Col>
               <CenterCol
                 size={3}
                 onPress={() => {
@@ -156,18 +153,14 @@ const BirdListScreen = ({ navigation }) => {
 
               <InfoCol
                 size={6}
-                onPress={() => {
-                  navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } });
-                }}>
+                onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
                 {bird.type && <TextBird>{bird.type}</TextBird>}
                 {bird.notes && <TextBird note>{bird.notes}</TextBird>}
               </InfoCol>
               <CenterCol
                 size={1}
-                onPress={() => {
-                  navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } });
-                }}>
+                onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })}>
                 <Icon
                   type="MaterialIcons"
                   name="chevron-right"
@@ -213,11 +206,15 @@ const BirdListScreen = ({ navigation }) => {
   );
 };
 
-BirdListScreen.navigationOptions = {
-  ...NavStyle,
-  headerLeft: undefined,
-  headerTitle: <Filter></Filter>,
-  headerRight: <SearchAction></SearchAction>,
+BirdSelectParent.navigationOptions = ({ navigation }) => {
+  const genderToSelect = navigation.getParam('genderToSelect');
+
+  return {
+    ...NavStyle,
+    headerLeft: undefined,
+    headerTitle: `Seleccionar ${genderToSelect}`,
+    headerRight: <SearchAction></SearchAction>,
+  };
 };
 
-export default withNavigation(BirdListScreen);
+export default withNavigation(BirdSelectParent);

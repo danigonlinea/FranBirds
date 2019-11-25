@@ -24,6 +24,7 @@ import { Back, HeaderDetailsRight, NavStyle } from '../components';
 import { Formik } from 'formik';
 import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
+import { NavKeys } from '.';
 
 const DetailsContainer = styled(Container)`
   margin-top: 140px;
@@ -123,8 +124,6 @@ const BirdDetails = ({ navigation }) => {
 
   const { id, type, notes, gender, photo } = birdData;
 
-  console.log(birdData);
-
   return (
     <DetailsContainer>
       <Formik
@@ -191,7 +190,12 @@ const BirdDetails = ({ navigation }) => {
                                   rounded
                                   active
                                   father
-                                  onPress={() => console.log('padre')}>
+                                  onPress={() =>
+                                    navigation.navigate(NavKeys.birdSelectParent, {
+                                      bird: birdData,
+                                      genderToSelect: 'Padre',
+                                    })
+                                  }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" father />
                                   <SelectBirdText father>Añadir</SelectBirdText>
                                 </SelectBirdBtn>
@@ -206,7 +210,12 @@ const BirdDetails = ({ navigation }) => {
                                   rounded
                                   active
                                   mother
-                                  onPress={() => console.log('madre')}>
+                                  onPress={() =>
+                                    navigation.navigate(NavKeys.birdSelectParent, {
+                                      bird: birdData,
+                                      genderToSelect: 'Madre',
+                                    })
+                                  }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" mother />
                                   <SelectBirdText mother>Añadir</SelectBirdText>
                                 </SelectBirdBtn>

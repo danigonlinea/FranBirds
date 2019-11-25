@@ -39,6 +39,7 @@ const BtnText = styled(Text)`
 const BirdPhotoDialog = ({ navigation }) => {
   const {
     dataModal: { bird, toggleDialog },
+    setDataModal,
   } = useGlobalCtx();
 
   const [showModal, setShowModal] = useState(toggleDialog);
@@ -78,7 +79,11 @@ const BirdPhotoDialog = ({ navigation }) => {
           <Btn
             type={bird.gender}
             onPress={() => {
-              setShowModal(false);
+              setDataModal({
+                bird: null,
+                toggleDialog: false,
+              });
+              // setShowModal(false);
               navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } });
             }}>
             <BtnText>Ver Más Detalles</BtnText>
