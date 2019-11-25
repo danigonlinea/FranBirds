@@ -48,6 +48,15 @@ const BirdPhotoDialog = ({ navigation }) => {
     setShowModal(true);
   }, [toggleDialog]);
 
+  useEffect(() => {
+    if (!showModal) {
+      /*  setDataModal({
+        bird: null,
+        toggleDialog: false,
+      }); */
+    }
+  }, [showModal]);
+
   if (!bird) {
     return null;
   }

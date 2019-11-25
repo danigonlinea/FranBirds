@@ -19,7 +19,7 @@ import { NavStyle, BirdPhotoDialog, Filter, SearchAction, SearchBar } from '../c
 import { Colors, Mock, Strings, Constants } from '../utils';
 import { withNavigation } from 'react-navigation';
 import { NavKeys } from '.';
-import { FlatList } from 'react-native';
+import { FlatList, Alert } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 import strings from '../utils/strings';
 
@@ -56,37 +56,31 @@ const FabPlus = styled(Fab)`
   background-color: ${Colors.secondary};
 `;
 
+const CurrentBirdContainer = styled(View)`
+  height: 90px;
+  background-color: ${Colors.primary};
+`;
+
 const BirdSelectParent = ({ navigation }) => {
+  const currentBird = navigation.getParam('currentBird');
+  const genderToSelect = navigation.getParam('genderToSelect');
+  const assignParent = navigation.getParam('assignParent');
+
   const [allBirds, setAllBirds] = useState([]);
   const [birdsList, setBirdsList] = useState([]);
 
-  const { dataModal, setDataModal, filterSelected, textToSearch } = useGlobalCtx();
+  const { textToSearch } = useGlobalCtx();
 
   useEffect(() => {
     // Load all Birds from database
-    setAllBirds(Mock.birdsData);
+    if (genderToSelect === strings.filter.male) {
+      // All Males
+      setAllBirds(Mock.birdsData);
+    } else {
+      // All Females
+      setAllBirds(Mock.birdsData);
+    }
   }, []);
-
-  useEffect(() => {
-    if (!isEmpty(allBirds)) {
-      filterChange(filterSelected);
-    }
-  }, [allBirds, filterSelected]);
-
-  const filterChange = filterSelected => {
-    switch (filterSelected) {
-      case strings.filter.male:
-        setBirdsList(allBirds.filter(bird => bird.gender === 'Macho'));
-        break;
-
-      case strings.filter.female:
-        setBirdsList(allBirds.filter(bird => bird.gender === 'Hembra'));
-        break;
-      default:
-        setBirdsList(allBirds);
-        break;
-    }
-  };
 
   // Only search on id, type and notes
   const isTextSearchFound = bird => {
@@ -100,34 +94,36 @@ const BirdSelectParent = ({ navigation }) => {
 
   useEffect(() => {
     if (!textToSearch) {
-      filterChange(filterSelected);
+      // All List
+      setBirdsList(Mock.birdsData);
     } else {
-      switch (filterSelected) {
-        case strings.filter.male:
-          setBirdsList(
-            allBirds.filter(
-              ({ gender, photo, ...bird }) => gender === 'Macho' && isTextSearchFound(bird)
-            )
-          );
-          break;
-
-        case strings.filter.female:
-          setBirdsList(
-            allBirds.filter(
-              ({ gender, photo, ...bird }) => gender === 'Hembra' && isTextSearchFound(bird)
-            )
-          );
-          break;
-        default:
-          setBirdsList(
-            allBirds.filter(({ gender, ...bird }) => {
-              return isTextSearchFound(bird);
-            })
-          );
-          break;
-      }
+      setBirdsList(
+        allBirds.filter(({ gender, photo, motherId, fatherId, ...bird }) => isTextSearchFound(bird))
+      );
     }
   }, [textToSearch]);
+
+  const assigningParent = birdId => {
+    Alert.alert(
+      `Asignar ${genderToSelect}`,
+      `¿Quieres asignar este pájaro (${birdId}) como ${genderToSelect}?`,
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Si',
+          onPress: () => {
+            assignParent(birdId);
+            navigation.goBack(null);
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   const _renderItem = ({ item: bird }) => {
     return (
@@ -135,14 +131,7 @@ const BirdSelectParent = ({ navigation }) => {
         <CardItemBird>
           <BodyBird>
             <Grid>
-              <CenterCol
-                size={3}
-                onPress={() => {
-                  setDataModal({
-                    bird,
-                    toggleDialog: !dataModal.toggleDialog,
-                  });
-                }}>
+              <CenterCol size={3}>
                 <Thumbnail
                   large
                   source={{
@@ -151,16 +140,12 @@ const BirdSelectParent = ({ navigation }) => {
                 />
               </CenterCol>
 
-              <InfoCol
-                size={6}
-                onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })}>
+              <InfoCol size={6} onPress={() => assigningParent(bird.id)}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
                 {bird.type && <TextBird>{bird.type}</TextBird>}
                 {bird.notes && <TextBird note>{bird.notes}</TextBird>}
               </InfoCol>
-              <CenterCol
-                size={1}
-                onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } })}>
+              <CenterCol size={1} onPress={() => assigningParent(bird.id)}>
                 <Icon
                   type="MaterialIcons"
                   name="chevron-right"
@@ -175,7 +160,23 @@ const BirdSelectParent = ({ navigation }) => {
 
   return (
     <Container>
-      <BirdPhotoDialog />
+      <CurrentBirdContainer>
+        <Grid>
+          <CenterCol size={3}>
+            <Thumbnail
+              source={{
+                uri: currentBird.photo,
+              }}
+            />
+          </CenterCol>
+
+          <InfoCol size={6}>
+            <TextBird fontSize={16}>{currentBird.id}</TextBird>
+            {currentBird.type && <TextBird>{currentBird.type}</TextBird>}
+            {currentBird.notes && <TextBird note>{currentBird.notes}</TextBird>}
+          </InfoCol>
+        </Grid>
+      </CurrentBirdContainer>
       <SearchBar></SearchBar>
       <Content padder>
         <FlatList
@@ -193,15 +194,6 @@ const BirdSelectParent = ({ navigation }) => {
           }
         />
       </Content>
-      <View>
-        <FabPlus
-          active
-          containerStyle={{}}
-          position="bottomRight"
-          onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { gender: 'Macho' } })}>
-          <Icon type="MaterialIcons" name="add" />
-        </FabPlus>
-      </View>
     </Container>
   );
 };

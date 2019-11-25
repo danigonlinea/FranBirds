@@ -8,6 +8,8 @@ export default {
       notes: 'Alas amarillas, ojos negros.',
       gender: 'Macho',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
     {
       id: '2-2019',
@@ -15,12 +17,16 @@ export default {
       notes: 'Alas verdes, ojos negros.',
       gender: 'Macho',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
     {
       id: '3-2019',
       type: 'Gorrión',
       gender: 'Hembra',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
     {
       id: '4-2019',
@@ -28,6 +34,8 @@ export default {
       notes: 'Alas amarillas, ojos negros.',
       gender: 'Macho',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
     {
       id: '5-2019',
@@ -35,6 +43,8 @@ export default {
       notes: 'Alas amarillas, ojos negros.',
       gender: 'Hembra',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
     {
       id: '6-2019',
@@ -42,6 +52,8 @@ export default {
       notes: 'Alas amarillas, ojos negros.',
       gender: 'Macho',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
     {
       id: '7-2019',
@@ -49,6 +61,8 @@ export default {
       notes: 'Alas amarillas, ojos negros.',
       gender: 'Hembra',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
     {
       id: '8-2019',
@@ -56,6 +70,8 @@ export default {
       notes: 'Alas amarillas, ojos marrones.',
       gender: 'Macho',
       photo: Constants.defaultAvatar,
+      fatherId: undefined,
+      motherId: undefined,
     },
   ],
 };

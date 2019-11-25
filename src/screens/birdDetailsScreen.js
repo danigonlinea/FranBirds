@@ -20,11 +20,13 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import styled, { css } from 'styled-components';
-import { Back, HeaderDetailsRight, NavStyle } from '../components';
+import { Back, HeaderDetailsRight, NavStyle, BirdPhotoDialog } from '../components';
 import { Formik } from 'formik';
 import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
+import { useGlobalCtx } from '../context/globalContext';
+import { red } from 'ansi-colors';
 
 const DetailsContainer = styled(Container)`
   margin-top: 140px;
@@ -91,6 +93,8 @@ const VerticalSpace = styled(View)`
   padding: 8px;
 `;
 
+const SelectBirdContainer = styled(Grid)``;
+
 const SelectBirdBtn = styled(Button)`
   margin: 12px 0;
   height: 30px;
@@ -115,12 +119,33 @@ const birdValidationSchema = () => {
   });
 };
 
+const TextLabel = styled(Text)`
+  color: #888;
+  margin-top: 4px;
+`;
+
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState(navigation.getParam('bird'));
+  const [fatherId, setFather] = useState(birdData.fatherId || false);
+  const [motherId, setMother] = useState(birdData.motherId || false);
+
+  const { dataModal, setDataModal } = useGlobalCtx();
 
   useEffect(() => {
     console.log('BirdData: ', birdData);
   }, [birdData]);
+
+  useEffect(() => {
+    console.log(fatherId, motherId);
+  }, [fatherId, motherId]);
+
+  const assignFather = fatherId => {
+    setFather(fatherId);
+  };
+
+  const assignMother = motherId => {
+    setMother(motherId);
+  };
 
   const { id, type, notes, gender, photo } = birdData;
 
@@ -180,48 +205,115 @@ const BirdDetails = ({ navigation }) => {
                               </FormItem>
                             </Col>
                           </Row>
-                          <Row>
-                            <Col>
-                              <FormItem stackedLabel>
-                                <Label>Padre</Label>
-                                <SelectBirdBtn
-                                  bordered
-                                  iconLeft
-                                  rounded
-                                  active
-                                  father
-                                  onPress={() =>
-                                    navigation.navigate(NavKeys.birdSelectParent, {
-                                      bird: birdData,
-                                      genderToSelect: 'Padre',
-                                    })
-                                  }>
-                                  <SelectBirdIcon type="MaterialIcons" name="add" father />
-                                  <SelectBirdText father>Añadir</SelectBirdText>
-                                </SelectBirdBtn>
-                              </FormItem>
-                            </Col>
-                            <Col>
-                              <FormItem stackedLabel>
-                                <Label>Madre</Label>
-                                <SelectBirdBtn
-                                  bordered
-                                  iconLeft
-                                  rounded
-                                  active
-                                  mother
-                                  onPress={() =>
-                                    navigation.navigate(NavKeys.birdSelectParent, {
-                                      bird: birdData,
-                                      genderToSelect: 'Madre',
-                                    })
-                                  }>
-                                  <SelectBirdIcon type="MaterialIcons" name="add" mother />
-                                  <SelectBirdText mother>Añadir</SelectBirdText>
-                                </SelectBirdBtn>
-                              </FormItem>
-                            </Col>
-                          </Row>
+                          <FormItem stackedLabel>
+                            <Label>Padres</Label>
+                            <Row>
+                              <Col style={{ marginRight: 6 }}>
+                                {fatherId ? (
+                                  <>
+                                    <Grid>
+                                      <Col size={50}>
+                                        <SelectBirdBtn
+                                          bordered
+                                          rounded
+                                          active
+                                          father
+                                          onPress={() =>
+                                            navigation.push(NavKeys.birdDetails, {
+                                              bird: { id: fatherId },
+                                            })
+                                          }>
+                                          <SelectBirdText father>{fatherId}</SelectBirdText>
+                                        </SelectBirdBtn>
+                                      </Col>
+                                      <Col size={30}>
+                                        <SelectBirdBtn
+                                          transparent
+                                          active
+                                          father
+                                          onPress={() => assignFather(undefined)}>
+                                          <SelectBirdIcon
+                                            type="MaterialIcons"
+                                            name="close"
+                                            father
+                                          />
+                                        </SelectBirdBtn>
+                                      </Col>
+                                    </Grid>
+                                  </>
+                                ) : (
+                                  <SelectBirdBtn
+                                    bordered
+                                    iconLeft
+                                    rounded
+                                    active
+                                    father
+                                    onPress={() =>
+                                      navigation.navigate(NavKeys.birdSelectParent, {
+                                        currentBird: birdData,
+                                        genderToSelect: 'Padre',
+                                        assignParent: fatherId => assignFather(fatherId),
+                                      })
+                                    }>
+                                    <SelectBirdIcon type="MaterialIcons" name="add" father />
+                                    <SelectBirdText father>Añadir</SelectBirdText>
+                                  </SelectBirdBtn>
+                                )}
+                              </Col>
+                              <Col style={{ marginLeft: 6 }}>
+                                {motherId ? (
+                                  <>
+                                    <Grid>
+                                      <Col size={50}>
+                                        <SelectBirdBtn
+                                          bordered
+                                          rounded
+                                          active
+                                          mother
+                                          onPress={() => {
+                                            navigation.push(NavKeys.birdDetails, {
+                                              bird: { id: motherId },
+                                            });
+                                          }}>
+                                          <SelectBirdText mother>{motherId}</SelectBirdText>
+                                        </SelectBirdBtn>
+                                      </Col>
+                                      <Col size={30}>
+                                        <SelectBirdBtn
+                                          transparent
+                                          active
+                                          mother
+                                          onPress={() => assignMother(undefined)}>
+                                          <SelectBirdIcon
+                                            type="MaterialIcons"
+                                            name="close"
+                                            mother
+                                          />
+                                        </SelectBirdBtn>
+                                      </Col>
+                                    </Grid>
+                                  </>
+                                ) : (
+                                  <SelectBirdBtn
+                                    bordered
+                                    iconLeft
+                                    rounded
+                                    active
+                                    mother
+                                    onPress={() =>
+                                      navigation.navigate(NavKeys.birdSelectParent, {
+                                        currentBird: birdData,
+                                        genderToSelect: 'Madre',
+                                        assignParent: motherId => assignMother(motherId),
+                                      })
+                                    }>
+                                    <SelectBirdIcon type="MaterialIcons" name="add" mother />
+                                    <SelectBirdText mother>Añadir</SelectBirdText>
+                                  </SelectBirdBtn>
+                                )}
+                              </Col>
+                            </Row>
+                          </FormItem>
                           <Row>
                             <FormItem style={{ flex: 1 }} stackedLabel>
                               <Label>Notas</Label>

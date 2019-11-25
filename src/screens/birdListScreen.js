@@ -106,7 +106,8 @@ const BirdListScreen = ({ navigation }) => {
         case strings.filter.male:
           setBirdsList(
             allBirds.filter(
-              ({ gender, photo, ...bird }) => gender === 'Macho' && isTextSearchFound(bird)
+              ({ gender, photo, motherId, fatherId, ...bird }) =>
+                gender === 'Macho' && isTextSearchFound(bird)
             )
           );
           break;
@@ -114,13 +115,14 @@ const BirdListScreen = ({ navigation }) => {
         case strings.filter.female:
           setBirdsList(
             allBirds.filter(
-              ({ gender, photo, ...bird }) => gender === 'Hembra' && isTextSearchFound(bird)
+              ({ gender, photo, motherId, fatherId, ...bird }) =>
+                gender === 'Hembra' && isTextSearchFound(bird)
             )
           );
           break;
         default:
           setBirdsList(
-            allBirds.filter(({ gender, ...bird }) => {
+            allBirds.filter(({ gender, motherId, fatherId, ...bird }) => {
               return isTextSearchFound(bird);
             })
           );
