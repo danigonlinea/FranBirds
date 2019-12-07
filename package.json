@@ -6,12 +6,15 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "reset:cache": "expo r -c"
+    "reset:cache": "expo r -c",
+    "install:reset": "rm -rf /node_modules && rm yarn.lock && yarn",
+    "sqlite": "expo install expo-sqlite"
   },
   "dependencies": {
     "expo": "^35.0.1",
     "expo-cli": "^3.10.2",
     "expo-font": "~7.0.0",
+    "expo-sqlite": "~7.0.0",
     "formik": "^2.0.6",
     "lodash": "^4.17.15",
     "native-base": "^2.13.8",

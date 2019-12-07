@@ -130,14 +130,6 @@ const BirdDetails = ({ navigation }) => {
 
   const { dataModal, setDataModal } = useGlobalCtx();
 
-  useEffect(() => {
-    console.log('BirdData: ', birdData);
-  }, [birdData]);
-
-  useEffect(() => {
-    console.log(fatherId, motherId);
-  }, [fatherId, motherId]);
-
   const assignFather = fatherId => {
     setFather(fatherId);
   };
