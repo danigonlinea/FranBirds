@@ -8,11 +8,12 @@
     "eject": "expo eject",
     "reset:cache": "expo r -c",
     "install:reset": "rm -rf /node_modules && rm yarn.lock && yarn",
-    "sqlite": "expo install expo-sqlite"
+    "sqlite": "expo install expo-file-system"
   },
   "dependencies": {
     "expo": "^35.0.1",
     "expo-cli": "^3.10.2",
+    "expo-file-system": "~7.0.0",
     "expo-font": "~7.0.0",
     "expo-sqlite": "~7.0.0",
     "formik": "^2.0.6",

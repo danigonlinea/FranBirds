@@ -23,6 +23,10 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.danigonlinea.franbirds",
+      "versionCode": 1
     }
   }
 }

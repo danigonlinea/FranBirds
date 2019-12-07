@@ -5,6 +5,8 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { AppNavigation } from './src/navigation';
 import GlobalContext from './src/context/globalContext';
+import { createDatabase } from './src/db';
+import * as FileSystem from 'expo-file-system';
 
 const App = props => {
   const [isReady, setReady] = useState(false);
@@ -20,6 +22,8 @@ const App = props => {
 
     if (!isReady) {
       loadFonts();
+      createDatabase();
+      console.log(FileSystem.documentDirectory);
       setReady(true);
     }
   }, []);

@@ -22,6 +22,8 @@ import { NavKeys } from '.';
 import { FlatList } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 import strings from '../utils/strings';
+import { openDatabase } from 'expo-sqlite';
+import { Info } from '../db';
 
 const LineBirdType = styled(View)`
   width: 10px;
