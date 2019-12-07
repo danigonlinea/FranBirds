@@ -26,7 +26,6 @@ import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
 import { useGlobalCtx } from '../context/globalContext';
-import { red } from 'ansi-colors';
 
 const DetailsContainer = styled(Container)`
   margin-top: 140px;
