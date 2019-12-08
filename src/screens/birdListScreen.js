@@ -23,7 +23,7 @@ import { FlatList } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 import strings from '../utils/strings';
 import { openDatabase } from 'expo-sqlite';
-import { Info } from '../db';
+import { Info, getAllBirds } from '../db';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -66,6 +66,7 @@ const BirdListScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Load all Birds from database
+    getAllBirds();
     setAllBirds(Mock.birdsData);
   }, []);
 

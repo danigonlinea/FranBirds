@@ -23,7 +23,7 @@ const App = props => {
     if (!isReady) {
       loadFonts();
       createDatabase();
-      console.log(FileSystem.documentDirectory);
+      console.log('Create Database');
       setReady(true);
     }
   }, []);
