@@ -1,62 +1,40 @@
 import * as SQLite from 'expo-sqlite';
 import info from './info';
 import database from './database';
+import sentencesSQL from './sentencesSQL';
 
-export { default as Query } from './query';
+const nullCallback = v => console.log('Object', v);
 
 const getDatabase = () => {
   return SQLite.openDatabase(info.name, info.version, info.description);
 };
 
+const query = (querySQL, argsArray, onSuccess, onError) => {
+  const db = getDatabase();
+
+  db.transaction(
+    tx => {
+      tx.executeSql(
+        querySQL,
+        argsArray,
+        (_, { rows, rowsAffected, insertedId }) =>
+          onSuccess instanceof Function && onSuccess({ rows, rowsAffected, insertedId }),
+        error => onError(error)
+      );
+    },
+    err => console.log('Query Error: ', error),
+    success => console.log('Query successfully executed')
+  );
+};
+
 export const createDatabase = () => {
-  const db = getDatabase();
-
-  console.log(database.create);
-  db.transaction(
-    tx => {
-      tx.executeSql(
-        database.create,
-        [],
-        ({ ...props }) => console.log('create', props),
-        error => console.log('Error: ', error)
-      );
-    },
-    err => console.log(err),
-    success => console.log(success)
-  );
+  query(database.create, [], nullCallback, nullCallback);
 };
 
-export const getAllBirds = async () => {
-  const db = getDatabase();
-
-  db.transaction(
-    tx => {
-      tx.executeSql(
-        'SELECT * FROM bird',
-        [],
-        ({ ...props }) => console.log('Select', props),
-        error => console.log('Error: ', error)
-      );
-    },
-    err => console.log(err),
-    success => console.log(success)
-  );
+export const getAllBirds = async (args = [], onSuccess, onError) => {
+  query(sentencesSQL.getAllBirds, args, onSuccess, onError);
 };
 
-export const insertBird = async birdData => {
-  const db = await getDatabase();
-
-  const insertId = await db.transaction(
-    tx =>
-      tx.executeSql(
-        `INSERT INTO birds (type, notes, gender, photo, fatherId, motherId) values
-                           ('Canario', 'Ojos marrones, 'Macho', null, null, null)`,
-        null,
-        (_, { rows: { _array }, insertId, rowsAffected }) => insertId
-      ),
-    null
-  );
-
-  console.log('Inserted: ', insertId);
-  return insertId;
+export const insertBird = async (args = [], onSuccess, onError) => {
+  query(sentencesSQL.insertBird, args, onSuccess, onError);
 };
