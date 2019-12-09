@@ -64,9 +64,13 @@ const BirdListScreen = ({ navigation }) => {
 
   const { dataModal, setDataModal, filterSelected, textToSearch } = useGlobalCtx();
 
+  const onSuccess = result => {
+    console.log('onSuccess class: ', result);
+  };
+
   useEffect(() => {
     // Load all Birds from database
-    getAllBirds();
+    getAllBirds([], onSuccess);
     setAllBirds(Mock.birdsData);
   }, []);
 
