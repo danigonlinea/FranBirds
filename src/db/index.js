@@ -17,8 +17,8 @@ const query = (querySQL, argsArray, onSuccess, onError) => {
       tx.executeSql(
         querySQL,
         argsArray,
-        (_, { rows, rowsAffected, insertedId }) =>
-          onSuccess instanceof Function && onSuccess({ rows, rowsAffected, insertedId }),
+        (_, { rows, rowsAffected, insertId }) =>
+          onSuccess instanceof Function && onSuccess({ rows, rowsAffected, insertId }),
         error => onError(error)
       );
     },
@@ -35,6 +35,15 @@ export const getAllBirds = async (onSuccess, onError) => {
   query(sentencesSQL.getAllBirds, [], onSuccess, onError);
 };
 
-export const insertBird = async (args = [], onSuccess, onError) => {
-  query(sentencesSQL.insertBird, args, onSuccess, onError);
+export const insertBird = async (args = {}, onSuccess, onError) => {
+  // Sort the values as it is designed in database
+  const { id, type, gender, fatherId, motherId, notes, photo } = args;
+  // Make the query with the sorted values as expected by the insert bird query.
+  console.log([id, type, gender, fatherId, motherId, notes, photo]);
+  query(
+    sentencesSQL.insertBird,
+    [id, type, gender, fatherId, motherId, notes, photo],
+    onSuccess,
+    onError
+  );
 };

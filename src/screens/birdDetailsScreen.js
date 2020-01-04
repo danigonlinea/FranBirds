@@ -26,6 +26,7 @@ import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
 import { useGlobalCtx } from '../context/globalContext';
+import { insertBird } from '../db';
 
 const DetailsContainer = styled(Container)`
   margin-top: 140px;
@@ -46,7 +47,7 @@ const FormContainer = styled(View)`
 `;
 
 const birdFormValues = bird => {
-  return bird
+  return bird.id
     ? { ...bird }
     : {
         id: undefined,
@@ -54,6 +55,8 @@ const birdFormValues = bird => {
         notes: undefined,
         gender: 'Macho',
         photo: Constants.defaultAvatar,
+        fatherId: undefined,
+        motherId: undefined,
       };
 };
 
@@ -115,6 +118,8 @@ const birdValidationSchema = () => {
     notes: Yup.string(),
     gender: Yup.string(),
     photo: Yup.string(),
+    fatherId: Yup.string(),
+    motherId: Yup.string(),
   });
 };
 
@@ -150,12 +155,25 @@ const BirdDetails = ({ navigation }) => {
 
   const { id, type, notes, gender, photo } = birdData;
 
+  const insertBirdSuccess = success => {
+    console.log('Success', success);
+  };
+
+  const insertBirdFailure = error => {
+    console.log('Error', error);
+  };
+
+  const submitBird = birdData => {
+    console.log(birdData);
+    insertBird(birdData, insertBirdSuccess, insertBirdFailure);
+  };
+
   return (
     <DetailsContainer>
       <Formik
         initialValues={birdFormValues(birdData)}
         validationSchema={birdValidationSchema()}
-        onSubmit={values => console.log(values)}>
+        onSubmit={submitBird}>
         {({ handleChange, handleBlur, handleSubmit, touched, values, errors }) => (
           <>
             <Content style={{ flex: 1 }}>
