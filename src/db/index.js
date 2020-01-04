@@ -3,7 +3,7 @@ import info from './info';
 import database from './database';
 import sentencesSQL from './sentencesSQL';
 
-const nullCallback = v => console.log('Object', v);
+const nullCallback = v => console.log('Object: ', v);
 
 const getDatabase = () => {
   return SQLite.openDatabase(info.name, info.version, info.description);
@@ -31,8 +31,8 @@ export const createDatabase = () => {
   query(database.create, [], nullCallback, nullCallback);
 };
 
-export const getAllBirds = async (args = [], onSuccess, onError) => {
-  query(sentencesSQL.getAllBirds, args, onSuccess, onError);
+export const getAllBirds = async (onSuccess, onError) => {
+  query(sentencesSQL.getAllBirds, [], onSuccess, onError);
 };
 
 export const insertBird = async (args = [], onSuccess, onError) => {

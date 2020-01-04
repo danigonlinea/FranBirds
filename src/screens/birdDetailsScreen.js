@@ -110,7 +110,7 @@ const SelectBirdText = styled(Text)`
 
 const birdValidationSchema = () => {
   return Yup.object().shape({
-    id: Yup.string().required('Identificator is required'),
+    id: Yup.string().required('El Identificador es necesario'),
     type: Yup.string(),
     notes: Yup.string(),
     gender: Yup.string(),
@@ -121,6 +121,16 @@ const birdValidationSchema = () => {
 const TextLabel = styled(Text)`
   color: #888;
   margin-top: 4px;
+`;
+
+const ErrorContainer = styled(View)`
+  height: 36px;
+  padding: 6px;
+`;
+
+const TextError = styled(Text)`
+  color: #cf3030;
+  font-size: 14px;
 `;
 
 const BirdDetails = ({ navigation }) => {
@@ -196,6 +206,15 @@ const BirdDetails = ({ navigation }) => {
                               </FormItem>
                             </Col>
                           </Row>
+                          {errors && errors.id && (
+                            <Row>
+                              <Col>
+                                <ErrorContainer>
+                                  <TextError>{errors.id}</TextError>
+                                </ErrorContainer>
+                              </Col>
+                            </Row>
+                          )}
                           <FormItem stackedLabel>
                             <Label>Padres</Label>
                             <Row>

@@ -70,7 +70,7 @@ const BirdListScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Load all Birds from database
-    getAllBirds([], onSuccess);
+    getAllBirds(onSuccess);
     setAllBirds(Mock.birdsData);
   }, []);
 
