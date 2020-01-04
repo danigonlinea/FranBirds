@@ -146,7 +146,7 @@ const BirdDetails = ({ navigation }) => {
         initialValues={birdFormValues(birdData)}
         validationSchema={birdValidationSchema()}
         onSubmit={values => console.log(values)}>
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
+        {({ handleChange, handleBlur, handleSubmit, touched, values, errors }) => (
           <>
             <Content style={{ flex: 1 }}>
               <FormContainer>
@@ -324,11 +324,7 @@ const BirdDetails = ({ navigation }) => {
               </FormContainer>
             </Content>
             <View>
-              <FabSave
-                active
-                containerStyle={{}}
-                position="bottomRight"
-                onPress={() => handleSubmit()}>
+              <FabSave active containerStyle={{}} position="bottomRight" onPress={handleSubmit}>
                 <FabIcon name="ios-save" />
               </FabSave>
             </View>
