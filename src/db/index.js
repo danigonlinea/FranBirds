@@ -3,7 +3,7 @@ import info from './info';
 import database from './database';
 import sentencesSQL from './sentencesSQL';
 
-const nullCallback = v => console.log('Object: ', v);
+const nullCallback = v => console.log('Null Callback');
 
 const getDatabase = () => {
   return SQLite.openDatabase(info.name, info.version, info.description);
@@ -18,7 +18,14 @@ const query = (querySQL, argsArray, onSuccess, onError) => {
         querySQL,
         argsArray,
         (_, { rows, rowsAffected, insertId }) =>
-          onSuccess instanceof Function && onSuccess({ rows, rowsAffected, insertId }),
+          onSuccess instanceof Function &&
+          onSuccess({
+            result: JSON.parse(JSON.stringify(rows._array)),
+            count: rows.length,
+            rawRows: rows,
+            rowsAffected,
+            insertId,
+          }),
         error => onError(error)
       );
     },
@@ -39,10 +46,23 @@ export const insertBird = async (args = {}, onSuccess, onError) => {
   // Sort the values as it is designed in database
   const { id, type, gender, fatherId, motherId, notes, photo } = args;
   // Make the query with the sorted values as expected by the insert bird query.
-  console.log([id, type, gender, fatherId, motherId, notes, photo]);
   query(
     sentencesSQL.insertBird,
     [id, type, gender, fatherId, motherId, notes, photo],
+    onSuccess,
+    onError
+  );
+};
+
+export const updateBird = async (args = {}, onSuccess, onError) => {
+  // Sort the values as it is designed in database
+  const { globalId, id, type, gender, fatherId, motherId, notes, photo } = args;
+  // Make the query with the sorted values as expected by the insert bird query.
+
+  console.log([id, type, gender, 'fatherId', 'motherId', notes, photo, globalId]);
+  query(
+    sentencesSQL.updateBird,
+    [id, type, gender, fatherId, motherId, notes, photo, globalId],
     onSuccess,
     onError
   );

@@ -74,7 +74,7 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
         onPress={() =>
           Alert.alert(
             'Eliminar Pájaro',
-            '¿Quieres Eliminar este pájaro de la app?',
+            '¿Estás seguro de eliminar este pájaro?',
             [
               {
                 text: 'No',

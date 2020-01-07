@@ -26,7 +26,7 @@ import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
 import { useGlobalCtx } from '../context/globalContext';
-import { insertBird } from '../db';
+import { insertBird, updateBird } from '../db';
 
 const DetailsContainer = styled(Container)`
   margin-top: 140px;
@@ -45,20 +45,6 @@ const FormContainer = styled(View)`
   flex: 1;
   padding: 24px;
 `;
-
-const birdFormValues = bird => {
-  return bird.id
-    ? { ...bird }
-    : {
-        id: undefined,
-        type: undefined,
-        notes: undefined,
-        gender: 'Macho',
-        photo: Constants.defaultAvatar,
-        fatherId: undefined,
-        motherId: undefined,
-      };
-};
 
 const FormItem = styled(Item)`
   margin: 0 8px 16px 8px;
@@ -111,18 +97,6 @@ const SelectBirdText = styled(Text)`
   color: ${props => (props.father ? Colors.male : Colors.female)};
 `;
 
-const birdValidationSchema = () => {
-  return Yup.object().shape({
-    id: Yup.string().required('El Identificador es necesario'),
-    type: Yup.string(),
-    notes: Yup.string(),
-    gender: Yup.string(),
-    photo: Yup.string(),
-    fatherId: Yup.string(),
-    motherId: Yup.string(),
-  });
-};
-
 const TextLabel = styled(Text)`
   color: #888;
   margin-top: 4px;
@@ -137,6 +111,34 @@ const TextError = styled(Text)`
   color: #cf3030;
   font-size: 14px;
 `;
+
+const birdValidationSchema = () => {
+  return Yup.object().shape({
+    globalId: Yup.number(),
+    id: Yup.string().required('El Identificador es necesario'),
+    type: Yup.string(),
+    notes: Yup.string(),
+    gender: Yup.string(),
+    photo: Yup.string().nullable(),
+    fatherId: Yup.string().nullable(),
+    motherId: Yup.string().nullable(),
+  });
+};
+
+const birdFormValues = bird => {
+  return bird.globalId
+    ? { ...bird }
+    : {
+        globalId: undefined,
+        id: undefined,
+        type: undefined,
+        notes: undefined,
+        gender: 'Macho',
+        photo: Constants.defaultAvatar,
+        fatherId: undefined,
+        motherId: undefined,
+      };
+};
 
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState(navigation.getParam('bird'));
@@ -153,19 +155,33 @@ const BirdDetails = ({ navigation }) => {
     setMother(motherId);
   };
 
-  const { id, type, notes, gender, photo } = birdData;
+  const { globalId, id, type, notes, gender, photo } = birdData;
 
-  const insertBirdSuccess = success => {
-    console.log('Success', success);
-  };
-
-  const insertBirdFailure = error => {
-    console.log('Error', error);
-  };
-
+  console.log(birdData);
   const submitBird = birdData => {
     console.log(birdData);
-    insertBird(birdData, insertBirdSuccess, insertBirdFailure);
+
+    if (globalId) {
+      updateBird(
+        birdData,
+        ({ rawRows }) => {
+          navigation.goBack();
+          navigation.getParam('refreshBirdList')();
+          console.log('Bird Updated: ', rawRows);
+        },
+        error => console.log('Error', error)
+      );
+    } else {
+      insertBird(
+        birdData,
+        ({ insertId }) => {
+          navigation.goBack();
+          navigation.getParam('refreshBirdList')();
+          console.log('Inserted Id: ', insertId);
+        },
+        ({ error }) => console.log(error)
+      );
+    }
   };
 
   return (

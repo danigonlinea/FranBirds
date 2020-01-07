@@ -64,14 +64,13 @@ const BirdListScreen = ({ navigation }) => {
 
   const { dataModal, setDataModal, filterSelected, textToSearch } = useGlobalCtx();
 
-  const onSuccess = result => {
-    console.log('onSuccess class: ', result);
+  const getBirdListRefreshed = () => {
+    getAllBirds(({ result: allBirds }) => setAllBirds(allBirds));
   };
 
   useEffect(() => {
     // Load all Birds from database
-    getAllBirds(onSuccess);
-    setAllBirds(Mock.birdsData);
+    getBirdListRefreshed();
   }, []);
 
   useEffect(() => {
@@ -166,7 +165,10 @@ const BirdListScreen = ({ navigation }) => {
               <InfoCol
                 size={6}
                 onPress={() => {
-                  navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } });
+                  navigation.navigate(NavKeys.birdDetails, {
+                    bird: { ...bird },
+                    refreshBirdList: () => getBirdListRefreshed(),
+                  });
                 }}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
                 {bird.type && <TextBird>{bird.type}</TextBird>}
@@ -175,7 +177,10 @@ const BirdListScreen = ({ navigation }) => {
               <CenterCol
                 size={1}
                 onPress={() => {
-                  navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } });
+                  navigation.navigate(NavKeys.birdDetails, {
+                    bird: { ...bird },
+                    refreshBirdList: () => getBirdListRefreshed(),
+                  });
                 }}>
                 <Icon
                   type="MaterialIcons"
@@ -214,7 +219,12 @@ const BirdListScreen = ({ navigation }) => {
           active
           containerStyle={{}}
           position="bottomRight"
-          onPress={() => navigation.navigate(NavKeys.birdDetails, { bird: { gender: 'Macho' } })}>
+          onPress={() =>
+            navigation.navigate(NavKeys.birdDetails, {
+              bird: { gender: 'Macho' },
+              refreshBirdList: () => getBirdListRefreshed(),
+            })
+          }>
           <Icon type="MaterialIcons" name="add" />
         </FabPlus>
       </View>
