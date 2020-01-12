@@ -178,22 +178,21 @@ const BirdSelectParent = ({ navigation }) => {
         </Grid>
       </CurrentBirdContainer>
       <SearchBar></SearchBar>
-      <Content padder>
-        <FlatList
-          enableAutomaticScroll
-          enableOnAndroid
-          scrollEnabled
-          key={birdsList.length}
-          data={birdsList}
-          renderItem={_renderItem}
-          keyExtractor={({ id }) => id}
-          ListEmptyComponent={
-            <Container>
-              <Text>{Strings.noBirdsRegistered}</Text>
-            </Container>
-          }
-        />
-      </Content>
+
+      <FlatList
+        enableAutomaticScroll
+        enableOnAndroid
+        scrollEnabled
+        key={birdsList.length}
+        data={birdsList}
+        renderItem={_renderItem}
+        keyExtractor={({ id }) => id}
+        ListEmptyComponent={
+          <Container>
+            <Text>{Strings.noBirdsRegistered}</Text>
+          </Container>
+        }
+      />
     </Container>
   );
 };

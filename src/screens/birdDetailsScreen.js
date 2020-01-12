@@ -169,7 +169,7 @@ const BirdDetails = ({ navigation }) => {
           navigation.getParam('refreshBirdList')();
           console.log('Bird Updated: ', rawRows);
         },
-        error => console.log('Error', error)
+        (ts, error) => console.log('Error', error)
       );
     } else {
       insertBird(
@@ -179,7 +179,7 @@ const BirdDetails = ({ navigation }) => {
           navigation.getParam('refreshBirdList')();
           console.log('Inserted Id: ', insertId);
         },
-        ({ error }) => console.log(error)
+        (ts, error) => console.log('Error Updating', error)
       );
     }
   };

@@ -12,21 +12,26 @@ const getDatabase = () => {
 const query = (querySQL, argsArray, onSuccess, onError) => {
   const db = getDatabase();
 
+  console.log(argsArray);
   db.transaction(
     tx => {
       tx.executeSql(
         querySQL,
         argsArray,
-        (_, { rows, rowsAffected, insertId }) =>
-          onSuccess instanceof Function &&
-          onSuccess({
-            result: JSON.parse(JSON.stringify(rows._array)),
-            count: rows.length,
-            rawRows: rows,
-            rowsAffected,
-            insertId,
-          }),
-        error => onError(error)
+        (_, { rows, rowsAffected, insertId }) => {
+          console.log('query done');
+          return (
+            onSuccess instanceof Function &&
+            onSuccess({
+              result: JSON.parse(JSON.stringify(rows._array)),
+              count: rows.length,
+              rawRows: rows,
+              rowsAffected,
+              insertId,
+            })
+          );
+        },
+        (ts, error) => onError(ts, error)
       );
     },
     err => console.log('Query Error: ', error),
@@ -44,7 +49,7 @@ export const getAllBirds = async (onSuccess, onError) => {
 
 export const insertBird = async (args = {}, onSuccess, onError) => {
   // Sort the values as it is designed in database
-  const { id, type, gender, fatherId, motherId, notes, photo } = args;
+  const { id, type, gender, fatherId = 0, motherId = 0, notes, photo } = args;
   // Make the query with the sorted values as expected by the insert bird query.
   query(
     sentencesSQL.insertBird,
@@ -56,10 +61,9 @@ export const insertBird = async (args = {}, onSuccess, onError) => {
 
 export const updateBird = async (args = {}, onSuccess, onError) => {
   // Sort the values as it is designed in database
-  const { globalId, id, type, gender, fatherId, motherId, notes, photo } = args;
+  const { globalId, id, type, gender, fatherId = 0, motherId = 0, notes, photo } = args;
   // Make the query with the sorted values as expected by the insert bird query.
 
-  console.log([id, type, gender, 'fatherId', 'motherId', notes, photo, globalId]);
   query(
     sentencesSQL.updateBird,
     [id, type, gender, fatherId, motherId, notes, photo, globalId],

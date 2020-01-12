@@ -70,10 +70,12 @@ const BirdListScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Load all Birds from database
+    console.log('Start');
     getBirdListRefreshed();
   }, []);
 
   useEffect(() => {
+    console.log('update');
     if (!isEmpty(allBirds)) {
       filterChange(filterSelected);
     }
@@ -198,22 +200,22 @@ const BirdListScreen = ({ navigation }) => {
     <Container>
       <BirdPhotoDialog />
       <SearchBar></SearchBar>
-      <Content padder>
-        <FlatList
-          enableAutomaticScroll
-          enableOnAndroid
-          scrollEnabled
-          key={birdsList.length}
-          data={birdsList}
-          renderItem={_renderItem}
-          keyExtractor={({ id }) => id}
-          ListEmptyComponent={
-            <Container>
-              <Text>{Strings.noBirdsRegistered}</Text>
-            </Container>
-          }
-        />
-      </Content>
+
+      <FlatList
+        enableAutomaticScroll
+        enableOnAndroid
+        scrollEnabled
+        key={birdsList.length}
+        data={birdsList}
+        renderItem={_renderItem}
+        keyExtractor={({ id }) => id}
+        ListEmptyComponent={
+          <Container>
+            <Text>{Strings.noBirdsRegistered}</Text>
+          </Container>
+        }
+      />
+
       <View>
         <FabPlus
           active
