@@ -58,6 +58,10 @@ const FabPlus = styled(Fab)`
   background-color: ${Colors.secondary};
 `;
 
+const CardBird = styled(Card)`
+  margin: 16px;
+`;
+
 const BirdListScreen = ({ navigation }) => {
   const [allBirds, setAllBirds] = useState([]);
   const [birdsList, setBirdsList] = useState([]);
@@ -70,12 +74,10 @@ const BirdListScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Load all Birds from database
-    console.log('Start');
     getBirdListRefreshed();
   }, []);
 
   useEffect(() => {
-    console.log('update');
     if (!isEmpty(allBirds)) {
       filterChange(filterSelected);
     }
@@ -141,7 +143,7 @@ const BirdListScreen = ({ navigation }) => {
 
   const _renderItem = ({ item: bird }) => {
     return (
-      <Card key={bird.id}>
+      <CardBird key={bird.id}>
         <CardItemBird>
           <BodyBird>
             <Grid>
@@ -174,7 +176,11 @@ const BirdListScreen = ({ navigation }) => {
                 }}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
                 {bird.type && <TextBird>{bird.type}</TextBird>}
-                {bird.notes && <TextBird note>{bird.notes}</TextBird>}
+                {bird.notes && (
+                  <TextBird ellipsizeMode="tail" note numberOfLines={1}>
+                    {bird.notes}
+                  </TextBird>
+                )}
               </InfoCol>
               <CenterCol
                 size={1}
@@ -192,7 +198,7 @@ const BirdListScreen = ({ navigation }) => {
             </Grid>
           </BodyBird>
         </CardItemBird>
-      </Card>
+      </CardBird>
     );
   };
 

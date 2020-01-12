@@ -3,6 +3,7 @@ import Constants from './constants';
 export default {
   birdsData: [
     {
+      globalId: 1,
       id: '1-2019',
       type: 'Canario',
       notes: 'Alas amarillas, ojos negros.',
@@ -12,6 +13,7 @@ export default {
       motherId: undefined,
     },
     {
+      globalId: 1,
       id: '2-2019',
       type: 'Canario',
       notes: 'Alas verdes, ojos negros.',
@@ -21,6 +23,7 @@ export default {
       motherId: undefined,
     },
     {
+      globalId: 1,
       id: '3-2019',
       type: 'Gorrión',
       gender: 'Hembra',
@@ -29,6 +32,7 @@ export default {
       motherId: undefined,
     },
     {
+      globalId: 1,
       id: '4-2019',
       type: 'Canario',
       notes: 'Alas amarillas, ojos negros.',
@@ -38,6 +42,7 @@ export default {
       motherId: undefined,
     },
     {
+      globalId: 1,
       id: '5-2019',
       type: 'Canario',
       notes: 'Alas amarillas, ojos negros.',
@@ -47,6 +52,7 @@ export default {
       motherId: undefined,
     },
     {
+      globalId: 1,
       id: '6-2019',
       type: 'Canario',
       notes: 'Alas amarillas, ojos negros.',
@@ -56,6 +62,7 @@ export default {
       motherId: undefined,
     },
     {
+      globalId: 1,
       id: '7-2019',
       type: 'Verdin',
       notes: 'Alas amarillas, ojos negros.',
@@ -65,6 +72,7 @@ export default {
       motherId: undefined,
     },
     {
+      globalId: 1,
       id: '8-2019',
       type: 'Canario',
       notes: 'Alas amarillas, ojos marrones.',

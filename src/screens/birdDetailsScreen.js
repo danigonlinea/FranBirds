@@ -21,7 +21,7 @@ import { Image, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import styled, { css } from 'styled-components';
 import { Back, HeaderDetailsRight, NavStyle, BirdPhotoDialog } from '../components';
-import { Formik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
@@ -157,10 +157,7 @@ const BirdDetails = ({ navigation }) => {
 
   const { globalId, id, type, notes, gender, photo } = birdData;
 
-  console.log(birdData);
   const submitBird = birdData => {
-    console.log(birdData);
-
     if (globalId) {
       updateBird(
         birdData,
@@ -184,217 +181,229 @@ const BirdDetails = ({ navigation }) => {
   };
 
   return (
-    <DetailsContainer>
-      <Formik
-        initialValues={birdFormValues(birdData)}
-        validationSchema={birdValidationSchema()}
-        onSubmit={submitBird}>
-        {({ handleChange, handleBlur, handleSubmit, touched, values, errors, setFieldValue }) => (
-          <>
-            <Content style={{ flex: 1 }}>
-              <FormContainer>
-                <KeyboardAvoidingView keyboardVerticalOffset={180} behavior="height" enabled>
-                  <ScrollView>
-                    <GenderSwitch>
-                      <GenderButton
-                        first
-                        active={gender === 'Macho'}
-                        onPress={() =>
-                          setFieldValue('gender', 'Macho') &&
-                          setBirdData({ ...birdData, gender: 'Macho' })
-                        }>
-                        <GenderText first active={gender === 'Macho'}>
-                          Macho
-                        </GenderText>
-                      </GenderButton>
-                      <GenderButton
-                        last
-                        active={gender === 'Hembra'}
-                        onPress={() =>
-                          setFieldValue('gender', 'Hembra') &&
-                          setBirdData({ ...birdData, gender: 'Hembra' })
-                        }>
-                        <GenderText last active={gender === 'Hembra'}>
-                          Hembra
-                        </GenderText>
-                      </GenderButton>
-                    </GenderSwitch>
-                    <VerticalSpace></VerticalSpace>
-                    <Card>
-                      <CardItem>
-                        <Grid>
-                          <Row>
-                            <Col>
-                              <FormItem stackedLabel>
-                                <Label>Identificador</Label>
-                                <Input
-                                  onChangeText={handleChange('id')}
-                                  onBlur={handleBlur('id')}
-                                  value={values.id}
-                                />
-                              </FormItem>
-                            </Col>
-                            <Col>
-                              <FormItem stackedLabel>
-                                <Label>Tipo</Label>
-                                <Input
-                                  onChangeText={handleChange('type')}
-                                  onBlur={handleBlur('type')}
-                                  value={values.type}
-                                />
-                              </FormItem>
-                            </Col>
-                          </Row>
-                          {errors && errors.id && (
-                            <Row>
-                              <Col>
-                                <ErrorContainer>
-                                  <TextError>{errors.id}</TextError>
-                                </ErrorContainer>
-                              </Col>
-                            </Row>
-                          )}
-                          <FormItem stackedLabel>
-                            <Label>Padres</Label>
-                            <Row>
-                              <Col style={{ marginRight: 6 }}>
-                                {fatherId ? (
-                                  <>
-                                    <Grid>
-                                      <Col size={50}>
-                                        <SelectBirdBtn
-                                          bordered
-                                          rounded
-                                          active
-                                          father
-                                          onPress={() =>
-                                            navigation.push(NavKeys.birdDetails, {
-                                              bird: { id: fatherId },
-                                            })
-                                          }>
-                                          <SelectBirdText father>{fatherId}</SelectBirdText>
-                                        </SelectBirdBtn>
-                                      </Col>
-                                      <Col size={30}>
-                                        <SelectBirdBtn
-                                          transparent
-                                          active
-                                          father
-                                          onPress={() => assignFather(undefined)}>
-                                          <SelectBirdIcon
-                                            type="MaterialIcons"
-                                            name="close"
-                                            father
-                                          />
-                                        </SelectBirdBtn>
-                                      </Col>
-                                    </Grid>
-                                  </>
-                                ) : (
-                                  <SelectBirdBtn
-                                    bordered
-                                    iconLeft
-                                    rounded
-                                    active
-                                    father
-                                    onPress={() =>
-                                      navigation.navigate(NavKeys.birdSelectParent, {
-                                        currentBird: birdData,
-                                        genderToSelect: 'Padre',
-                                        assignParent: fatherId => assignFather(fatherId),
-                                      })
-                                    }>
-                                    <SelectBirdIcon type="MaterialIcons" name="add" father />
-                                    <SelectBirdText father>Añadir</SelectBirdText>
-                                  </SelectBirdBtn>
-                                )}
-                              </Col>
-                              <Col style={{ marginLeft: 6 }}>
-                                {motherId ? (
-                                  <>
-                                    <Grid>
-                                      <Col size={50}>
-                                        <SelectBirdBtn
-                                          bordered
-                                          rounded
-                                          active
-                                          mother
-                                          onPress={() => {
-                                            navigation.push(NavKeys.birdDetails, {
-                                              bird: { id: motherId },
-                                            });
-                                          }}>
-                                          <SelectBirdText mother>{motherId}</SelectBirdText>
-                                        </SelectBirdBtn>
-                                      </Col>
-                                      <Col size={30}>
-                                        <SelectBirdBtn
-                                          transparent
-                                          active
-                                          mother
-                                          onPress={() => assignMother(undefined)}>
-                                          <SelectBirdIcon
-                                            type="MaterialIcons"
-                                            name="close"
-                                            mother
-                                          />
-                                        </SelectBirdBtn>
-                                      </Col>
-                                    </Grid>
-                                  </>
-                                ) : (
-                                  <SelectBirdBtn
-                                    bordered
-                                    iconLeft
-                                    rounded
-                                    active
-                                    mother
-                                    onPress={() =>
-                                      navigation.navigate(NavKeys.birdSelectParent, {
-                                        currentBird: birdData,
-                                        genderToSelect: 'Madre',
-                                        assignParent: motherId => assignMother(motherId),
-                                      })
-                                    }>
-                                    <SelectBirdIcon type="MaterialIcons" name="add" mother />
-                                    <SelectBirdText mother>Añadir</SelectBirdText>
-                                  </SelectBirdBtn>
-                                )}
-                              </Col>
-                            </Row>
-                          </FormItem>
-                          <Row>
-                            <FormItem style={{ flex: 1 }} stackedLabel>
-                              <Label>Notas</Label>
-                              <NotasField
-                                rowSpan={3}
-                                onChangeText={handleChange('notes')}
-                                onBlur={handleBlur('notes')}
-                                value={values.notes}
+    <KeyboardAvoidingView
+      style={{
+        paddingBottom: 0,
+        flex: 1,
+        justifyContent: 'center',
+      }}
+      keyboardVerticalOffset={72}
+      behavior="height"
+      enabled>
+      <DetailsContainer>
+        <Formik
+          initialValues={birdFormValues(birdData)}
+          validationSchema={birdValidationSchema()}
+          onSubmit={submitBird}>
+          {({ handleChange, handleBlur, handleSubmit, touched, values, errors, setFieldValue }) => (
+            <>
+              <Content style={{ flex: 1 }}>
+                <FormContainer>
+                  <GenderSwitch>
+                    <GenderButton
+                      first
+                      active={gender === 'Macho'}
+                      onPress={() =>
+                        setFieldValue('gender', 'Macho') &&
+                        setBirdData({ ...birdData, gender: 'Macho' })
+                      }>
+                      <GenderText first active={gender === 'Macho'}>
+                        Macho
+                      </GenderText>
+                    </GenderButton>
+                    <GenderButton
+                      last
+                      active={gender === 'Hembra'}
+                      onPress={() =>
+                        setFieldValue('gender', 'Hembra') &&
+                        setBirdData({ ...birdData, gender: 'Hembra' })
+                      }>
+                      <GenderText last active={gender === 'Hembra'}>
+                        Hembra
+                      </GenderText>
+                    </GenderButton>
+                  </GenderSwitch>
+                  <VerticalSpace></VerticalSpace>
+                  <Card>
+                    <CardItem>
+                      <Grid>
+                        <Row>
+                          <Col>
+                            <FormItem stackedLabel>
+                              <Label>Identificador</Label>
+                              <Input
+                                onChangeText={handleChange('id')}
+                                onBlur={handleBlur('id')}
+                                value={values.id}
+                                returnKeyType="done"
                               />
                             </FormItem>
+                          </Col>
+                          <Col>
+                            <FormItem stackedLabel>
+                              <Label>Tipo</Label>
+                              <Input
+                                onChangeText={handleChange('type')}
+                                onBlur={handleBlur('type')}
+                                value={values.type}
+                                returnKeyType="done"
+                              />
+                            </FormItem>
+                          </Col>
+                        </Row>
+                        {errors && errors.id && (
+                          <Row>
+                            <Col>
+                              <ErrorContainer>
+                                <TextError>{errors.id}</TextError>
+                              </ErrorContainer>
+                            </Col>
                           </Row>
-                        </Grid>
-                      </CardItem>
-                    </Card>
-                  </ScrollView>
-                </KeyboardAvoidingView>
-              </FormContainer>
-            </Content>
-            <View>
-              <FabSave active containerStyle={{}} position="bottomRight" onPress={handleSubmit}>
-                <FabIcon name="ios-save" />
-              </FabSave>
-            </View>
-          </>
-        )}
-      </Formik>
-    </DetailsContainer>
+                        )}
+                        <FormItem stackedLabel>
+                          <Label>Padres</Label>
+                          <Row>
+                            <Col style={{ marginRight: 6 }}>
+                              {fatherId ? (
+                                <>
+                                  <Grid>
+                                    <Col size={50}>
+                                      <SelectBirdBtn
+                                        bordered
+                                        rounded
+                                        active
+                                        father
+                                        onPress={() =>
+                                          navigation.push(NavKeys.birdDetails, {
+                                            bird: { id: fatherId },
+                                          })
+                                        }>
+                                        <SelectBirdText father>{fatherId}</SelectBirdText>
+                                      </SelectBirdBtn>
+                                    </Col>
+                                    <Col size={30}>
+                                      <SelectBirdBtn
+                                        transparent
+                                        active
+                                        father
+                                        onPress={() =>
+                                          setFieldValue('fatherId', null) && assignFather(undefined)
+                                        }>
+                                        <SelectBirdIcon type="MaterialIcons" name="close" father />
+                                      </SelectBirdBtn>
+                                    </Col>
+                                  </Grid>
+                                </>
+                              ) : (
+                                <SelectBirdBtn
+                                  bordered
+                                  iconLeft
+                                  rounded
+                                  active
+                                  father
+                                  onPress={() =>
+                                    navigation.navigate(NavKeys.birdSelectParent, {
+                                      currentBird: birdData,
+                                      genderToSelect: 'Padre',
+                                      assignParent: (globalId, fatherId) =>
+                                        setFieldValue('fatherId', globalId) &&
+                                        assignFather(fatherId),
+                                    })
+                                  }>
+                                  <SelectBirdIcon type="MaterialIcons" name="add" father />
+                                  <SelectBirdText father>Añadir</SelectBirdText>
+                                </SelectBirdBtn>
+                              )}
+                            </Col>
+                            <Col style={{ marginLeft: 6 }}>
+                              {motherId ? (
+                                <>
+                                  <Grid>
+                                    <Col size={50}>
+                                      <SelectBirdBtn
+                                        bordered
+                                        rounded
+                                        active
+                                        mother
+                                        onPress={() => {
+                                          navigation.push(NavKeys.birdDetails, {
+                                            bird: { id: motherId },
+                                          });
+                                        }}>
+                                        <SelectBirdText mother>{motherId}</SelectBirdText>
+                                      </SelectBirdBtn>
+                                    </Col>
+                                    <Col size={30}>
+                                      <SelectBirdBtn
+                                        transparent
+                                        active
+                                        mother
+                                        onPress={() =>
+                                          setFieldValue('motherId', null) && assignMother(undefined)
+                                        }>
+                                        <SelectBirdIcon type="MaterialIcons" name="close" mother />
+                                      </SelectBirdBtn>
+                                    </Col>
+                                  </Grid>
+                                </>
+                              ) : (
+                                <SelectBirdBtn
+                                  bordered
+                                  iconLeft
+                                  rounded
+                                  active
+                                  mother
+                                  onPress={() =>
+                                    navigation.navigate(NavKeys.birdSelectParent, {
+                                      currentBird: birdData,
+                                      genderToSelect: 'Madre',
+                                      assignParent: (globalId, motherId) =>
+                                        setFieldValue('motherId', globalId) &&
+                                        assignMother(motherId),
+                                    })
+                                  }>
+                                  <SelectBirdIcon type="MaterialIcons" name="add" mother />
+                                  <SelectBirdText mother>Añadir</SelectBirdText>
+                                </SelectBirdBtn>
+                              )}
+                            </Col>
+                          </Row>
+                        </FormItem>
+                        <Row>
+                          <FormItem style={{ flex: 1 }} stackedLabel>
+                            <Label>Notas</Label>
+                            <NotasField
+                              rowSpan={3}
+                              multiline={true}
+                              onChangeText={handleChange('notes')}
+                              onBlur={handleBlur('notes')}
+                              value={values.notes}
+                            />
+                          </FormItem>
+                        </Row>
+                      </Grid>
+                    </CardItem>
+                  </Card>
+                </FormContainer>
+              </Content>
+              <View>
+                <FabSave active containerStyle={{}} position="bottomRight" onPress={handleSubmit}>
+                  <FabIcon name="ios-save" />
+                </FabSave>
+              </View>
+            </>
+          )}
+        </Formik>
+      </DetailsContainer>
+    </KeyboardAvoidingView>
   );
 };
 
 BirdDetails.navigationOptions = ({ navigation }) => {
   const { photo = Constants.defaultAvatar } = navigation.getParam('bird');
+
+  //const saveBird = navigation.getParam('saveBird');
+
   return {
     ...NavStyle,
     headerLeft: <Back></Back>,

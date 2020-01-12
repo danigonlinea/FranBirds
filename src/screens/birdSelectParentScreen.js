@@ -103,7 +103,7 @@ const BirdSelectParent = ({ navigation }) => {
     }
   }, [textToSearch]);
 
-  const assigningParent = birdId => {
+  const assigningParent = (globalId, birdId) => {
     Alert.alert(
       `Asignar ${genderToSelect}`,
       `¿Quieres asignar este pájaro (${birdId}) como ${genderToSelect}?`,
@@ -116,7 +116,7 @@ const BirdSelectParent = ({ navigation }) => {
         {
           text: 'Si',
           onPress: () => {
-            assignParent(birdId);
+            assignParent(globalId, birdId);
             navigation.goBack(null);
           },
         },
@@ -140,12 +140,12 @@ const BirdSelectParent = ({ navigation }) => {
                 />
               </CenterCol>
 
-              <InfoCol size={6} onPress={() => assigningParent(bird.id)}>
+              <InfoCol size={6} onPress={() => assigningParent(bird.globalId, bird.id)}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
                 {bird.type && <TextBird>{bird.type}</TextBird>}
                 {bird.notes && <TextBird note>{bird.notes}</TextBird>}
               </InfoCol>
-              <CenterCol size={1} onPress={() => assigningParent(bird.id)}>
+              <CenterCol size={1} onPress={() => assigningParent(bird.globalId, bird.id)}>
                 <Icon
                   type="MaterialIcons"
                   name="chevron-right"

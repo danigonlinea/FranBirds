@@ -12,14 +12,12 @@ const getDatabase = () => {
 const query = (querySQL, argsArray, onSuccess, onError) => {
   const db = getDatabase();
 
-  console.log(argsArray);
   db.transaction(
     tx => {
       tx.executeSql(
         querySQL,
         argsArray,
         (_, { rows, rowsAffected, insertId }) => {
-          console.log('query done');
           return (
             onSuccess instanceof Function &&
             onSuccess({
