@@ -164,10 +164,9 @@ const BirdDetails = ({ navigation }) => {
     if (globalId) {
       updateBird(
         birdData,
-        ({ rawRows }) => {
+        () => {
           navigation.goBack();
           navigation.getParam('refreshBirdList')();
-          console.log('Bird Updated: ', rawRows);
         },
         (ts, error) => console.log('Error', error)
       );
@@ -190,7 +189,7 @@ const BirdDetails = ({ navigation }) => {
         initialValues={birdFormValues(birdData)}
         validationSchema={birdValidationSchema()}
         onSubmit={submitBird}>
-        {({ handleChange, handleBlur, handleSubmit, touched, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, touched, values, errors, setFieldValue }) => (
           <>
             <Content style={{ flex: 1 }}>
               <FormContainer>
@@ -200,7 +199,10 @@ const BirdDetails = ({ navigation }) => {
                       <GenderButton
                         first
                         active={gender === 'Macho'}
-                        onPress={() => setBirdData({ ...birdData, gender: 'Macho' })}>
+                        onPress={() =>
+                          setFieldValue('gender', 'Macho') &&
+                          setBirdData({ ...birdData, gender: 'Macho' })
+                        }>
                         <GenderText first active={gender === 'Macho'}>
                           Macho
                         </GenderText>
@@ -208,7 +210,10 @@ const BirdDetails = ({ navigation }) => {
                       <GenderButton
                         last
                         active={gender === 'Hembra'}
-                        onPress={() => setBirdData({ ...birdData, gender: 'Hembra' })}>
+                        onPress={() =>
+                          setFieldValue('gender', 'Hembra') &&
+                          setBirdData({ ...birdData, gender: 'Hembra' })
+                        }>
                         <GenderText last active={gender === 'Hembra'}>
                           Hembra
                         </GenderText>
