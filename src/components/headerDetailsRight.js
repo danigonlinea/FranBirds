@@ -5,6 +5,7 @@ import { withNavigation } from 'react-navigation';
 import { Colors } from '../utils';
 import styled, { css } from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { deleteBird } from '../db';
 
 const HorizontalContainer = styled(View)`
   display: flex;
@@ -52,6 +53,7 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
     return null;
   }
 
+  console.log('id global, ', navigation.getParam('bird').globalId);
   return (
     <HorizontalContainer>
       <HeaderMaterialBtn>
@@ -81,7 +83,19 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
                 onPress: () => console.log('Cancel Pressed'),
                 style: 'cancel',
               },
-              { text: 'Si', onPress: () => console.log('Eliminar pajaro') },
+              {
+                text: 'Si',
+                onPress: () => {
+                  deleteBird(
+                    navigation.getParam('bird') && navigation.getParam('bird').globalId,
+                    () => {
+                      navigation.goBack();
+                      navigation.getParam('refreshBirdList')();
+                    },
+                    (ts, error) => console.log('Error Deleting', error)
+                  );
+                },
+              },
             ],
             { cancelable: false }
           )

@@ -3,27 +3,25 @@ import {
   Body,
   Card,
   CardItem,
+  Col,
   Container,
-  Content,
+  Fab,
+  Grid,
   Icon,
   Text,
   Thumbnail,
   View,
-  Grid,
-  Col,
-  Fab,
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { NavStyle, BirdPhotoDialog, Filter, SearchAction, SearchBar } from '../components';
-import { Colors, Mock, Strings, Constants } from '../utils';
-import { withNavigation } from 'react-navigation';
-import { NavKeys } from '.';
 import { FlatList } from 'react-native';
-import GlobalContext, { useGlobalCtx } from '../context/globalContext';
+import { withNavigation } from 'react-navigation';
+import styled, { css } from 'styled-components';
+import { NavKeys } from '.';
+import { BirdPhotoDialog, Filter, NavStyle, SearchAction, SearchBar } from '../components';
+import { useGlobalCtx } from '../context/globalContext';
+import { getAllBirds } from '../db';
+import { Colors, Strings } from '../utils';
 import strings from '../utils/strings';
-import { openDatabase } from 'expo-sqlite';
-import { Info, getAllBirds } from '../db';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -69,7 +67,10 @@ const BirdListScreen = ({ navigation }) => {
   const { dataModal, setDataModal, filterSelected, textToSearch } = useGlobalCtx();
 
   const getBirdListRefreshed = () => {
-    getAllBirds(({ result: allBirds }) => setAllBirds(allBirds));
+    getAllBirds(({ result: allBirds }) => {
+      setAllBirds(allBirds);
+      setBirdsList(allBirds);
+    });
   };
 
   useEffect(() => {
@@ -175,12 +176,10 @@ const BirdListScreen = ({ navigation }) => {
                   });
                 }}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
-                {bird.type && <TextBird>{bird.type}</TextBird>}
-                {bird.notes && (
-                  <TextBird ellipsizeMode="tail" note numberOfLines={1}>
-                    {bird.notes}
-                  </TextBird>
-                )}
+                <TextBird>{bird.type}</TextBird>
+                <TextBird ellipsizeMode="tail" note numberOfLines={1}>
+                  {bird.notes}
+                </TextBird>
               </InfoCol>
               <CenterCol
                 size={1}
@@ -221,7 +220,6 @@ const BirdListScreen = ({ navigation }) => {
           </Container>
         }
       />
-
       <View>
         <FabPlus
           active
@@ -242,7 +240,7 @@ const BirdListScreen = ({ navigation }) => {
 
 BirdListScreen.navigationOptions = {
   ...NavStyle,
-  headerLeft: undefined,
+  headerLeft: null,
   headerTitle: <Filter></Filter>,
   headerRight: <SearchAction></SearchAction>,
 };

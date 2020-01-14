@@ -129,14 +129,14 @@ const birdFormValues = bird => {
   return bird.globalId
     ? { ...bird }
     : {
-        globalId: undefined,
-        id: undefined,
-        type: undefined,
-        notes: undefined,
+        globalId: null,
+        id: null,
+        type: null,
+        notes: null,
         gender: 'Macho',
         photo: Constants.defaultAvatar,
-        fatherId: undefined,
-        motherId: undefined,
+        fatherId: null,
+        motherId: null,
       };
 };
 
@@ -144,8 +144,6 @@ const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState(navigation.getParam('bird'));
   const [fatherId, setFather] = useState(birdData.fatherId || false);
   const [motherId, setMother] = useState(birdData.motherId || false);
-
-  const { dataModal, setDataModal } = useGlobalCtx();
 
   const assignFather = fatherId => {
     setFather(fatherId);
@@ -270,7 +268,7 @@ const BirdDetails = ({ navigation }) => {
                                     <Col size={50}>
                                       <SelectBirdBtn
                                         bordered
-                                        rounded
+                                        unded
                                         active
                                         father
                                         onPress={() =>
@@ -287,7 +285,7 @@ const BirdDetails = ({ navigation }) => {
                                         active
                                         father
                                         onPress={() =>
-                                          setFieldValue('fatherId', null) && assignFather(undefined)
+                                          setFieldValue('fatherId', null) && assignFather(null)
                                         }>
                                         <SelectBirdIcon type="MaterialIcons" name="close" father />
                                       </SelectBirdBtn>
@@ -339,7 +337,7 @@ const BirdDetails = ({ navigation }) => {
                                         active
                                         mother
                                         onPress={() =>
-                                          setFieldValue('motherId', null) && assignMother(undefined)
+                                          setFieldValue('motherId', null) && assignMother(null)
                                         }>
                                         <SelectBirdIcon type="MaterialIcons" name="close" mother />
                                       </SelectBirdBtn>
@@ -400,8 +398,7 @@ const BirdDetails = ({ navigation }) => {
 };
 
 BirdDetails.navigationOptions = ({ navigation }) => {
-  const { photo = Constants.defaultAvatar } = navigation.getParam('bird');
-
+  const { photo = Constants.defaultAvatar, globalId } = navigation.getParam('bird');
   //const saveBird = navigation.getParam('saveBird');
 
   return {
