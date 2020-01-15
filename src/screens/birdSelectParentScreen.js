@@ -142,8 +142,10 @@ const BirdSelectParent = ({ navigation }) => {
 
               <InfoCol size={6} onPress={() => assigningParent(bird.globalId, bird.id)}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
-                {bird.type && <TextBird>{bird.type}</TextBird>}
-                {bird.notes && <TextBird note>{bird.notes}</TextBird>}
+                <TextBird>{bird.type}</TextBird>
+                <TextBird ellipsizeMode="tail" note numberOfLines={1}>
+                  {bird.notes}
+                </TextBird>
               </InfoCol>
               <CenterCol size={1} onPress={() => assigningParent(bird.globalId, bird.id)}>
                 <Icon
@@ -158,6 +160,10 @@ const BirdSelectParent = ({ navigation }) => {
     );
   };
 
+  console.log(currentBird);
+
+  const { photo, id, type, notes } = currentBird;
+
   return (
     <Container>
       <CurrentBirdContainer>
@@ -165,15 +171,17 @@ const BirdSelectParent = ({ navigation }) => {
           <CenterCol size={3}>
             <Thumbnail
               source={{
-                uri: currentBird.photo,
+                uri: photo,
               }}
             />
           </CenterCol>
 
           <InfoCol size={6}>
-            <TextBird fontSize={16}>{currentBird.id}</TextBird>
-            {currentBird.type && <TextBird>{currentBird.type}</TextBird>}
-            {currentBird.notes && <TextBird note>{currentBird.notes}</TextBird>}
+            <TextBird fontSize={16}>{id}</TextBird>
+            <TextBird>{type}</TextBird>
+            <TextBird ellipsizeMode="tail" note numberOfLines={1}>
+              {notes}
+            </TextBird>
           </InfoCol>
         </Grid>
       </CurrentBirdContainer>

@@ -22,7 +22,6 @@ import { useGlobalCtx } from '../context/globalContext';
 import { getAllBirds } from '../db';
 import { Colors, Strings } from '../utils';
 import strings from '../utils/strings';
-import colors from '../utils/colors';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -30,8 +29,8 @@ const LineBirdType = styled(View)`
   background: ${({ color }) => color};
 `;
 const TextBird = styled(Text)`
-  ${({ colors, fontSize }) => css`
-    color: ${colors ? colors : Colors.textPrimary};
+  ${({ color, fontSize }) => css`
+    color: ${color ? color : Colors.textPrimary};
     font-size: ${fontSize ? fontSize : 14}px;
   `}
 `;
@@ -114,43 +113,23 @@ const BirdListScreen = ({ navigation }) => {
     if (!textToSearch) {
       filterChange(filterSelected);
     } else {
-      switch (filterSelected) {
-        case strings.filter.male:
-          setBirdsList(
-            allBirds.filter(
-              ({ gender, photo, motherId, fatherId, ...bird }) =>
-                gender === 'Macho' && isTextSearchFound(bird)
-            )
-          );
-          break;
-
-        case strings.filter.female:
-          setBirdsList(
-            allBirds.filter(
-              ({ gender, photo, motherId, fatherId, ...bird }) =>
-                gender === 'Hembra' && isTextSearchFound(bird)
-            )
-          );
-          break;
-        default:
-          setBirdsList(
-            allBirds.filter(({ gender, motherId, fatherId, ...bird }) => {
-              return isTextSearchFound(bird);
-            })
-          );
-          break;
-      }
+      setBirdsList(
+        allBirds.filter(
+          ({ gender, photo, motherId, fatherId, ...bird }) =>
+            gender === filterSelected && isTextSearchFound(bird)
+        )
+      );
     }
   }, [textToSearch]);
 
   const getGenderColorSelected = gender => {
     if (gender === 'Macho') {
-      return colors.male;
+      return Colors.male;
     } else if (gender === 'Hembra') {
-      return colors.female;
+      return Colors.female;
     }
 
-    return colors.egg;
+    return Colors.egg;
   };
 
   const _renderItem = ({ item: bird }) => {
