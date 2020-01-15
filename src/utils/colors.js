@@ -11,6 +11,7 @@ export default {
   tint: '#FFF9C4',
   textPrimary: black,
   textSecundary: white,
+  egg: '#795548',
   male: '#303F9F',
   female: '#C2185B',
   defaultIcon: grey,

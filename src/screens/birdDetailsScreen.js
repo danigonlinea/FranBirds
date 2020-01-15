@@ -27,6 +27,7 @@ import * as Yup from 'yup';
 import { NavKeys } from '.';
 import { useGlobalCtx } from '../context/globalContext';
 import { insertBird, updateBird } from '../db';
+import colors from '../utils/colors';
 
 const DetailsContainer = styled(Container)`
   margin-top: 140px;
@@ -43,7 +44,7 @@ const FabIcon = styled(Icon)`
 
 const FormContainer = styled(View)`
   flex: 1;
-  padding: 24px;
+  padding: 22px;
 `;
 
 const FormItem = styled(Item)`
@@ -51,23 +52,17 @@ const FormItem = styled(Item)`
 `;
 
 const GenderSwitch = styled(Segment)``;
-// border-color: ${props.active ? (props.first ? Colors.male : Colors.female) : Colors.female};
+
 const GenderButton = styled(Button)(
-  props => css`
-    border-color: ${props.active
-      ? props.first
-        ? Colors.male
-        : Colors.female
-      : props.first
-      ? Colors.female
-      : Colors.male};
-    background-color: ${props.active ? (props.first ? Colors.male : Colors.female) : Colors.white};
+  ({ active, color, genderColorSelected }) => css`
+    border-color: ${active ? color : genderColorSelected};
+    background-color: ${active ? color : Colors.white};
   `
 );
 
 const GenderText = styled(Text)(
-  props => css`
-    color: ${props.active ? Colors.white : props.first ? Colors.female : Colors.male};
+  ({ active, genderColorSelected }) => css`
+    color: ${active ? Colors.white : genderColorSelected};
   `
 );
 
@@ -178,6 +173,16 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
+  const getGenderColorSelected = gender => {
+    if (gender === 'Macho') {
+      return colors.male;
+    } else if (gender === 'Hembra') {
+      return colors.female;
+    }
+
+    return colors.egg;
+  };
+
   return (
     <KeyboardAvoidingView
       style={{
@@ -200,23 +205,48 @@ const BirdDetails = ({ navigation }) => {
                   <GenderSwitch>
                     <GenderButton
                       first
+                      color={colors.egg}
+                      genderColorSelected={getGenderColorSelected(gender)}
+                      active={gender === 'Huevo'}
+                      onPress={() =>
+                        setFieldValue('gender', 'Huevo') &&
+                        setBirdData({ ...birdData, gender: 'Huevo' })
+                      }>
+                      <GenderText
+                        color={colors.egg}
+                        genderColorSelected={getGenderColorSelected(gender)}
+                        active={gender === 'Huevo'}>
+                        Huevo
+                      </GenderText>
+                    </GenderButton>
+                    <GenderButton
+                      color={colors.male}
+                      genderColorSelected={getGenderColorSelected(gender)}
                       active={gender === 'Macho'}
                       onPress={() =>
                         setFieldValue('gender', 'Macho') &&
                         setBirdData({ ...birdData, gender: 'Macho' })
                       }>
-                      <GenderText first active={gender === 'Macho'}>
+                      <GenderText
+                        color={colors.male}
+                        genderColorSelected={getGenderColorSelected(gender)}
+                        active={gender === 'Macho'}>
                         Macho
                       </GenderText>
                     </GenderButton>
                     <GenderButton
                       last
+                      color={colors.female}
+                      genderColorSelected={getGenderColorSelected(gender)}
                       active={gender === 'Hembra'}
                       onPress={() =>
                         setFieldValue('gender', 'Hembra') &&
                         setBirdData({ ...birdData, gender: 'Hembra' })
                       }>
-                      <GenderText last active={gender === 'Hembra'}>
+                      <GenderText
+                        color={colors.female}
+                        genderColorSelected={getGenderColorSelected(gender)}
+                        active={gender === 'Hembra'}>
                         Hembra
                       </GenderText>
                     </GenderButton>

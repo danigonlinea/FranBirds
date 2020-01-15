@@ -53,7 +53,6 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
     return null;
   }
 
-  console.log('id global, ', navigation.getParam('bird').globalId);
   return (
     <HorizontalContainer>
       <HeaderMaterialBtn>

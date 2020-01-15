@@ -22,11 +22,12 @@ import { useGlobalCtx } from '../context/globalContext';
 import { getAllBirds } from '../db';
 import { Colors, Strings } from '../utils';
 import strings from '../utils/strings';
+import colors from '../utils/colors';
 
 const LineBirdType = styled(View)`
   width: 10px;
   height: 100px;
-  background: ${props => (props.type === 'Macho' ? Colors.male : Colors.female)};
+  background: ${({ color }) => color};
 `;
 const TextBird = styled(Text)`
   ${({ colors, fontSize }) => css`
@@ -142,6 +143,16 @@ const BirdListScreen = ({ navigation }) => {
     }
   }, [textToSearch]);
 
+  const getGenderColorSelected = gender => {
+    if (gender === 'Macho') {
+      return colors.male;
+    } else if (gender === 'Hembra') {
+      return colors.female;
+    }
+
+    return colors.egg;
+  };
+
   const _renderItem = ({ item: bird }) => {
     return (
       <CardBird key={bird.id}>
@@ -149,7 +160,7 @@ const BirdListScreen = ({ navigation }) => {
           <BodyBird>
             <Grid>
               <Col size={0.5}>
-                <LineBirdType type={bird.gender} />
+                <LineBirdType color={getGenderColorSelected(bird.gender)} />
               </Col>
               <CenterCol
                 size={3}
