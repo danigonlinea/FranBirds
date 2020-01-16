@@ -57,7 +57,7 @@ const FabPlus = styled(Fab)`
 `;
 
 const CardBird = styled(Card)`
-  margin: 16px;
+  margin: 8px;
 `;
 
 const BirdListScreen = ({ navigation }) => {

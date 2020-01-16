@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "expo": "^36.0.2",
+    "expo-camera": "~8.0.0",
     "expo-cli": "^3.11.5",
     "expo-file-system": "~8.0.0",
     "expo-font": "~8.0.0",

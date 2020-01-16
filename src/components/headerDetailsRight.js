@@ -6,6 +6,7 @@ import { Colors } from '../utils';
 import styled, { css } from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { deleteBird } from '../db';
+import { NavKeys } from '../screens';
 
 const HorizontalContainer = styled(View)`
   display: flex;
@@ -66,7 +67,7 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
             },
             elevation: 10,
           }}
-          onPress={() => console.log('yes')}>
+          onPress={() => navigation.navigate(NavKeys.birdCamera, {})}>
           <TakePhotoIcon name="ios-camera" type="Ionicons" />
         </TakePhotoBtn>
       </HeaderMaterialBtn>
