@@ -109,10 +109,12 @@ const TextError = styled(Text)`
 
 const birdValidationSchema = () => {
   return Yup.object().shape({
-    globalId: Yup.number(),
-    id: Yup.string().required('El Identificador es necesario'),
-    type: Yup.string(),
-    notes: Yup.string(),
+    globalId: Yup.number().nullable(),
+    id: Yup.string()
+      .required('El Identificador es necesario')
+      .nullable(),
+    type: Yup.string().nullable(),
+    notes: Yup.string().nullable(),
     gender: Yup.string(),
     photo: Yup.string().nullable(),
     fatherId: Yup.string().nullable(),
