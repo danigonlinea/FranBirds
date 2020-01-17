@@ -54,6 +54,8 @@ export default function BirdCameraScreen() {
       const photo = await camera.takePictureAsync();
       camera.pausePreview();
       setTakePhoto(true);
+
+      console.log(photo);
       setPreview(photo.uri);
     }
   };
@@ -65,14 +67,13 @@ export default function BirdCameraScreen() {
     }
   };
 
-  const savePhoto = async photoUri => {
-    console.log(photoUri);
-    if (photoUri) {
-      const base64 = await FileSystem.readAsStringAsync(photoUri, {
+  const savePhoto = async () => {
+    if (camera) {
+      const base64 = await FileSystem.readAsStringAsync(preview, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      console.log(base64.substring(0, 15));
+      console.log('data:image/png;base64,' + base64.substring(0, 15));
     }
   };
 
