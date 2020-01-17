@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
+import Constants from 'expo-constants';
+import * as FileSystem from 'expo-file-system';
 import { Icon, Button } from 'native-base';
 import styled, { css } from 'styled-components';
+import { Colors } from '../utils';
 
 const CameraActions = styled(View)`
   flex-direction: row;
@@ -14,14 +17,20 @@ const CameraActions = styled(View)`
   justify-content: space-evenly;
 `;
 
+const CameraButton = styled(Button)`
+  background-color: ${({ color }) => color};
+  align-items: center;
+`;
+
 export default function BirdCameraScreen() {
   const [hasPermission, setHasPermission] = useState(null);
 
   const [camera, setCamera] = useState(null);
   const [preview, setPreview] = useState(null);
   const [ratio, setRatio] = useState('4:3');
-  const [isTakingPhoto, setTakingPhoto] = useState(false);
+  const [isTakingPhoto, setTakePhoto] = useState(false);
 
+  const DESIRED_RATIO = '16:9';
   // Request permission to access Camera
   useEffect(() => {
     (async () => {
@@ -31,18 +40,41 @@ export default function BirdCameraScreen() {
   }, []);
 
   // Set Ratio Available for Phone
-  useEffect(() => {
-    /* (async () => {
-      if (Platform.OS === 'android' && camera) {
-        console.log(camera.getSupportedRatiosAsync());
-        const ratios = await camera.getSupportedRatiosAsync();
-        const defaultRatio = ratios.find(availRatio => availRatio === DESIRED_RATIO) || '4:3';
+  const prepareRatio = async () => {
+    if (Platform.OS === 'android' && camera) {
+      const ratios = await camera.getSupportedRatiosAsync();
+      const defaultRatio = ratios.find(availRatio => availRatio === DESIRED_RATIO) || '4:3';
+      setRatio(defaultRatio);
+    }
+  };
 
-        console.log('default Ratio', defaultRatio);
-        setRatio(defaultRatio);
-      }
-    })(); */
-  }, [camera]);
+  const capturePhoto = async () => {
+    if (camera) {
+      setTakePhoto(true);
+      const photo = await camera.takePictureAsync();
+      camera.pausePreview();
+      setTakePhoto(true);
+      setPreview(photo.uri);
+    }
+  };
+
+  const discardPhoto = () => {
+    if (camera) {
+      camera.resumePreview();
+      setPreview(null);
+    }
+  };
+
+  const savePhoto = async photoUri => {
+    console.log(photoUri);
+    if (photoUri) {
+      const base64 = await FileSystem.readAsStringAsync(photoUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      console.log(base64.substring(0, 15));
+    }
+  };
 
   if ((hasPermission === null || hasPermission) === false) {
     return <Text>No access to camera</Text>;
@@ -54,16 +86,24 @@ export default function BirdCameraScreen() {
         ref={cameraRef => {
           setCamera(cameraRef);
         }}
+        ratio={ratio}
+        onCameraReady={() => prepareRatio()}
         type={Camera.Constants.Type.back}>
         <CameraActions>
-          <Button
-            style={{
-              alignItems: 'center',
-              backgroundColor: 'grey',
-            }}
-            onPress={() => {}}>
-            <Icon type="MaterialIcons" name="camera" />
-          </Button>
+          {!preview ? (
+            <CameraButton color={Colors.defaultBackground} onPress={() => capturePhoto()}>
+              <Icon type="MaterialIcons" name="camera" />
+            </CameraButton>
+          ) : (
+            <>
+              <CameraButton color={Colors.denied} onPress={() => discardPhoto()}>
+                <Icon type="MaterialIcons" name="clear" />
+              </CameraButton>
+              <CameraButton color={Colors.accept} onPress={uri => savePhoto(uri)}>
+                <Icon type="MaterialIcons" name="check" />
+              </CameraButton>
+            </>
+          )}
         </CameraActions>
       </Camera>
     </View>
