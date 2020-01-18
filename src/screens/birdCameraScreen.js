@@ -76,13 +76,40 @@ export default function BirdCameraScreen() {
     }
   };
 
+  const createDir = async dir => {
+    const newDir = await FileSystem.getInfoAsync(dir);
+
+    if (newDir.exists && newDir.isDirectory) {
+      return newDir.uri;
+    }
+
+    await FileSystem.makeDirectoryAsync(dir);
+    return newDir.uri;
+  };
+
+  const getPhotoName = previewUri => {
+    const partPhoto = previewUri.split('/');
+
+    return partPhoto[partPhoto.length - 1];
+  };
+
   const savePhoto = async () => {
     if (camera) {
-      const base64 = await FileSystem.readAsStringAsync(preview, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
+      try {
+        const dirDestiny = await createDir(FileSystem.documentDirectory + 'images');
 
-      console.log('data:image/png;base64,' + base64.substring(0, 15));
+        await FileSystem.moveAsync({
+          from: preview,
+          to: dirDestiny + `/${getPhotoName(preview)}`,
+        });
+
+        const filesArray = await FileSystem.readDirectoryAsync(
+          FileSystem.documentDirectory + 'images'
+        );
+        console.log(filesArray);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -109,7 +136,7 @@ export default function BirdCameraScreen() {
               <CameraButton color={Colors.denied} onPress={() => discardPhoto()}>
                 <Icon type="MaterialIcons" name="clear" />
               </CameraButton>
-              <CameraButton color={Colors.accept} onPress={uri => savePhoto(uri)}>
+              <CameraButton color={Colors.accept} onPress={cameraInfo => savePhoto()}>
                 <Icon type="MaterialIcons" name="check" />
               </CameraButton>
             </>

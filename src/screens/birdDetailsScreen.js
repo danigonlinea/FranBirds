@@ -28,6 +28,7 @@ import { NavKeys } from '.';
 import { useGlobalCtx } from '../context/globalContext';
 import { insertBird, updateBird } from '../db';
 import colors from '../utils/colors';
+import * as FileSystem from 'expo-file-system';
 
 const DetailsContainer = styled(Container)`
   margin-top: 140px;
@@ -136,6 +137,11 @@ const birdFormValues = bird => {
         motherId: null,
       };
 };
+
+const ImageContainer = styled(Image)`
+  height: 300px;
+  width: 200px;
+`;
 
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState(navigation.getParam('bird'));
