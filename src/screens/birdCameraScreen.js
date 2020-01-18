@@ -6,6 +6,14 @@ import * as FileSystem from 'expo-file-system';
 import { Icon, Button } from 'native-base';
 import styled, { css } from 'styled-components';
 import { Colors } from '../utils';
+import { NavStyle } from '../components';
+
+BirdCameraScreen.navigationOptions = () => {
+  return {
+    ...NavStyle,
+    header: null,
+  };
+};
 
 const CameraActions = styled(View)`
   flex-direction: row;
@@ -19,6 +27,7 @@ const CameraActions = styled(View)`
 
 const CameraButton = styled(Button)`
   background-color: ${({ color }) => color};
+  border-radius: 12px;
   align-items: center;
 `;
 
