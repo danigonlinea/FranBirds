@@ -152,7 +152,7 @@ const TakePhotoIcon = styled(Icon)`
 const TakePhotoContainer = styled(View)`
   position: relative;
   display: flex;
-  top: -40px;
+  top: -30px;
   margin-right: 24px;
 
   align-self: flex-end;
@@ -266,7 +266,19 @@ const BirdDetails = ({ navigation }) => {
                         },
                         elevation: 10,
                       }}
-                      onPress={() => navigation.navigate(NavKeys.birdCamera, {})}>
+                      onPress={() =>
+                        navigation.navigate(NavKeys.birdCamera, {
+                          changePhoto: async photoFullPath => {
+                            console.log(photoFullPath);
+
+                            setFieldValue('photo', photoFullPath);
+                            setBirdData({
+                              ...birdData,
+                              photo: photoFullPath,
+                            });
+                          },
+                        })
+                      }>
                       <TakePhotoIcon name="ios-camera" type="Ionicons" />
                     </TakePhotoBtn>
                   </TakePhotoContainer>

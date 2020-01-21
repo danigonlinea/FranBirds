@@ -90,20 +90,18 @@ const BirdCameraScreen = ({ navigation }) => {
   const savePhoto = async () => {
     if (camera) {
       try {
-        const dirDestiny = await createDir(FileSystem.documentDirectory + 'images');
+        const dirDestiny = await createDir(FileSystem.documentDirectory + 'images/');
 
-        navigation.goBack();
-        navigation.getParam('changePhoto')(
-          `${FileSystem.documentDirectory}/Camera/${getPhotoName(preview)}`
-        );
-
-        /* await FileSystem.moveAsync({
+        await FileSystem.moveAsync({
           from: preview,
-          to: dirDestiny + `/${getPhotoName(preview)}`,
+          to: dirDestiny + getPhotoName(preview),
         });
 
-        const filesArray = await FileSystem.readDirectoryAsync(
-          FileSystem.documentDirectory + 'images'
+        navigation.goBack();
+        navigation.getParam('changePhoto')(dirDestiny + getPhotoName(preview));
+
+        /*  const filesArray = await FileSystem.readDirectoryAsync(
+          FileSystem.documentDirectory + 'Camera'
         );
         console.log(filesArray); */
       } catch (error) {
