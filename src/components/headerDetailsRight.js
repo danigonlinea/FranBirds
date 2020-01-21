@@ -15,27 +15,6 @@ const HorizontalContainer = styled(View)`
   justify-content: center;
 `;
 
-const TakePhotoBtn = styled(TouchableOpacity)`
-  width: 60px;
-  height: 60px;
-  background-color: ${Colors.secondary};
-  border-radius: 50;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
-
-const HeaderMaterialBtn = styled(View)`
-  right: 20px;
-  top: 140px;
-  position: absolute;
-`;
-
-const TakePhotoIcon = styled(Icon)`
-  color: ${Colors.white};
-`;
-
 const HeaderIcon = styled(Icon)`
   font-size: 28px;
   color: ${Colors.black};
@@ -56,21 +35,6 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
 
   return (
     <HorizontalContainer>
-      <HeaderMaterialBtn>
-        <TakePhotoBtn
-          activeOpacity={1.0}
-          style={{
-            shadowColor: '#000',
-            shadowOpacity: 0.5,
-            shadowOffset: {
-              height: 4,
-            },
-            elevation: 10,
-          }}
-          onPress={() => navigation.navigate(NavKeys.birdCamera, {})}>
-          <TakePhotoIcon name="ios-camera" type="Ionicons" />
-        </TakePhotoBtn>
-      </HeaderMaterialBtn>
       <HeaderIconBtn
         transparent
         onPress={() =>

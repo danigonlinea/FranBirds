@@ -7,13 +7,7 @@ import { Icon, Button } from 'native-base';
 import styled, { css } from 'styled-components';
 import { Colors } from '../utils';
 import { NavStyle } from '../components';
-
-BirdCameraScreen.navigationOptions = () => {
-  return {
-    ...NavStyle,
-    header: null,
-  };
-};
+import { withNavigation } from 'react-navigation';
 
 const CameraActions = styled(View)`
   flex-direction: row;
@@ -31,7 +25,7 @@ const CameraButton = styled(Button)`
   align-items: center;
 `;
 
-export default function BirdCameraScreen() {
+const BirdCameraScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
 
   const [camera, setCamera] = useState(null);
@@ -98,7 +92,12 @@ export default function BirdCameraScreen() {
       try {
         const dirDestiny = await createDir(FileSystem.documentDirectory + 'images');
 
-        await FileSystem.moveAsync({
+        navigation.goBack();
+        navigation.getParam('changePhoto')(
+          `${FileSystem.documentDirectory}/Camera/${getPhotoName(preview)}`
+        );
+
+        /* await FileSystem.moveAsync({
           from: preview,
           to: dirDestiny + `/${getPhotoName(preview)}`,
         });
@@ -106,7 +105,7 @@ export default function BirdCameraScreen() {
         const filesArray = await FileSystem.readDirectoryAsync(
           FileSystem.documentDirectory + 'images'
         );
-        console.log(filesArray);
+        console.log(filesArray); */
       } catch (error) {
         console.log(error);
       }
@@ -145,4 +144,13 @@ export default function BirdCameraScreen() {
       </Camera>
     </View>
   );
-}
+};
+
+BirdCameraScreen.navigationOptions = () => {
+  return {
+    ...NavStyle,
+    header: null,
+  };
+};
+
+export default withNavigation(BirdCameraScreen);

@@ -29,10 +29,9 @@ import { useGlobalCtx } from '../context/globalContext';
 import { insertBird, updateBird } from '../db';
 import colors from '../utils/colors';
 import * as FileSystem from 'expo-file-system';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const DetailsContainer = styled(Container)`
-  margin-top: 140px;
-`;
+const DetailsContainer = styled(Container)``;
 
 const FabSave = styled(Fab)`
   background-color: ${Colors.fabSave};
@@ -138,9 +137,39 @@ const birdFormValues = bird => {
       };
 };
 
-const ImageContainer = styled(Image)`
-  height: 300px;
-  width: 200px;
+const HeaderMaterialBtn = styled(View)`
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 0 24px;
+`;
+
+const TakePhotoIcon = styled(Icon)`
+  color: ${Colors.white};
+`;
+
+const TakePhotoContainer = styled(View)`
+  position: relative;
+  display: flex;
+  top: -40px;
+  margin-right: 24px;
+
+  align-self: flex-end;
+`;
+const TakePhotoBtn = styled(TouchableOpacity)`
+  width: 60px;
+  height: 60px;
+  background-color: ${Colors.secondary};
+  border-radius: 50;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PhotoContainer = styled(View)`
+  height: 250px;
 `;
 
 const BirdDetails = ({ navigation }) => {
@@ -181,6 +210,20 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
+  /* useEffect(() => {
+    if (navigation && !navigation.getParam('changePhoto')) {
+      console.log('Adding method ----------');
+      navigation.setParams({
+        changePhoto: photoFullPath => {
+          navigation.setParam('bird', {
+            ...birdData,
+            photo: photoFullPath,
+          });
+        },
+      });
+    }
+  }, []); */
+
   const getGenderColorSelected = gender => {
     if (gender === 'Macho') {
       return colors.male;
@@ -209,6 +252,26 @@ const BirdDetails = ({ navigation }) => {
           {({ handleChange, handleBlur, handleSubmit, touched, values, errors, setFieldValue }) => (
             <>
               <Content style={{ flex: 1 }}>
+                <PhotoContainer>
+                  <Image style={{ height: 250 }} source={{ uri: photo }} />
+
+                  <TakePhotoContainer>
+                    <TakePhotoBtn
+                      activeOpacity={1.0}
+                      style={{
+                        shadowColor: '#000',
+                        shadowOpacity: 0.5,
+                        shadowOffset: {
+                          height: 4,
+                        },
+                        elevation: 10,
+                      }}
+                      onPress={() => navigation.navigate(NavKeys.birdCamera, {})}>
+                      <TakePhotoIcon name="ios-camera" type="Ionicons" />
+                    </TakePhotoBtn>
+                  </TakePhotoContainer>
+                </PhotoContainer>
+
                 <FormContainer>
                   <GenderSwitch>
                     <GenderButton
@@ -436,14 +499,16 @@ const BirdDetails = ({ navigation }) => {
 };
 
 BirdDetails.navigationOptions = ({ navigation }) => {
-  const { photo = Constants.defaultAvatar, globalId } = navigation.getParam('bird');
-  //const saveBird = navigation.getParam('saveBird');
-
   return {
     ...NavStyle,
+    headerStyle: {
+      backgroundColor: 'transparent',
+    },
+    headerTransparent: {
+      position: 'absolute',
+    },
     headerLeft: <Back></Back>,
     headerRight: <HeaderDetailsRight></HeaderDetailsRight>,
-    headerBackground: <Image style={{ height: 220 }} source={{ uri: photo }} />,
   };
 };
 
