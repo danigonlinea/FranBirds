@@ -13,7 +13,7 @@ const CameraActions = styled(View)`
   flex-direction: row;
   flex: 1;
   position: absolute;
-  bottom: 35;
+  bottom: 35px;
   left: 0;
   right: 0;
   justify-content: space-evenly;
@@ -147,7 +147,7 @@ const BirdCameraScreen = ({ navigation }) => {
 BirdCameraScreen.navigationOptions = () => {
   return {
     ...NavStyle,
-    header: null,
+    headerShown: false,
   };
 };
 

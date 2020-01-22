@@ -237,12 +237,12 @@ const BirdDetails = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{
-        paddingBottom: 0,
+        paddingBottom: 10,
         flex: 1,
         justifyContent: 'center',
       }}
-      keyboardVerticalOffset={72}
-      behavior="height"
+      keyboardVerticalOffset={0}
+      behavior="padding"
       enabled>
       <DetailsContainer>
         <Formik
