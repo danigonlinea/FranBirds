@@ -210,9 +210,9 @@ BirdSelectParent.navigationOptions = ({ navigation }) => {
 
   return {
     ...NavStyle,
-    headerLeft: undefined,
-    headerTitle: `Seleccionar ${genderToSelect}`,
-    headerRight: <SearchAction></SearchAction>,
+    headerLeft: () => null,
+    headerTitle: () => `Seleccionar ${genderToSelect}`,
+    headerRight: () => <SearchAction></SearchAction>,
   };
 };
 

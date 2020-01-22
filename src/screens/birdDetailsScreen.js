@@ -161,7 +161,7 @@ const TakePhotoBtn = styled(TouchableOpacity)`
   width: 60px;
   height: 60px;
   background-color: ${Colors.secondary};
-  border-radius: 50;
+  border-radius: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -517,8 +517,9 @@ BirdDetails.navigationOptions = ({ navigation }) => {
     headerTransparent: {
       position: 'absolute',
     },
-    headerLeft: <Back></Back>,
-    headerRight: <HeaderDetailsRight></HeaderDetailsRight>,
+    headerTitle: () => null,
+    headerLeft: () => <Back></Back>,
+    headerRight: () => <HeaderDetailsRight></HeaderDetailsRight>,
   };
 };
 

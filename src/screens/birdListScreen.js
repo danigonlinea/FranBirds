@@ -230,9 +230,9 @@ const BirdListScreen = ({ navigation }) => {
 
 BirdListScreen.navigationOptions = {
   ...NavStyle,
-  headerLeft: null,
-  headerTitle: <Filter></Filter>,
-  headerRight: <SearchAction></SearchAction>,
+  headerLeft: () => null,
+  headerTitle: () => <Filter></Filter>,
+  headerRight: () => <SearchAction></SearchAction>,
 };
 
 export default withNavigation(BirdListScreen);
