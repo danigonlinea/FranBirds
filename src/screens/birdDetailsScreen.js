@@ -249,7 +249,7 @@ const BirdDetails = ({ navigation }) => {
           initialValues={birdFormValues(birdData)}
           validationSchema={birdValidationSchema()}
           onSubmit={submitBird}>
-          {({ handleChange, handleBlur, handleSubmit, touched, values, errors, setFieldValue }) => (
+          {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
             <>
               <Content style={{ flex: 1 }}>
                 <PhotoContainer>
@@ -269,8 +269,6 @@ const BirdDetails = ({ navigation }) => {
                       onPress={() =>
                         navigation.navigate(NavKeys.birdCamera, {
                           changePhoto: async photoFullPath => {
-                            console.log(photoFullPath);
-
                             setFieldValue('photo', photoFullPath);
                             setBirdData({
                               ...birdData,

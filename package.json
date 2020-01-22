@@ -13,12 +13,12 @@
   "dependencies": {
     "expo": "^36.0.2",
     "expo-camera": "~8.0.0",
-    "expo-cli": "^3.11.5",
+    "expo-cli": "^3.11.7",
     "expo-constants": "~8.0.0",
     "expo-file-system": "~8.0.0",
     "expo-font": "~8.0.0",
     "expo-sqlite": "~8.0.0",
-    "formik": "^2.1.1",
+    "formik": "^2.1.2",
     "lodash": "^4.17.15",
     "native-base": "^2.13.8",
     "react": "16.9.0",
@@ -26,11 +26,12 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.1.tar.gz",
     "react-native-gesture-handler": "~1.5.3",
     "react-native-modal": "^11.5.3",
+    "react-native-screens": "^2.0.0-alpha.28",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.7",
     "react-navigation": "^4.0.10",
-    "react-navigation-stack": "^1.10.3",
-    "styled-components": "^4.4.1",
+    "react-navigation-stack": "^2.0.15",
+    "styled-components": "^5.0.0",
     "yup": "^0.28.0"
   },
   "devDependencies": {
@@ -40,7 +41,7 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-config-universe": "^2.1.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react": "^7.18.0",
     "prettier": "^1.19.1"
   },
   "private": true
