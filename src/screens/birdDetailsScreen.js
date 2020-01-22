@@ -237,9 +237,8 @@ const BirdDetails = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{
-        paddingBottom: 10,
+        paddingBottom: 0,
         flex: 1,
-        justifyContent: 'center',
       }}
       keyboardVerticalOffset={0}
       behavior="padding"
