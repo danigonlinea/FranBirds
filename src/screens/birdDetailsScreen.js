@@ -30,6 +30,7 @@ import { insertBird, updateBird } from '../db';
 import colors from '../utils/colors';
 import * as FileSystem from 'expo-file-system';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getDefaultAvatar } from '../utils/functions';
 
 const DetailsContainer = styled(Container)``;
 
@@ -252,7 +253,7 @@ const BirdDetails = ({ navigation }) => {
                 <PhotoContainer>
                   <Image
                     style={{ height: 250 }}
-                    source={{ uri: photo ? photo : Constants.defaultAvatar }}
+                    source={{ uri: photo ? photo : getDefaultAvatar(gender) }}
                   />
 
                   <TakePhotoContainer>

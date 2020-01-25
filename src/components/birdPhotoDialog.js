@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import NavKeys from '../screens/navKeys';
 import { withNavigation } from 'react-navigation';
 import { Colors, Constants } from '../utils';
+import { getDefaultAvatar } from '../utils/functions';
 
 const Photo = styled(Image)`
   width: 100%;
@@ -79,7 +80,7 @@ const BirdPhotoDialog = ({ navigation }) => {
         setShowModal(false);
       }}>
       <ModalBody>
-        <Photo source={{ uri: bird.photo ? bird.photo : Constants.defaultAvatar }} />
+        <Photo source={{ uri: bird.photo ? bird.photo : getDefaultAvatar(bird.gender) }} />
         <View>
           <BirdInfo>
             <Text>{bird.id}</Text>

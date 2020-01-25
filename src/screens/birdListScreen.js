@@ -22,6 +22,7 @@ import { useGlobalCtx } from '../context/globalContext';
 import { getAllBirds } from '../db';
 import { Colors, Strings, Constants } from '../utils';
 import strings from '../utils/strings';
+import { getDefaultAvatar } from '../utils/functions';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -152,7 +153,7 @@ const BirdListScreen = ({ navigation }) => {
                 <Thumbnail
                   large
                   source={{
-                    uri: bird.photo ? bird.photo : Constants.defaultAvatar,
+                    uri: bird.photo ? bird.photo : getDefaultAvatar(bird.gender),
                   }}
                 />
               </CenterCol>
