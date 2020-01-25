@@ -177,6 +177,8 @@ const BirdDetails = ({ navigation }) => {
   const [fatherId, setFather] = useState(birdData.fatherId || false);
   const [motherId, setMother] = useState(birdData.motherId || false);
 
+  const photosToDeleteFromStorage = new Set();
+
   const assignFather = fatherId => {
     setFather(fatherId);
   };
@@ -188,6 +190,16 @@ const BirdDetails = ({ navigation }) => {
   const { globalId, id, type, notes, gender, photo } = birdData;
 
   const submitBird = birdData => {
+    try {
+      photosToDeleteFromStorage.forEach(async photoToDelete => {
+        await FileSystem.deleteAsync(photoToDelete, {
+          idempotent: false,
+        });
+      });
+    } catch (e) {
+      console.log('Error: ', e);
+    }
+
     if (globalId) {
       updateBird(
         birdData,
@@ -209,20 +221,6 @@ const BirdDetails = ({ navigation }) => {
       );
     }
   };
-
-  /* useEffect(() => {
-    if (navigation && !navigation.getParam('changePhoto')) {
-      console.log('Adding method ----------');
-      navigation.setParams({
-        changePhoto: photoFullPath => {
-          navigation.setParam('bird', {
-            ...birdData,
-            photo: photoFullPath,
-          });
-        },
-      });
-    }
-  }, []); */
 
   const getGenderColorSelected = gender => {
     if (gender === 'Macho') {
@@ -272,11 +270,7 @@ const BirdDetails = ({ navigation }) => {
                         navigation.navigate(NavKeys.birdCamera, {
                           changePhoto: async photoFullPath => {
                             // Remove previous photo
-                            if (photo) {
-                              await FileSystem.deleteAsync(photo, {
-                                idempotent: false,
-                              });
-                            }
+                            photosToDeleteFromStorage.add(photo);
 
                             setFieldValue('photo', photoFullPath);
                             setBirdData({
