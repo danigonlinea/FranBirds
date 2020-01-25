@@ -131,7 +131,7 @@ const birdFormValues = bird => {
         type: null,
         notes: null,
         gender: 'Macho',
-        photo: Constants.defaultAvatar,
+        photo: null,
         fatherId: null,
         motherId: null,
       };
@@ -252,7 +252,10 @@ const BirdDetails = ({ navigation }) => {
             <>
               <Content style={{ flex: 1 }}>
                 <PhotoContainer>
-                  <Image style={{ height: 250 }} source={{ uri: photo }} />
+                  <Image
+                    style={{ height: 250 }}
+                    source={{ uri: photo ? photo : Constants.defaultAvatar }}
+                  />
 
                   <TakePhotoContainer>
                     <TakePhotoBtn
@@ -268,6 +271,13 @@ const BirdDetails = ({ navigation }) => {
                       onPress={() =>
                         navigation.navigate(NavKeys.birdCamera, {
                           changePhoto: async photoFullPath => {
+                            // Remove previous photo
+                            if (photo) {
+                              await FileSystem.deleteAsync(photo, {
+                                idempotent: false,
+                              });
+                            }
+
                             setFieldValue('photo', photoFullPath);
                             setBirdData({
                               ...birdData,

@@ -20,7 +20,7 @@ import { NavKeys } from '.';
 import { BirdPhotoDialog, Filter, NavStyle, SearchAction, SearchBar } from '../components';
 import { useGlobalCtx } from '../context/globalContext';
 import { getAllBirds } from '../db';
-import { Colors, Strings } from '../utils';
+import { Colors, Strings, Constants } from '../utils';
 import strings from '../utils/strings';
 
 const LineBirdType = styled(View)`
@@ -152,7 +152,7 @@ const BirdListScreen = ({ navigation }) => {
                 <Thumbnail
                   large
                   source={{
-                    uri: bird.photo,
+                    uri: bird.photo ? bird.photo : Constants.defaultAvatar,
                   }}
                 />
               </CenterCol>

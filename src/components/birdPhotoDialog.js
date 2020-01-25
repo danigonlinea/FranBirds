@@ -6,7 +6,7 @@ import { useGlobalCtx } from '../context/globalContext';
 import styled from 'styled-components';
 import NavKeys from '../screens/navKeys';
 import { withNavigation } from 'react-navigation';
-import { Colors } from '../utils';
+import { Colors, Constants } from '../utils';
 
 const Photo = styled(Image)`
   width: 100%;
@@ -79,7 +79,7 @@ const BirdPhotoDialog = ({ navigation }) => {
         setShowModal(false);
       }}>
       <ModalBody>
-        <Photo source={{ uri: bird.photo }} />
+        <Photo source={{ uri: bird.photo ? bird.photo : Constants.defaultAvatar }} />
         <View>
           <BirdInfo>
             <Text>{bird.id}</Text>

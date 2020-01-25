@@ -56,7 +56,7 @@ const BirdCameraScreen = ({ navigation }) => {
       setTakePhoto(true);
       const photo = await camera.takePictureAsync();
       camera.pausePreview();
-      setTakePhoto(true);
+      setTakePhoto(false);
 
       console.log(photo);
       setPreview(photo.uri);
