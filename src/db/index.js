@@ -2,6 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import info from './info';
 import database from './database';
 import sentencesSQL from './sentencesSQL';
+import strings from '../utils/strings';
 
 const nullCallback = v => console.log('Null Callback');
 
@@ -44,6 +45,14 @@ export const createDatabase = () => {
 
 export const getAllBirds = async (onSuccess, onError) => {
   query(sentencesSQL.getAllBirds, [], onSuccess, onError);
+};
+
+export const getBirds = async (gender, onSuccess, onError) => {
+  if (gender === strings.gender[0]) {
+    query(sentencesSQL.getAllBirds, [], onSuccess, onError);
+  } else {
+    query(sentencesSQL.getBirds, [gender], onSuccess, onError);
+  }
 };
 
 export const insertBird = async (args = {}, onSuccess, onError) => {

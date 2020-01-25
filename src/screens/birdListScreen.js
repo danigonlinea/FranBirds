@@ -19,7 +19,7 @@ import styled, { css } from 'styled-components';
 import { NavKeys } from '.';
 import { BirdPhotoDialog, Filter, NavStyle, SearchAction, SearchBar } from '../components';
 import { useGlobalCtx } from '../context/globalContext';
-import { getAllBirds } from '../db';
+import { getAllBirds, getBirds } from '../db';
 import { Colors, Strings, Constants } from '../utils';
 import strings from '../utils/strings';
 import { getDefaultAvatar } from '../utils/functions';
@@ -62,55 +62,27 @@ const CardBird = styled(Card)`
 `;
 
 const BirdListScreen = ({ navigation }) => {
-  const [allBirds, setAllBirds] = useState([]);
   const [birdsList, setBirdsList] = useState([]);
 
-  const { dataModal, setDataModal, filterSelected, textToSearch } = useGlobalCtx();
-
-  const getBirdListRefreshed = () => {
-    getAllBirds(({ result: allBirds }) => {
-      setAllBirds(allBirds);
-      setBirdsList(allBirds);
-    });
-  };
-
-  useEffect(() => {
-    // Load all Birds from database
-    getBirdListRefreshed();
-  }, []);
-
-  useEffect(() => {
-    if (!isEmpty(allBirds)) {
-      filterChange(filterSelected);
-    }
-  }, [allBirds, filterSelected]);
-
-  const filterChange = filterSelected => {
-    switch (filterSelected) {
-      case strings.filter.male:
-        setBirdsList(allBirds.filter(bird => bird.gender === 'Macho'));
-        break;
-
-      case strings.filter.female:
-        setBirdsList(allBirds.filter(bird => bird.gender === 'Hembra'));
-        break;
-      default:
-        setBirdsList(allBirds);
-        break;
-    }
-  };
+  const { dataModal, setDataModal, filterSelected, setFilter, textToSearch } = useGlobalCtx();
 
   // Only search on id, type and notes
-  const isTextSearchFound = bird => {
+  /* const isTextSearchFound = bird => {
     const allWordsToSearch = textToSearch.split(' ');
     return Object.values(bird).some(fieldValue => {
       return allWordsToSearch.some(singleTextToSearch => {
         return fieldValue.toLowerCase().includes(singleTextToSearch.toLowerCase());
       });
     });
-  };
+  }; */
 
   useEffect(() => {
+    getBirds(strings.gender[filterSelected], ({ result: birdsMatched }) => {
+      setBirdsList(birdsMatched);
+    });
+  }, [filterSelected]);
+
+  /* useEffect(() => {
     if (!textToSearch) {
       filterChange(filterSelected);
     } else {
@@ -121,7 +93,7 @@ const BirdListScreen = ({ navigation }) => {
         )
       );
     }
-  }, [textToSearch]);
+  }, [textToSearch]); */
 
   const getGenderColorSelected = gender => {
     if (gender === 'Macho') {

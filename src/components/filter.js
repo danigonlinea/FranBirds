@@ -26,8 +26,9 @@ const Filter = () => {
     <FilterBirds>
       <GenderFilter mode="dropdown" selectedValue={filterSelected} onValueChange={setFilter}>
         <Picker.Item label="Todos" value={0} />
-        <Picker.Item label="Machos" value={1} />
-        <Picker.Item label="Hembras" value={2} />
+        <Picker.Item label="Huevos" value={1} />
+        <Picker.Item label="Machos" value={2} />
+        <Picker.Item label="Hembras" value={3} />
       </GenderFilter>
     </FilterBirds>
   );
