@@ -5,3 +5,4 @@ export { default as HeaderDetailsRight } from './headerDetailsRight';
 export { default as Filter } from './filter';
 export { default as SearchAction } from './searchAction';
 export { default as SearchBar } from './searchBar';
+export { default as Modal } from './modal';

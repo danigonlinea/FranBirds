@@ -20,7 +20,7 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import styled, { css } from 'styled-components';
-import { Back, HeaderDetailsRight, NavStyle, BirdPhotoDialog } from '../components';
+import { Back, HeaderDetailsRight, NavStyle, BirdPhotoDialog, Modal } from '../components';
 import { Formik, useFormik } from 'formik';
 import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
@@ -173,10 +173,27 @@ const PhotoContainer = styled(View)`
   height: 250px;
 `;
 
+const ModalBody = styled(View)`
+  background-color: ${Colors.white};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+`;
+
+const Space = styled(View)`
+  height: 12px;
+`;
+
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState(navigation.getParam('bird'));
   const [fatherId, setFather] = useState(birdData.fatherId || false);
   const [motherId, setMother] = useState(birdData.motherId || false);
+  const [modal, setModal] = useState({
+    isVisible: false,
+    title: null,
+  });
 
   const photosToDeleteFromStorage = new Set();
 
@@ -242,6 +259,33 @@ const BirdDetails = ({ navigation }) => {
       keyboardVerticalOffset={0}
       behavior="padding"
       enabled>
+      <Modal
+        title={modal.title}
+        isVisible={modal.isVisible}
+        orientation="row"
+        onClose={() => {
+          setModal({
+            isVisible: false,
+            title: null,
+          });
+        }}>
+        <ModalBody>
+          <Button
+            onPress={() => {
+              // setShowModal(false);
+            }}>
+            <Text>Registrar nuevo pájaro</Text>
+          </Button>
+          <Space></Space>
+          <Button
+            transparent
+            onPress={() => {
+              // setShowModal(false);
+            }}>
+            <Text>Seleccionar un pájaro existente</Text>
+          </Button>
+        </ModalBody>
+      </Modal>
       <DetailsContainer>
         <Formik
           initialValues={birdFormValues(birdData)}
@@ -414,14 +458,19 @@ const BirdDetails = ({ navigation }) => {
                                   rounded
                                   active
                                   father
-                                  onPress={() =>
-                                    navigation.navigate(NavKeys.birdSelectParent, {
+                                  onPress={
+                                    () =>
+                                      setModal({
+                                        isVisible: true,
+                                        title: 'Asignar Padre',
+                                      })
+                                    /*  navigation.navigate(NavKeys.birdSelectParent, {
                                       currentBird: birdData,
                                       genderToSelect: 'Padre',
                                       assignParent: (globalId, fatherId) =>
                                         setFieldValue('fatherId', globalId) &&
                                         assignFather(fatherId),
-                                    })
+                                    }) */
                                   }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" father />
                                   <SelectBirdText father>Añadir</SelectBirdText>
@@ -466,14 +515,19 @@ const BirdDetails = ({ navigation }) => {
                                   rounded
                                   active
                                   mother
-                                  onPress={() =>
-                                    navigation.navigate(NavKeys.birdSelectParent, {
+                                  onPress={
+                                    () =>
+                                      setModal({
+                                        isVisible: true,
+                                        title: 'Asignar Madre',
+                                      })
+                                    /* navigation.navigate(NavKeys.birdSelectParent, {
                                       currentBird: birdData,
                                       genderToSelect: 'Madre',
                                       assignParent: (globalId, motherId) =>
                                         setFieldValue('motherId', globalId) &&
                                         assignMother(motherId),
-                                    })
+                                    }) */
                                   }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" mother />
                                   <SelectBirdText mother>Añadir</SelectBirdText>
