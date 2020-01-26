@@ -260,7 +260,7 @@ const BirdDetails = ({ navigation }) => {
       behavior="padding"
       enabled>
       <Modal
-        title={modal.title}
+        title={`Asignar ${modal.parentGenderToSelect}`}
         isVisible={modal.isVisible}
         orientation="row"
         onClose={() => {
@@ -273,6 +273,10 @@ const BirdDetails = ({ navigation }) => {
           <Button
             onPress={() => {
               // setShowModal(false);
+              navigation.navigate(NavKeys.birdDetails, {
+                bird: { gender: 'Macho' },
+                refreshBirdList: () => getBirdListRefreshed(), // TODO
+              });
             }}>
             <Text>Registrar nuevo pájaro</Text>
           </Button>
@@ -280,7 +284,19 @@ const BirdDetails = ({ navigation }) => {
           <Button
             transparent
             onPress={() => {
-              // setShowModal(false);
+              navigation.navigate(NavKeys.birdSelectParent, {
+                currentBird: birdData,
+                genderToSelect: modal.parentGenderToSelect,
+                assignParent: (globalId, parentId) => {
+                  if (modal.parentGenderToSelect === 'Padre') {
+                    setFieldValue('fatherId', globalId);
+                    assignFather(parentId);
+                  } else {
+                    setFieldValue('motherId', globalId);
+                    assignMother(parentId);
+                  }
+                },
+              });
             }}>
             <Text>Seleccionar un pájaro existente</Text>
           </Button>
@@ -458,19 +474,11 @@ const BirdDetails = ({ navigation }) => {
                                   rounded
                                   active
                                   father
-                                  onPress={
-                                    () =>
-                                      setModal({
-                                        isVisible: true,
-                                        title: 'Asignar Padre',
-                                      })
-                                    /*  navigation.navigate(NavKeys.birdSelectParent, {
-                                      currentBird: birdData,
-                                      genderToSelect: 'Padre',
-                                      assignParent: (globalId, fatherId) =>
-                                        setFieldValue('fatherId', globalId) &&
-                                        assignFather(fatherId),
-                                    }) */
+                                  onPress={() =>
+                                    setModal({
+                                      isVisible: true,
+                                      title: 'Asignar Padre',
+                                    })
                                   }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" father />
                                   <SelectBirdText father>Añadir</SelectBirdText>
@@ -515,19 +523,11 @@ const BirdDetails = ({ navigation }) => {
                                   rounded
                                   active
                                   mother
-                                  onPress={
-                                    () =>
-                                      setModal({
-                                        isVisible: true,
-                                        title: 'Asignar Madre',
-                                      })
-                                    /* navigation.navigate(NavKeys.birdSelectParent, {
-                                      currentBird: birdData,
-                                      genderToSelect: 'Madre',
-                                      assignParent: (globalId, motherId) =>
-                                        setFieldValue('motherId', globalId) &&
-                                        assignMother(motherId),
-                                    }) */
+                                  onPress={() =>
+                                    setModal({
+                                      isVisible: true,
+                                      title: 'Asignar Madre',
+                                    })
                                   }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" mother />
                                   <SelectBirdText mother>Añadir</SelectBirdText>
