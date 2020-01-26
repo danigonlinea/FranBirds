@@ -83,11 +83,7 @@ const BirdListScreen = ({ navigation }) => {
     });
   }; */
 
-  const getBirdListRefreshed = () => {
-    setFilter(0);
-  };
-
-  useEffect(() => {
+  const getBirdsAndUpdate = () => {
     getBirds(
       strings.gender[filterSelected],
       ({ result: birdsMatched }) => {
@@ -95,6 +91,18 @@ const BirdListScreen = ({ navigation }) => {
       },
       (ts, error) => console.log('Error', error)
     );
+  };
+
+  const getBirdListRefreshed = () => {
+    if (filterSelected) {
+      setFilter(0);
+    } else {
+      getBirdsAndUpdate();
+    }
+  };
+
+  useEffect(() => {
+    getBirdsAndUpdate();
   }, [filterSelected]);
 
   useEffect(() => {
