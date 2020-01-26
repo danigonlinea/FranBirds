@@ -16,12 +16,6 @@ const GenderFilter = styled(Picker)`
 const Filter = () => {
   const { filterSelected, setFilter, showSearchBar } = useGlobalCtx();
 
-  useEffect(() => {});
-
-  /* const filterChange = value => {
-    setSelected(value);
-  }; */
-
   return (
     <FilterBirds>
       {showSearchBar ? (

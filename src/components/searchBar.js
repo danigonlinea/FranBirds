@@ -20,8 +20,6 @@ const SearchInput = styled(Input)`
   border-radius: 25px;
 `;
 
-const ActionContainer = styled(Button)``;
-
 const SearchBar = () => {
   const [textSearch, setTextSearch] = useState('');
   const { showSearchBar, setSearchBar, searchBirdsByText } = useGlobalCtx();
@@ -37,15 +35,15 @@ const SearchBar = () => {
           placeholder="Buscar"
         />
       </Item>
-      <ActionContainer
+      <Button
         transparent
         onPress={() => {
           setTextSearch('');
           searchBirdsByText('');
           setSearchBar(false);
         }}>
-        <Icon type="MaterialIcons" name="clear" />
-      </ActionContainer>
+        <Icon type="MaterialIcons" name="clear" style={{ color: colors.defaultIcon }} />
+      </Button>
     </SearchContainer>
   ) : null;
 };
