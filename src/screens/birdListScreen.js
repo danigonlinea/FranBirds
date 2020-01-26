@@ -19,7 +19,7 @@ import styled, { css } from 'styled-components';
 import { NavKeys } from '.';
 import { BirdPhotoDialog, Filter, NavStyle, SearchAction, SearchBar } from '../components';
 import { useGlobalCtx } from '../context/globalContext';
-import { getAllBirds, getBirds } from '../db';
+import { searchBirds, getBirds } from '../db';
 import { Colors, Strings, Constants } from '../utils';
 import strings from '../utils/strings';
 import { getDefaultAvatar } from '../utils/functions';
@@ -64,7 +64,14 @@ const CardBird = styled(Card)`
 const BirdListScreen = ({ navigation }) => {
   const [birdsList, setBirdsList] = useState([]);
 
-  const { dataModal, setDataModal, filterSelected, setFilter, textToSearch } = useGlobalCtx();
+  const {
+    dataModal,
+    setDataModal,
+    filterSelected,
+    setFilter,
+    textToSearch,
+    showSearchBar,
+  } = useGlobalCtx();
 
   // Only search on id, type and notes
   /* const isTextSearchFound = bird => {
@@ -76,24 +83,29 @@ const BirdListScreen = ({ navigation }) => {
     });
   }; */
 
+  const getBirdListRefreshed = () => {
+    setFilter(0);
+  };
+
   useEffect(() => {
-    getBirds(strings.gender[filterSelected], ({ result: birdsMatched }) => {
-      setBirdsList(birdsMatched);
-    });
+    getBirds(
+      strings.gender[filterSelected],
+      ({ result: birdsMatched }) => {
+        setBirdsList(birdsMatched);
+      },
+      (ts, error) => console.log('Error', error)
+    );
   }, [filterSelected]);
 
-  /* useEffect(() => {
-    if (!textToSearch) {
-      filterChange(filterSelected);
-    } else {
-      setBirdsList(
-        allBirds.filter(
-          ({ gender, photo, motherId, fatherId, ...bird }) =>
-            gender === filterSelected && isTextSearchFound(bird)
-        )
-      );
-    }
-  }, [textToSearch]); */
+  useEffect(() => {
+    searchBirds(
+      textToSearch,
+      ({ result: birdsMatched }) => {
+        setBirdsList(birdsMatched);
+      },
+      (ts, error) => console.log('Error', error)
+    );
+  }, [textToSearch]);
 
   const getGenderColorSelected = gender => {
     if (gender === 'Macho') {

@@ -9,10 +9,19 @@ const SearchIcon = styled(Icon)`
 `;
 
 const SearchAction = () => {
-  const { showSearchBar, setSearchBar } = useGlobalCtx();
+  const { showSearchBar, setSearchBar, setFilter } = useGlobalCtx();
 
   return (
-    <Button icon transparent onPress={() => setSearchBar(!showSearchBar)}>
+    <Button
+      icon
+      transparent
+      onPress={() => {
+        setSearchBar(!showSearchBar);
+
+        if (!showSearchBar) {
+          setFilter(0);
+        }
+      }}>
       <SearchIcon type="MaterialIcons" name="search" />
     </Button>
   );

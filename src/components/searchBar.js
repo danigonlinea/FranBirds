@@ -1,4 +1,4 @@
-import { Button, Form, Input, View, Item } from 'native-base';
+import { Button, Form, Input, View, Item, Icon } from 'native-base';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useGlobalCtx } from '../context/globalContext';
@@ -6,9 +6,10 @@ import colors from '../utils/colors';
 
 const SearchContainer = styled(View)`
   display: flex;
+
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: row;
   height: 64px;
   margin: 8px;
 `;
@@ -19,13 +20,15 @@ const SearchInput = styled(Input)`
   border-radius: 25px;
 `;
 
+const ActionContainer = styled(Button)``;
+
 const SearchBar = () => {
   const [textSearch, setTextSearch] = useState('');
-  const { showSearchBar, searchBirdsByText } = useGlobalCtx();
+  const { showSearchBar, setSearchBar, searchBirdsByText } = useGlobalCtx();
 
   return showSearchBar ? (
     <SearchContainer>
-      <Item rounded>
+      <Item rounded style={{ flex: 1 }}>
         <SearchInput
           autoFocus
           onEndEditing={() => searchBirdsByText(textSearch)}
@@ -34,6 +37,15 @@ const SearchBar = () => {
           placeholder="Buscar"
         />
       </Item>
+      <ActionContainer
+        transparent
+        onPress={() => {
+          setTextSearch('');
+          searchBirdsByText('');
+          setSearchBar(false);
+        }}>
+        <Icon type="MaterialIcons" name="clear" />
+      </ActionContainer>
     </SearchContainer>
   ) : null;
 };

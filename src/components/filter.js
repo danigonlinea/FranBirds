@@ -1,4 +1,4 @@
-import { Button, Icon, Picker, Form } from 'native-base';
+import { Button, Icon, Picker, Form, Text } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Colors } from '../utils';
@@ -14,7 +14,7 @@ const GenderFilter = styled(Picker)`
 `;
 
 const Filter = () => {
-  const { filterSelected, setFilter } = useGlobalCtx();
+  const { filterSelected, setFilter, showSearchBar } = useGlobalCtx();
 
   useEffect(() => {});
 
@@ -24,12 +24,16 @@ const Filter = () => {
 
   return (
     <FilterBirds>
-      <GenderFilter mode="dropdown" selectedValue={filterSelected} onValueChange={setFilter}>
-        <Picker.Item label="Todos" value={0} />
-        <Picker.Item label="Huevos" value={1} />
-        <Picker.Item label="Machos" value={2} />
-        <Picker.Item label="Hembras" value={3} />
-      </GenderFilter>
+      {showSearchBar ? (
+        <Text>Todos</Text>
+      ) : (
+        <GenderFilter mode="dropdown" selectedValue={filterSelected} onValueChange={setFilter}>
+          <Picker.Item label="Todos" value={0} />
+          <Picker.Item label="Huevos" value={1} />
+          <Picker.Item label="Machos" value={2} />
+          <Picker.Item label="Hembras" value={3} />
+        </GenderFilter>
+      )}
     </FilterBirds>
   );
 };
