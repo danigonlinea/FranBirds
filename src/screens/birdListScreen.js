@@ -154,7 +154,7 @@ const BirdListScreen = ({ navigation }) => {
                 size={6}
                 onPress={() => {
                   navigation.navigate(NavKeys.birdDetails, {
-                    bird: { ...bird },
+                    birdGlobalId: bird.globalId,
                     refreshBirdList: () => getBirdListRefreshed(),
                   });
                 }}>
@@ -168,7 +168,7 @@ const BirdListScreen = ({ navigation }) => {
                 size={1}
                 onPress={() => {
                   navigation.navigate(NavKeys.birdDetails, {
-                    bird: { ...bird },
+                    birdGlobalId: bird.globalId,
                     refreshBirdList: () => getBirdListRefreshed(),
                   });
                 }}>

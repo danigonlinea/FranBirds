@@ -51,7 +51,7 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
                 text: 'Si',
                 onPress: () => {
                   deleteBird(
-                    navigation.getParam('bird') && navigation.getParam('bird').globalId,
+                    navigation.getParam('birdGlobalId'),
                     () => {
                       navigation.goBack();
                       navigation.getParam('refreshBirdList')();

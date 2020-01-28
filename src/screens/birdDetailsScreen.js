@@ -26,7 +26,7 @@ import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
 import { useGlobalCtx } from '../context/globalContext';
-import { insertBird, updateBird } from '../db';
+import { insertBird, updateBird, getBirdByGlobal } from '../db';
 import colors from '../utils/colors';
 import * as FileSystem from 'expo-file-system';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -160,45 +160,46 @@ const birdValidationSchema = () => {
     photo: Yup.string().nullable(),
     fatherId: Yup.string().nullable(),
     motherId: Yup.string().nullable(),
+    fatherIdLabel: Yup.string().nullable(),
+    motherIdLabel: Yup.string().nullable(),
   });
-};
-
-const birdFormValues = bird => {
-  return bird.globalId
-    ? { ...bird }
-    : {
-        globalId: null,
-        id: null,
-        type: null,
-        notes: null,
-        gender: 'Macho',
-        photo: null,
-        fatherId: null,
-        motherId: null,
-      };
 };
 
 const getGenderFromParent = parentType => (parentType === 'Padre' ? 'Macho' : 'Hembra');
 const BirdDetails = ({ navigation }) => {
-  const [birdData, setBirdData] = useState(navigation.getParam('bird'));
-  const [fatherId, setFather] = useState(birdData.fatherId || false);
-  const [motherId, setMother] = useState(birdData.motherId || false);
+  const [birdData, setBirdData] = useState({
+    globalId: null,
+    id: null,
+    type: null,
+    notes: null,
+    gender: 'Macho',
+    photo: null,
+    fatherId: null,
+    fatherIdLabel: null,
+    motherId: null,
+    motherIdLabel: null,
+  });
+
   const [modal, setModal] = useState({
     isVisible: false,
     parentGenderToSelect: null,
   });
 
+  useEffect(() => {
+    console.log('queryin... ', navigation.getParam('birdGlobalId'));
+    if (navigation.getParam('birdGlobalId')) {
+      getBirdByGlobal(
+        navigation.getParam('birdGlobalId'),
+        ({ result: birdInfo }) => {
+          console.log('------- Database OK:', birdInfo);
+          setBirdData(birdInfo[0]);
+        },
+        (ts, error) => console.log('Error', error)
+      );
+    }
+  }, []);
+
   const photosToDeleteFromStorage = new Set();
-
-  const assignFather = fatherId => {
-    setFather(fatherId);
-  };
-
-  const assignMother = motherId => {
-    setMother(motherId);
-  };
-
-  const { globalId, id, type, notes, gender, photo } = birdData;
 
   const submitBird = birdData => {
     try {
@@ -211,7 +212,7 @@ const BirdDetails = ({ navigation }) => {
       console.log('Error: ', e);
     }
 
-    if (globalId) {
+    if (birdData.globalId) {
       updateBird(
         birdData,
         () => {
@@ -243,6 +244,10 @@ const BirdDetails = ({ navigation }) => {
     return colors.egg;
   };
 
+  if (!birdData) {
+    return null;
+  }
+
   return (
     <KeyboardAvoidingView
       style={{
@@ -254,50 +259,32 @@ const BirdDetails = ({ navigation }) => {
       enabled>
       <DetailsContainer>
         <Formik
-          initialValues={birdFormValues(birdData)}
+          enableReinitialize
+          initialValues={birdData}
           validationSchema={birdValidationSchema()}
           onSubmit={submitBird}>
-          {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
-            <>
-              <Modal
-                title={`Asignar ${modal.parentGenderToSelect}`}
-                isVisible={modal.isVisible}
-                orientation="row"
-                onClose={() => {
-                  setModal({
-                    isVisible: false,
-                    title: null,
-                  });
-                }}>
-                <ModalBody>
-                  <Button
-                    onPress={() => {
-                      setModal({ isVisible: false });
-                      navigation.navigate(NavKeys.birdNewParent, {
-                        genderParent: getGenderFromParent(modal.parentGenderToSelect),
-                        assignParent: (globalId, parentId) => {
-                          if (modal.parentGenderToSelect === 'Padre') {
-                            setFieldValue('fatherId', globalId);
-                            assignFather(parentId);
-                          } else {
-                            setFieldValue('motherId', globalId);
-                            assignMother(parentId);
-                          }
-                        },
-                      });
-                    }}>
-                    <Text>Registrar nuevo pájaro</Text>
-                  </Button>
-                  <Space></Space>
-                  <Button
-                    transparent
-                    onPress={() => {
-                      setModal({ isVisible: false });
-                      navigation.navigate(NavKeys.birdSelectParent, {
-                        currentBird: birdData,
-                        genderParent: getGenderFromParent(modal.parentGenderToSelect),
-                        assignParent: (globalId, parentId) => {
-                          {
+          {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => {
+            //console.log('????', values);
+
+            return (
+              <>
+                <Modal
+                  title={`Asignar ${modal.parentGenderToSelect}`}
+                  isVisible={modal.isVisible}
+                  orientation="row"
+                  onClose={() => {
+                    setModal({
+                      isVisible: false,
+                      title: null,
+                    });
+                  }}>
+                  <ModalBody>
+                    <Button
+                      onPress={() => {
+                        setModal({ isVisible: false });
+                        navigation.navigate(NavKeys.birdNewParent, {
+                          genderParent: getGenderFromParent(modal.parentGenderToSelect),
+                          assignParent: (globalId, parentId) => {
                             if (modal.parentGenderToSelect === 'Padre') {
                               setFieldValue('fatherId', globalId);
                               assignFather(parentId);
@@ -305,265 +292,289 @@ const BirdDetails = ({ navigation }) => {
                               setFieldValue('motherId', globalId);
                               assignMother(parentId);
                             }
-                          }
-                        },
-                      });
-                    }}>
-                    <Text>Seleccionar un pájaro ya registrado</Text>
-                  </Button>
-                </ModalBody>
-              </Modal>
-              <Content style={{ flex: 1 }}>
-                <PhotoContainer>
-                  <Image
-                    style={{ height: 250 }}
-                    source={{ uri: photo ? photo : getDefaultAvatar(gender) }}
-                  />
-
-                  <TakePhotoContainer>
-                    <TakePhotoBtn
-                      activeOpacity={1.0}
-                      style={{
-                        shadowColor: '#000',
-                        shadowOpacity: 0.5,
-                        shadowOffset: {
-                          height: 4,
-                        },
-                        elevation: 10,
-                      }}
-                      onPress={() =>
-                        navigation.navigate(NavKeys.birdCamera, {
-                          changePhoto: async photoFullPath => {
-                            // Remove previous photo
-                            photosToDeleteFromStorage.add(photo);
-
-                            setFieldValue('photo', photoFullPath);
-                            setBirdData({
-                              ...birdData,
-                              photo: photoFullPath,
-                            });
                           },
-                        })
-                      }>
-                      <TakePhotoIcon name="ios-camera" type="Ionicons" />
-                    </TakePhotoBtn>
-                  </TakePhotoContainer>
-                </PhotoContainer>
+                        });
+                      }}>
+                      <Text>Registrar como nuevo pájaro</Text>
+                    </Button>
+                    <Space></Space>
+                    <Button
+                      transparent
+                      onPress={() => {
+                        setModal({ isVisible: false });
+                        navigation.navigate(NavKeys.birdSelectParent, {
+                          currentBird: birdData,
+                          genderParent: getGenderFromParent(modal.parentGenderToSelect),
+                          assignParent: (globalId, parentId) => {
+                            {
+                              if (modal.parentGenderToSelect === 'Padre') {
+                                setFieldValue('fatherId', globalId);
+                                assignFather(parentId);
+                              } else {
+                                setFieldValue('motherId', globalId);
+                                assignMother(parentId);
+                              }
+                            }
+                          },
+                        });
+                      }}>
+                      <Text>Seleccionar un pájaro ya registrado</Text>
+                    </Button>
+                  </ModalBody>
+                </Modal>
+                <Content style={{ flex: 1 }}>
+                  <PhotoContainer>
+                    <Image
+                      style={{ height: 250 }}
+                      source={{
+                        uri: values.photo ? values.photo : getDefaultAvatar(values.gender),
+                      }}
+                    />
 
-                <FormContainer>
-                  <GenderSwitch>
-                    <GenderButton
-                      first
-                      color={colors.egg}
-                      genderColorSelected={getGenderColorSelected(gender)}
-                      active={gender === 'Huevo'}
-                      onPress={() =>
-                        setFieldValue('gender', 'Huevo') &&
-                        setBirdData({ ...birdData, gender: 'Huevo' })
-                      }>
-                      <GenderText
+                    <TakePhotoContainer>
+                      <TakePhotoBtn
+                        activeOpacity={1.0}
+                        style={{
+                          shadowColor: '#000',
+                          shadowOpacity: 0.5,
+                          shadowOffset: {
+                            height: 4,
+                          },
+                          elevation: 10,
+                        }}
+                        onPress={() =>
+                          navigation.navigate(NavKeys.birdCamera, {
+                            changePhoto: async photoFullPath => {
+                              // Remove previous photo
+                              photosToDeleteFromStorage.add(photo);
+
+                              setFieldValue('photo', photoFullPath);
+                              setBirdData({
+                                ...birdData,
+                                photo: photoFullPath,
+                              });
+                            },
+                          })
+                        }>
+                        <TakePhotoIcon name="ios-camera" type="Ionicons" />
+                      </TakePhotoBtn>
+                    </TakePhotoContainer>
+                  </PhotoContainer>
+
+                  <FormContainer>
+                    <GenderSwitch>
+                      <GenderButton
+                        first
                         color={colors.egg}
-                        genderColorSelected={getGenderColorSelected(gender)}
-                        active={gender === 'Huevo'}>
-                        Huevo
-                      </GenderText>
-                    </GenderButton>
-                    <GenderButton
-                      color={colors.male}
-                      genderColorSelected={getGenderColorSelected(gender)}
-                      active={gender === 'Macho'}
-                      onPress={() =>
-                        setFieldValue('gender', 'Macho') &&
-                        setBirdData({ ...birdData, gender: 'Macho' })
-                      }>
-                      <GenderText
+                        genderColorSelected={getGenderColorSelected(values.gender)}
+                        active={values.gender === 'Huevo'}
+                        onPress={() => setFieldValue('gender', 'Huevo')}>
+                        <GenderText
+                          color={colors.egg}
+                          genderColorSelected={getGenderColorSelected(values.gender)}
+                          active={values.gender === 'Huevo'}>
+                          Huevo
+                        </GenderText>
+                      </GenderButton>
+                      <GenderButton
                         color={colors.male}
-                        genderColorSelected={getGenderColorSelected(gender)}
-                        active={gender === 'Macho'}>
-                        Macho
-                      </GenderText>
-                    </GenderButton>
-                    <GenderButton
-                      last
-                      color={colors.female}
-                      genderColorSelected={getGenderColorSelected(gender)}
-                      active={gender === 'Hembra'}
-                      onPress={() =>
-                        setFieldValue('gender', 'Hembra') &&
-                        setBirdData({ ...birdData, gender: 'Hembra' })
-                      }>
-                      <GenderText
+                        genderColorSelected={getGenderColorSelected(values.gender)}
+                        active={values.gender === 'Macho'}
+                        onPress={() => setFieldValue('gender', 'Macho')}>
+                        <GenderText
+                          color={colors.male}
+                          genderColorSelected={getGenderColorSelected(values.gender)}
+                          active={values.gender === 'Macho'}>
+                          Macho
+                        </GenderText>
+                      </GenderButton>
+                      <GenderButton
+                        last
                         color={colors.female}
-                        genderColorSelected={getGenderColorSelected(gender)}
-                        active={gender === 'Hembra'}>
-                        Hembra
-                      </GenderText>
-                    </GenderButton>
-                  </GenderSwitch>
-                  <VerticalSpace></VerticalSpace>
-                  <Card>
-                    <CardItem>
-                      <Grid>
-                        <Row>
-                          <Col>
-                            <FormItem stackedLabel>
-                              <Label>Identificador</Label>
-                              <Input
-                                onChangeText={handleChange('id')}
-                                onBlur={handleBlur('id')}
-                                value={values.id}
-                                returnKeyType="done"
-                              />
-                            </FormItem>
-                          </Col>
-                          <Col>
-                            <FormItem stackedLabel>
-                              <Label>Tipo</Label>
-                              <Input
-                                onChangeText={handleChange('type')}
-                                onBlur={handleBlur('type')}
-                                value={values.type}
-                                returnKeyType="done"
-                              />
-                            </FormItem>
-                          </Col>
-                        </Row>
-                        {errors && errors.id && (
+                        genderColorSelected={getGenderColorSelected(values.gender)}
+                        active={values.gender === 'Hembra'}
+                        onPress={() => setFieldValue('gender', 'Hembra')}>
+                        <GenderText
+                          color={colors.female}
+                          genderColorSelected={getGenderColorSelected(values.gender)}
+                          active={values.gender === 'Hembra'}>
+                          Hembra
+                        </GenderText>
+                      </GenderButton>
+                    </GenderSwitch>
+                    <VerticalSpace></VerticalSpace>
+                    <Card>
+                      <CardItem>
+                        <Grid>
                           <Row>
                             <Col>
-                              <ErrorContainer>
-                                <TextError>{errors.id}</TextError>
-                              </ErrorContainer>
+                              <FormItem stackedLabel>
+                                <Label>Identificador</Label>
+                                <Input
+                                  onChangeText={handleChange('id')}
+                                  onBlur={handleBlur('id')}
+                                  value={values.id}
+                                  returnKeyType="done"
+                                />
+                              </FormItem>
+                            </Col>
+                            <Col>
+                              <FormItem stackedLabel>
+                                <Label>Tipo</Label>
+                                <Input
+                                  onChangeText={handleChange('type')}
+                                  onBlur={handleBlur('type')}
+                                  value={values.type}
+                                  returnKeyType="done"
+                                />
+                              </FormItem>
                             </Col>
                           </Row>
-                        )}
-                        <FormItem stackedLabel>
-                          <Label>Padres</Label>
-                          <Row>
-                            <Col style={{ marginRight: 6 }}>
-                              {fatherId ? (
-                                <>
-                                  <Grid>
-                                    <Col size={50}>
-                                      <SelectBirdBtn
-                                        bordered
-                                        unded
-                                        active
-                                        father
-                                        onPress={() =>
-                                          navigation.push(NavKeys.birdDetails, {
-                                            bird: { id: fatherId },
-                                          })
-                                        }>
-                                        <SelectBirdText father>{fatherId}</SelectBirdText>
-                                      </SelectBirdBtn>
-                                    </Col>
-                                    <Col size={30}>
-                                      <SelectBirdBtn
-                                        transparent
-                                        active
-                                        father
-                                        onPress={() =>
-                                          setFieldValue('fatherId', null) && assignFather(null)
-                                        }>
-                                        <SelectBirdIcon type="MaterialIcons" name="close" father />
-                                      </SelectBirdBtn>
-                                    </Col>
-                                  </Grid>
-                                </>
-                              ) : (
-                                <SelectBirdBtn
-                                  bordered
-                                  iconLeft
-                                  rounded
-                                  active
-                                  father
-                                  onPress={() =>
-                                    setModal({
-                                      isVisible: true,
-                                      parentGenderToSelect: 'Padre',
-                                    })
-                                  }>
-                                  <SelectBirdIcon type="MaterialIcons" name="add" father />
-                                  <SelectBirdText father>Añadir</SelectBirdText>
-                                </SelectBirdBtn>
-                              )}
-                            </Col>
-                            <Col style={{ marginLeft: 6 }}>
-                              {motherId ? (
-                                <>
-                                  <Grid>
-                                    <Col size={50}>
-                                      <SelectBirdBtn
-                                        bordered
-                                        rounded
-                                        active
-                                        mother
-                                        onPress={() => {
-                                          navigation.push(NavKeys.birdDetails, {
-                                            bird: { id: motherId },
-                                          });
-                                        }}>
-                                        <SelectBirdText mother>{motherId}</SelectBirdText>
-                                      </SelectBirdBtn>
-                                    </Col>
-                                    <Col size={30}>
-                                      <SelectBirdBtn
-                                        transparent
-                                        active
-                                        mother
-                                        onPress={() =>
-                                          setFieldValue('motherId', null) && assignMother(null)
-                                        }>
-                                        <SelectBirdIcon type="MaterialIcons" name="close" mother />
-                                      </SelectBirdBtn>
-                                    </Col>
-                                  </Grid>
-                                </>
-                              ) : (
-                                <SelectBirdBtn
-                                  bordered
-                                  iconLeft
-                                  rounded
-                                  active
-                                  mother
-                                  onPress={() =>
-                                    setModal({
-                                      isVisible: true,
-                                      parentGenderToSelect: 'Madre',
-                                    })
-                                  }>
-                                  <SelectBirdIcon type="MaterialIcons" name="add" mother />
-                                  <SelectBirdText mother>Añadir</SelectBirdText>
-                                </SelectBirdBtn>
-                              )}
-                            </Col>
-                          </Row>
-                        </FormItem>
-                        <Row>
-                          <FormItem style={{ flex: 1 }} stackedLabel>
-                            <Label>Notas</Label>
-                            <NotasField
-                              rowSpan={3}
-                              multiline={true}
-                              onChangeText={handleChange('notes')}
-                              onBlur={handleBlur('notes')}
-                              value={values.notes}
-                            />
+                          {errors && errors.id && (
+                            <Row>
+                              <Col>
+                                <ErrorContainer>
+                                  <TextError>{errors.id}</TextError>
+                                </ErrorContainer>
+                              </Col>
+                            </Row>
+                          )}
+                          <FormItem stackedLabel>
+                            <Label>Padres</Label>
+                            <Row>
+                              <Col style={{ marginRight: 6 }}>
+                                {values.fatherId ? (
+                                  <>
+                                    <Grid>
+                                      <Col size={50}>
+                                        <SelectBirdBtn
+                                          bordered
+                                          unded
+                                          active
+                                          father
+                                          onPress={() =>
+                                            navigation.push(NavKeys.birdDetails, {
+                                              birdGlobalId: values.fatherId,
+                                            })
+                                          }>
+                                          <SelectBirdText father>{values.fatherId}</SelectBirdText>
+                                        </SelectBirdBtn>
+                                      </Col>
+                                      <Col size={30}>
+                                        <SelectBirdBtn
+                                          transparent
+                                          active
+                                          father
+                                          onPress={() =>
+                                            setFieldValue('fatherId', null) && assignFather(null)
+                                          }>
+                                          <SelectBirdIcon
+                                            type="MaterialIcons"
+                                            name="close"
+                                            father
+                                          />
+                                        </SelectBirdBtn>
+                                      </Col>
+                                    </Grid>
+                                  </>
+                                ) : (
+                                  <SelectBirdBtn
+                                    bordered
+                                    iconLeft
+                                    rounded
+                                    active
+                                    father
+                                    onPress={() =>
+                                      setModal({
+                                        isVisible: true,
+                                        parentGenderToSelect: 'Padre',
+                                      })
+                                    }>
+                                    <SelectBirdIcon type="MaterialIcons" name="add" father />
+                                    <SelectBirdText father>Añadir</SelectBirdText>
+                                  </SelectBirdBtn>
+                                )}
+                              </Col>
+                              <Col style={{ marginLeft: 6 }}>
+                                {values.motherId ? (
+                                  <>
+                                    <Grid>
+                                      <Col size={50}>
+                                        <SelectBirdBtn
+                                          bordered
+                                          rounded
+                                          active
+                                          mother
+                                          onPress={() => {
+                                            navigation.push(NavKeys.birdDetails, {
+                                              birdGlobalId: values.fatherId,
+                                            });
+                                          }}>
+                                          <SelectBirdText mother>{values.motherId}</SelectBirdText>
+                                        </SelectBirdBtn>
+                                      </Col>
+                                      <Col size={30}>
+                                        <SelectBirdBtn
+                                          transparent
+                                          active
+                                          mother
+                                          onPress={() =>
+                                            setFieldValue('motherId', null) && assignMother(null)
+                                          }>
+                                          <SelectBirdIcon
+                                            type="MaterialIcons"
+                                            name="close"
+                                            mother
+                                          />
+                                        </SelectBirdBtn>
+                                      </Col>
+                                    </Grid>
+                                  </>
+                                ) : (
+                                  <SelectBirdBtn
+                                    bordered
+                                    iconLeft
+                                    rounded
+                                    active
+                                    mother
+                                    onPress={() =>
+                                      setModal({
+                                        isVisible: true,
+                                        parentGenderToSelect: 'Madre',
+                                      })
+                                    }>
+                                    <SelectBirdIcon type="MaterialIcons" name="add" mother />
+                                    <SelectBirdText mother>Añadir</SelectBirdText>
+                                  </SelectBirdBtn>
+                                )}
+                              </Col>
+                            </Row>
                           </FormItem>
-                        </Row>
-                      </Grid>
-                    </CardItem>
-                  </Card>
-                </FormContainer>
-              </Content>
-              <View>
-                <FabSave active containerStyle={{}} position="bottomRight" onPress={handleSubmit}>
-                  <FabIcon name="ios-save" />
-                </FabSave>
-              </View>
-            </>
-          )}
+                          <Row>
+                            <FormItem style={{ flex: 1 }} stackedLabel>
+                              <Label>Notas</Label>
+                              <NotasField
+                                rowSpan={3}
+                                multiline={true}
+                                onChangeText={handleChange('notes')}
+                                onBlur={handleBlur('notes')}
+                                value={values.notes}
+                              />
+                            </FormItem>
+                          </Row>
+                        </Grid>
+                      </CardItem>
+                    </Card>
+                  </FormContainer>
+                </Content>
+                <View>
+                  <FabSave active containerStyle={{}} position="bottomRight" onPress={handleSubmit}>
+                    <FabIcon name="ios-save" />
+                  </FabSave>
+                </View>
+              </>
+            );
+          }}
         </Formik>
       </DetailsContainer>
     </KeyboardAvoidingView>

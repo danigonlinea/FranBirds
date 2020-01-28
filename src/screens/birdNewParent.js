@@ -155,8 +155,6 @@ const renderGenderButton = gender => (
 );
 
 const BirdNewParent = ({ navigation }) => {
-  // const [birdData, setBirdData] = useState(birdFormValues());
-
   const photosToDeleteFromStorage = new Set();
 
   const submitBird = birdFormData => {
@@ -173,7 +171,6 @@ const BirdNewParent = ({ navigation }) => {
     insertBird(
       birdFormData,
       ({ insertId }) => {
-        console.log('Global - Id: ', insertId, birdFormData.id);
         navigation.goBack();
         navigation.getParam('assignParent')(insertId, birdFormData.id);
       },

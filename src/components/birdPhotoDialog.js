@@ -94,7 +94,7 @@ const BirdPhotoDialog = ({ navigation }) => {
                 toggleDialog: false,
               });
               // setShowModal(false);
-              navigation.navigate(NavKeys.birdDetails, { bird: { ...bird } });
+              navigation.navigate(NavKeys.birdDetails, { birdGlobalId: bird.globalId });
             }}>
             <BtnText>Ver Más Detalles</BtnText>
           </Btn>
