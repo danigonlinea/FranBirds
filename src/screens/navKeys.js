@@ -3,4 +3,5 @@ export default {
   birdDetails: 'birdDetails',
   birdSelectParent: 'birdSelectParent',
   birdCamera: 'birdCamera',
+  birdNewParent: 'birdNewParent',
 };

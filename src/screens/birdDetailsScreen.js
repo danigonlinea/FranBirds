@@ -108,44 +108,6 @@ const TextError = styled(Text)`
   font-size: 14px;
 `;
 
-const birdValidationSchema = () => {
-  return Yup.object().shape({
-    globalId: Yup.number().nullable(),
-    id: Yup.string()
-      .required('El Identificador es necesario')
-      .nullable(),
-    type: Yup.string().nullable(),
-    notes: Yup.string().nullable(),
-    gender: Yup.string(),
-    photo: Yup.string().nullable(),
-    fatherId: Yup.string().nullable(),
-    motherId: Yup.string().nullable(),
-  });
-};
-
-const birdFormValues = bird => {
-  return bird.globalId
-    ? { ...bird }
-    : {
-        globalId: null,
-        id: null,
-        type: null,
-        notes: null,
-        gender: 'Macho',
-        photo: null,
-        fatherId: null,
-        motherId: null,
-      };
-};
-
-const HeaderMaterialBtn = styled(View)`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  margin: 0 24px;
-`;
-
 const TakePhotoIcon = styled(Icon)`
   color: ${Colors.white};
 `;
@@ -186,13 +148,44 @@ const Space = styled(View)`
   height: 12px;
 `;
 
+const birdValidationSchema = () => {
+  return Yup.object().shape({
+    globalId: Yup.number().nullable(),
+    id: Yup.string()
+      .required('El Identificador es necesario')
+      .nullable(),
+    type: Yup.string().nullable(),
+    notes: Yup.string().nullable(),
+    gender: Yup.string(),
+    photo: Yup.string().nullable(),
+    fatherId: Yup.string().nullable(),
+    motherId: Yup.string().nullable(),
+  });
+};
+
+const birdFormValues = bird => {
+  return bird.globalId
+    ? { ...bird }
+    : {
+        globalId: null,
+        id: null,
+        type: null,
+        notes: null,
+        gender: 'Macho',
+        photo: null,
+        fatherId: null,
+        motherId: null,
+      };
+};
+
+const getGenderFromParent = parentType => (parentType === 'Padre' ? 'Macho' : 'Hembra');
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState(navigation.getParam('bird'));
   const [fatherId, setFather] = useState(birdData.fatherId || false);
   const [motherId, setMother] = useState(birdData.motherId || false);
   const [modal, setModal] = useState({
     isVisible: false,
-    title: null,
+    parentGenderToSelect: null,
   });
 
   const photosToDeleteFromStorage = new Set();
@@ -259,49 +252,6 @@ const BirdDetails = ({ navigation }) => {
       keyboardVerticalOffset={0}
       behavior="padding"
       enabled>
-      <Modal
-        title={`Asignar ${modal.parentGenderToSelect}`}
-        isVisible={modal.isVisible}
-        orientation="row"
-        onClose={() => {
-          setModal({
-            isVisible: false,
-            title: null,
-          });
-        }}>
-        <ModalBody>
-          <Button
-            onPress={() => {
-              // setShowModal(false);
-              navigation.navigate(NavKeys.birdDetails, {
-                bird: { gender: 'Macho' },
-                refreshBirdList: () => getBirdListRefreshed(), // TODO
-              });
-            }}>
-            <Text>Registrar nuevo pájaro</Text>
-          </Button>
-          <Space></Space>
-          <Button
-            transparent
-            onPress={() => {
-              navigation.navigate(NavKeys.birdSelectParent, {
-                currentBird: birdData,
-                genderToSelect: modal.parentGenderToSelect,
-                assignParent: (globalId, parentId) => {
-                  if (modal.parentGenderToSelect === 'Padre') {
-                    setFieldValue('fatherId', globalId);
-                    assignFather(parentId);
-                  } else {
-                    setFieldValue('motherId', globalId);
-                    assignMother(parentId);
-                  }
-                },
-              });
-            }}>
-            <Text>Seleccionar un pájaro existente</Text>
-          </Button>
-        </ModalBody>
-      </Modal>
       <DetailsContainer>
         <Formik
           initialValues={birdFormValues(birdData)}
@@ -309,6 +259,60 @@ const BirdDetails = ({ navigation }) => {
           onSubmit={submitBird}>
           {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
             <>
+              <Modal
+                title={`Asignar ${modal.parentGenderToSelect}`}
+                isVisible={modal.isVisible}
+                orientation="row"
+                onClose={() => {
+                  setModal({
+                    isVisible: false,
+                    title: null,
+                  });
+                }}>
+                <ModalBody>
+                  <Button
+                    onPress={() => {
+                      setModal({ isVisible: false });
+                      navigation.navigate(NavKeys.birdNewParent, {
+                        genderParent: getGenderFromParent(modal.parentGenderToSelect),
+                        assignParent: (globalId, parentId) => {
+                          if (modal.parentGenderToSelect === 'Padre') {
+                            setFieldValue('fatherId', globalId);
+                            assignFather(parentId);
+                          } else {
+                            setFieldValue('motherId', globalId);
+                            assignMother(parentId);
+                          }
+                        },
+                      });
+                    }}>
+                    <Text>Registrar nuevo pájaro</Text>
+                  </Button>
+                  <Space></Space>
+                  <Button
+                    transparent
+                    onPress={() => {
+                      setModal({ isVisible: false });
+                      navigation.navigate(NavKeys.birdSelectParent, {
+                        currentBird: birdData,
+                        genderParent: getGenderFromParent(modal.parentGenderToSelect),
+                        assignParent: (globalId, parentId) => {
+                          {
+                            if (modal.parentGenderToSelect === 'Padre') {
+                              setFieldValue('fatherId', globalId);
+                              assignFather(parentId);
+                            } else {
+                              setFieldValue('motherId', globalId);
+                              assignMother(parentId);
+                            }
+                          }
+                        },
+                      });
+                    }}>
+                    <Text>Seleccionar un pájaro ya registrado</Text>
+                  </Button>
+                </ModalBody>
+              </Modal>
               <Content style={{ flex: 1 }}>
                 <PhotoContainer>
                   <Image
@@ -477,7 +481,7 @@ const BirdDetails = ({ navigation }) => {
                                   onPress={() =>
                                     setModal({
                                       isVisible: true,
-                                      title: 'Asignar Padre',
+                                      parentGenderToSelect: 'Padre',
                                     })
                                   }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" father />
@@ -526,7 +530,7 @@ const BirdDetails = ({ navigation }) => {
                                   onPress={() =>
                                     setModal({
                                       isVisible: true,
-                                      title: 'Asignar Madre',
+                                      parentGenderToSelect: 'Madre',
                                     })
                                   }>
                                   <SelectBirdIcon type="MaterialIcons" name="add" mother />
