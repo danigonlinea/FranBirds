@@ -453,7 +453,7 @@ const BirdDetails = ({ navigation }) => {
                                           father
                                           onPress={() =>
                                             navigation.push(NavKeys.birdDetails, {
-                                              birdGlobalId: values.fatherId,
+                                              birdGlobalId: values.fatherIdGlobal,
                                             })
                                           }>
                                           <SelectBirdText father>{values.fatherId}</SelectBirdText>
@@ -504,7 +504,7 @@ const BirdDetails = ({ navigation }) => {
                                           mother
                                           onPress={() => {
                                             navigation.push(NavKeys.birdDetails, {
-                                              birdGlobalId: values.fatherId,
+                                              birdGlobalId: values.motherIdGlobal,
                                             });
                                           }}>
                                           <SelectBirdText mother>{values.motherId}</SelectBirdText>
