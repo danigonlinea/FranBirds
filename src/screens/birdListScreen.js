@@ -126,6 +126,7 @@ const BirdListScreen = ({ navigation }) => {
   };
 
   const _renderItem = ({ item: bird }) => {
+    console.log(`Bird: ${bird.globalId} - ${bird.id}`);
     return (
       <CardBird key={bird.id}>
         <CardItemBird>

@@ -56,8 +56,10 @@ export const getBirds = async (gender, onSuccess, onError) => {
   }
 };
 
+/* SELECT globalId, id, type, gender, fatherId, motherId, notes, photo, (SELECT globalId FROM bird WHERE fatherId=?) AS 'fatherIdGlobal', (SELECT globalId FROM bird WHERE motherId=?) AS 'motherIdGlobal' FROM bird WHERE a.globalId = ? */
+
 export const getBirdByGlobal = async (globalId, onSuccess, onError) => {
-  query(sentencesSQL.getBirdByGlobalId, [globalId], onSuccess, onError);
+  query(sentencesSQL.getBirdByGlobalId, [globalId, globalId, globalId], onSuccess, onError);
 };
 
 export const searchBirds = async (textToSearch = '', onSuccess, onError) => {
@@ -71,24 +73,38 @@ export const searchBirds = async (textToSearch = '', onSuccess, onError) => {
 
 export const insertBird = async (args = {}, onSuccess, onError) => {
   // Sort the values as it is designed in database
-  const { id, type, gender, fatherId = null, motherId = null, notes, photo } = args;
+  const { id, type, gender, fatherIdGlobal = null, motherIdGlobal = null, notes, photo } = args;
   // Make the query with the sorted values as expected by the insert bird query.
   query(
     sentencesSQL.insertBird,
-    [id, type, gender, fatherId, motherId, notes, photo],
+    [id, type, gender, fatherIdGlobal, motherIdGlobal, notes, photo],
     onSuccess,
     onError
   );
 };
 
+/* SELECT a.globalId, a.id, a.type, a.gender, a.fatherId AS 'fatherIdGlobal', a.motherId AS 'motherIdGlobal',
+a.notes, a.photo,
+(SELECT b.id FROM bird b WHERE b.globalId = (SELECT d.fatherId FROM bird d WHERE d.globalId = ?)) AS 'fatherId',
+(SELECT c.id FROM bird c WHERE c.globalId = (SELECT e.motherId FROM bird e WHERE e.globalId = ?))) AS 'motherId' FROM bird a WHERE a.globalId = ?
+ */
 export const updateBird = async (args = {}, onSuccess, onError) => {
   // Sort the values as it is designed in database
-  const { globalId, id, type, gender, fatherId = null, motherId = null, notes, photo } = args;
+  const {
+    globalId,
+    id,
+    type,
+    gender,
+    fatherIdGlobal = null,
+    motherIdGlobal = null,
+    notes,
+    photo,
+  } = args;
   // Make the query with the sorted values as expected by the insert bird query.
 
   query(
     sentencesSQL.updateBird,
-    [id, type, gender, fatherId, motherId, notes, photo, globalId],
+    [id, type, gender, fatherIdGlobal, motherIdGlobal, notes, photo, globalId],
     onSuccess,
     onError
   );

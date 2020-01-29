@@ -107,8 +107,8 @@ const birdFormValues = birdGender => {
     notes: null,
     gender: birdGender,
     photo: null,
-    fatherId: null,
-    motherId: null,
+    fatherIdGlobal: null,
+    motherIdGlobal: null,
   };
 };
 

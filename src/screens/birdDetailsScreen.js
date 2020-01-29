@@ -160,24 +160,25 @@ const birdValidationSchema = () => {
     photo: Yup.string().nullable(),
     fatherId: Yup.string().nullable(),
     motherId: Yup.string().nullable(),
-    fatherIdLabel: Yup.string().nullable(),
-    motherIdLabel: Yup.string().nullable(),
+    fatherIdGlobal: Yup.string().nullable(),
+    motherIdGlobal: Yup.string().nullable(),
   });
 };
 
 const getGenderFromParent = parentType => (parentType === 'Padre' ? 'Macho' : 'Hembra');
+
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState({
-    globalId: null,
+    globalId: navigation.getParam('birdGlobalId'),
     id: null,
     type: null,
     notes: null,
     gender: 'Macho',
     photo: null,
     fatherId: null,
-    fatherIdLabel: null,
+    fatherIdGlobal: null,
     motherId: null,
-    motherIdLabel: null,
+    motherIdGlobal: null,
   });
 
   const [modal, setModal] = useState({
@@ -187,9 +188,9 @@ const BirdDetails = ({ navigation }) => {
 
   useEffect(() => {
     console.log('queryin... ', navigation.getParam('birdGlobalId'));
-    if (navigation.getParam('birdGlobalId')) {
+    if (birdData.globalId) {
       getBirdByGlobal(
-        navigation.getParam('birdGlobalId'),
+        birdData.globalId,
         ({ result: birdInfo }) => {
           console.log('------- Database OK:', birdInfo);
           setBirdData(birdInfo[0]);
@@ -286,11 +287,11 @@ const BirdDetails = ({ navigation }) => {
                           genderParent: getGenderFromParent(modal.parentGenderToSelect),
                           assignParent: (globalId, parentId) => {
                             if (modal.parentGenderToSelect === 'Padre') {
-                              setFieldValue('fatherId', globalId);
-                              assignFather(parentId);
+                              setFieldValue('fatherIdGlobal', globalId);
+                              setFieldValue('fatherId', parentId);
                             } else {
-                              setFieldValue('motherId', globalId);
-                              assignMother(parentId);
+                              setFieldValue('motherIdGlobal', globalId);
+                              setFieldValue('motherId', parentId);
                             }
                           },
                         });
@@ -306,14 +307,12 @@ const BirdDetails = ({ navigation }) => {
                           currentBird: birdData,
                           genderParent: getGenderFromParent(modal.parentGenderToSelect),
                           assignParent: (globalId, parentId) => {
-                            {
-                              if (modal.parentGenderToSelect === 'Padre') {
-                                setFieldValue('fatherId', globalId);
-                                assignFather(parentId);
-                              } else {
-                                setFieldValue('motherId', globalId);
-                                assignMother(parentId);
-                              }
+                            if (modal.parentGenderToSelect === 'Padre') {
+                              setFieldValue('fatherIdGlobal', globalId);
+                              setFieldValue('fatherId', parentId);
+                            } else {
+                              setFieldValue('motherIdGlobal', globalId);
+                              setFieldValue('motherId', parentId);
                             }
                           },
                         });
@@ -465,9 +464,7 @@ const BirdDetails = ({ navigation }) => {
                                           transparent
                                           active
                                           father
-                                          onPress={() =>
-                                            setFieldValue('fatherId', null) && assignFather(null)
-                                          }>
+                                          onPress={() => setFieldValue('fatherId', null)}>
                                           <SelectBirdIcon
                                             type="MaterialIcons"
                                             name="close"
