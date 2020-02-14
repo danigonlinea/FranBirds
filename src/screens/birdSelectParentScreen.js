@@ -22,7 +22,7 @@ import { NavKeys } from '.';
 import { FlatList, Alert } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 import strings from '../utils/strings';
-import { getBirdsForSelectAsParent } from '../db';
+import { getBirdsForSelectAsParent, searchBirds, searchBirdsByGender } from '../db';
 import { getDefaultAvatar } from '../utils/functions';
 
 const HeaderText = styled(Text)`
@@ -64,7 +64,7 @@ const BirdSelectParent = ({ navigation }) => {
   const assignParent = navigation.getParam('assignParent');
 
   const [birdsList, setBirdsList] = useState([]);
-  const { textToSearch } = useGlobalCtx();
+  const { textToSearch, showSearchBar } = useGlobalCtx();
 
   const { photo, id, type, notes, gender, globalId } = currentBird;
 
@@ -83,6 +83,18 @@ const BirdSelectParent = ({ navigation }) => {
   useEffect(() => {
     getBirdsAndUpdate();
   }, []);
+
+  useEffect(() => {
+    searchBirdsByGender(
+      textToSearch,
+      genderToAssign,
+      currentBird.globalId,
+      ({ result: birdsMatched }) => {
+        setBirdsList(birdsMatched);
+      },
+      (ts, error) => console.log('Error', error)
+    );
+  }, [textToSearch]);
 
   const assigningParent = (globalId, birdId) => {
     Alert.alert(
@@ -139,29 +151,32 @@ const BirdSelectParent = ({ navigation }) => {
 
   return (
     <Container>
-      <CurrentBirdContainer color={getGenderColorSelected(genderToAssign)}>
-        <Grid>
-          <CenterCol size={3}>
-            <Thumbnail
-              source={{
-                uri: photo ? photo : getDefaultAvatar(gender),
-              }}
-            />
-          </CenterCol>
+      {!showSearchBar && (
+        <CurrentBirdContainer color={getGenderColorSelected(genderToAssign)}>
+          <Grid>
+            <CenterCol size={3}>
+              <Thumbnail
+                source={{
+                  uri: photo ? photo : getDefaultAvatar(gender),
+                }}
+              />
+            </CenterCol>
 
-          <InfoCol size={6}>
-            <TextBird colors={Colors.textSecundary} fontSize={16}>
-              {id}
-            </TextBird>
-            <TextBird colors={Colors.textSecundary}>{`${gender}${
-              type ? '/' + type : ''
-            }`}</TextBird>
-            <TextBird colors={Colors.textSecundary} ellipsizeMode="tail" note numberOfLines={1}>
-              {notes}
-            </TextBird>
-          </InfoCol>
-        </Grid>
-      </CurrentBirdContainer>
+            <InfoCol size={6}>
+              <TextBird colors={Colors.textSecundary} fontSize={16}>
+                {id}
+              </TextBird>
+              <TextBird colors={Colors.textSecundary}>{`${gender}${
+                type ? '/' + type : ''
+              }`}</TextBird>
+              <TextBird colors={Colors.textSecundary} ellipsizeMode="tail" note numberOfLines={1}>
+                {notes}
+              </TextBird>
+            </InfoCol>
+          </Grid>
+        </CurrentBirdContainer>
+      )}
+
       <SearchBar></SearchBar>
 
       <FlatList

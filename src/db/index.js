@@ -56,6 +56,15 @@ export const getBirds = async (gender, onSuccess, onError) => {
   }
 };
 
+export const searchBirds = async (textToSearch = '', onSuccess, onError) => {
+  query(
+    sentencesSQL.searchBirds,
+    [`%${textToSearch}%`, `%${textToSearch}%`, `%${textToSearch}%`],
+    onSuccess,
+    onError
+  );
+};
+
 export const getBirdsForSelectAsParent = async (gender, currentBirdId, onSuccess, onError) => {
   query(sentencesSQL.getBirdsForSelectAsParent, [gender, currentBirdId], onSuccess, onError);
 };
@@ -66,10 +75,16 @@ export const getBirdByGlobal = async (globalId, onSuccess, onError) => {
   query(sentencesSQL.getBirdByGlobalId, [globalId, globalId, globalId], onSuccess, onError);
 };
 
-export const searchBirds = async (textToSearch = '', onSuccess, onError) => {
+export const searchBirdsByGender = async (
+  textToSearch = '',
+  gender,
+  currentBirdId,
+  onSuccess,
+  onError
+) => {
   query(
-    sentencesSQL.searchBirds,
-    [`%${textToSearch}%`, `%${textToSearch}%`, `%${textToSearch}%`],
+    sentencesSQL.searchBirdsByGender,
+    [currentBirdId, gender, `%${textToSearch}%`, `%${textToSearch}%`, `%${textToSearch}%`],
     onSuccess,
     onError
   );

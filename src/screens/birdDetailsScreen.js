@@ -236,9 +236,9 @@ const BirdDetails = ({ navigation }) => {
   };
 
   const getGenderColorSelected = gender => {
-    if (gender === 'Macho') {
+    if (gender === 'Macho' || gender === 'Padre') {
       return colors.male;
-    } else if (gender === 'Hembra') {
+    } else if (gender === 'Hembra' || gender === 'Madre') {
       return colors.female;
     }
 
@@ -271,6 +271,7 @@ const BirdDetails = ({ navigation }) => {
               <>
                 <Modal
                   title={`Asignar ${modal.parentGenderToSelect}`}
+                  backgroundColor={getGenderColorSelected(modal.parentGenderToSelect)}
                   isVisible={modal.isVisible}
                   orientation="row"
                   onClose={() => {
@@ -281,6 +282,7 @@ const BirdDetails = ({ navigation }) => {
                   }}>
                   <ModalBody>
                     <Button
+                      backgroundColor={getGenderColorSelected(modal.parentGenderToSelect)}
                       onPress={() => {
                         setModal({ isVisible: false });
                         navigation.navigate(NavKeys.birdNewParent, {
@@ -296,7 +298,7 @@ const BirdDetails = ({ navigation }) => {
                           },
                         });
                       }}>
-                      <Text>Registrar como nuevo pájaro</Text>
+                      <Text>Registrar {modal.parentGenderToSelect}</Text>
                     </Button>
                     <Space></Space>
                     <Button
@@ -318,7 +320,9 @@ const BirdDetails = ({ navigation }) => {
                           },
                         });
                       }}>
-                      <Text>Seleccionar un pájaro ya registrado</Text>
+                      <Text style={{ color: getGenderColorSelected(modal.parentGenderToSelect) }}>
+                        Seleccionar {modal.parentGenderToSelect} ya existente
+                      </Text>
                     </Button>
                   </ModalBody>
                 </Modal>

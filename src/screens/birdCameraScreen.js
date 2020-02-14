@@ -58,7 +58,6 @@ const BirdCameraScreen = ({ navigation }) => {
       camera.pausePreview();
       setTakePhoto(false);
 
-      console.log(photo);
       setPreview(photo.uri);
     }
   };
@@ -99,11 +98,6 @@ const BirdCameraScreen = ({ navigation }) => {
 
         navigation.goBack();
         navigation.getParam('changePhoto')(dirDestiny + getPhotoName(preview));
-
-        /*  const filesArray = await FileSystem.readDirectoryAsync(
-          FileSystem.documentDirectory + 'Camera'
-        );
-        console.log(filesArray); */
       } catch (error) {
         console.log(error);
       }
