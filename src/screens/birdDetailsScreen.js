@@ -305,7 +305,8 @@ const BirdDetails = ({ navigation }) => {
                         setModal({ isVisible: false });
                         navigation.navigate(NavKeys.birdSelectParent, {
                           currentBird: birdData,
-                          genderParent: getGenderFromParent(modal.parentGenderToSelect),
+                          parentType: modal.parentGenderToSelect,
+                          genderToAssign: getGenderFromParent(modal.parentGenderToSelect),
                           assignParent: (globalId, parentId) => {
                             if (modal.parentGenderToSelect === 'Padre') {
                               setFieldValue('fatherIdGlobal', globalId);

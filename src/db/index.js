@@ -56,6 +56,10 @@ export const getBirds = async (gender, onSuccess, onError) => {
   }
 };
 
+export const getBirdsForSelectAsParent = async (gender, currentBirdId, onSuccess, onError) => {
+  query(sentencesSQL.getBirdsForSelectAsParent, [gender, currentBirdId], onSuccess, onError);
+};
+
 /* SELECT globalId, id, type, gender, fatherId, motherId, notes, photo, (SELECT globalId FROM bird WHERE fatherId=?) AS 'fatherIdGlobal', (SELECT globalId FROM bird WHERE motherId=?) AS 'motherIdGlobal' FROM bird WHERE a.globalId = ? */
 
 export const getBirdByGlobal = async (globalId, onSuccess, onError) => {

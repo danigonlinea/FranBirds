@@ -22,7 +22,7 @@ import { NavKeys } from '.';
 import { FlatList, Alert } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 import strings from '../utils/strings';
-import { getBirds } from '../db';
+import { getBirdsForSelectAsParent } from '../db';
 import { getDefaultAvatar } from '../utils/functions';
 
 const LineBirdType = styled(View)`
@@ -61,16 +61,20 @@ const CurrentBirdContainer = styled(View)`
 
 const BirdSelectParent = ({ navigation }) => {
   const currentBird = navigation.getParam('currentBird');
-  const genderToSelect = navigation.getParam('genderParent');
+  const genderType = navigation.getParam('parentType');
+  const genderToAssign = navigation.getParam('genderToAssign');
   const assignParent = navigation.getParam('assignParent');
 
   const [birdsList, setBirdsList] = useState([]);
-
   const { textToSearch } = useGlobalCtx();
 
+  const { photo, id, type, notes, gender, globalId } = currentBird;
+
   const getBirdsAndUpdate = () => {
-    getBirds(
-      genderToSelect,
+    console.log(genderToAssign, globalId);
+    getBirdsForSelectAsParent(
+      genderToAssign,
+      globalId,
       ({ result: birdsMatched }) => {
         setBirdsList(birdsMatched);
       },
@@ -84,8 +88,8 @@ const BirdSelectParent = ({ navigation }) => {
 
   const assigningParent = (globalId, birdId) => {
     Alert.alert(
-      `Asignar ${genderToSelect}`,
-      `¿Quieres asignar este pájaro (${birdId}) como ${genderToSelect}?`,
+      `Asignar ${genderType}`,
+      `¿Quieres asignar este pájaro (${birdId}) como ${genderType}?`,
       [
         {
           text: 'No',
@@ -121,7 +125,7 @@ const BirdSelectParent = ({ navigation }) => {
 
               <InfoCol size={6} onPress={() => assigningParent(bird.globalId, bird.id)}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
-                <TextBird>{bird.type}</TextBird>
+                <TextBird>{`${bird.gender}${bird.type ? '/' + bird.type : ''}`}</TextBird>
                 <TextBird ellipsizeMode="tail" note numberOfLines={1}>
                   {bird.notes}
                 </TextBird>
@@ -134,8 +138,6 @@ const BirdSelectParent = ({ navigation }) => {
   };
 
   console.log(currentBird);
-
-  const { photo, id, type, notes, gender } = currentBird;
 
   return (
     <Container>
@@ -179,13 +181,12 @@ const BirdSelectParent = ({ navigation }) => {
 };
 
 BirdSelectParent.navigationOptions = ({ navigation }) => {
-  const genderParent = navigation.getParam('genderParent');
+  const parentType = navigation.getParam('parentType');
 
-  console.log('Nav', genderParent);
   return {
     ...NavStyle,
     headerLeft: () => null,
-    headerTitle: () => <Text>{`Selecciona para asignar ${genderParent}`}</Text>,
+    headerTitle: () => <Text>{`Selecciona para asignar ${parentType}`}</Text>,
     headerRight: () => <SearchAction></SearchAction>,
   };
 };

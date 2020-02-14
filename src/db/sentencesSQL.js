@@ -1,6 +1,7 @@
 export default {
   getAllBirds: 'SELECT * FROM bird',
   getBirds: 'SELECT * FROM bird WHERE gender = ?',
+  getBirdsForSelectAsParent: 'SELECT * FROM bird WHERE gender = ? AND globalId != ?',
   getBird: 'SELECT * FROM bird WHERE globalId = ?',
   getBirdByGlobalId:
     "SELECT a.globalId, a.id, a.type, a.gender, a.fatherId AS 'fatherIdGlobal', a.motherId AS 'motherIdGlobal', a.notes, a.photo, (SELECT b.id FROM bird b WHERE b.globalId = (SELECT d.fatherId FROM bird d WHERE d.globalId = ?)) AS 'fatherId', (SELECT c.id FROM bird c WHERE c.globalId = (SELECT e.motherId FROM bird e WHERE e.globalId = ?)) AS 'motherId' FROM bird a WHERE a.globalId = ?",
