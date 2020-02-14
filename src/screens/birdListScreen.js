@@ -73,16 +73,6 @@ const BirdListScreen = ({ navigation }) => {
     showSearchBar,
   } = useGlobalCtx();
 
-  // Only search on id, type and notes
-  /* const isTextSearchFound = bird => {
-    const allWordsToSearch = textToSearch.split(' ');
-    return Object.values(bird).some(fieldValue => {
-      return allWordsToSearch.some(singleTextToSearch => {
-        return fieldValue.toLowerCase().includes(singleTextToSearch.toLowerCase());
-      });
-    });
-  }; */
-
   const getBirdsAndUpdate = () => {
     getBirds(
       strings.gender[filterSelected],
@@ -126,7 +116,6 @@ const BirdListScreen = ({ navigation }) => {
   };
 
   const _renderItem = ({ item: bird }) => {
-    console.log(`Bird: ${bird.globalId} - ${bird.id}`);
     return (
       <CardBird key={bird.id}>
         <CardItemBird>

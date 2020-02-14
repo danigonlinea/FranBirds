@@ -22,6 +22,8 @@ import { NavKeys } from '.';
 import { FlatList, Alert } from 'react-native';
 import GlobalContext, { useGlobalCtx } from '../context/globalContext';
 import strings from '../utils/strings';
+import { getBirds } from '../db';
+import { getDefaultAvatar } from '../utils/functions';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -52,10 +54,6 @@ const InfoCol = styled(Col)`
   padding-bottom: 8px;
 `;
 
-const FabPlus = styled(Fab)`
-  background-color: ${Colors.secondary};
-`;
-
 const CurrentBirdContainer = styled(View)`
   height: 90px;
   background-color: ${Colors.primary};
@@ -63,45 +61,26 @@ const CurrentBirdContainer = styled(View)`
 
 const BirdSelectParent = ({ navigation }) => {
   const currentBird = navigation.getParam('currentBird');
-  const genderToSelect = navigation.getParam('genderToSelect');
+  const genderToSelect = navigation.getParam('genderParent');
   const assignParent = navigation.getParam('assignParent');
 
-  const [allBirds, setAllBirds] = useState([]);
   const [birdsList, setBirdsList] = useState([]);
 
   const { textToSearch } = useGlobalCtx();
 
-  useEffect(() => {
-    // Load all Birds from database
-    if (genderToSelect === strings.filter.male) {
-      // All Males
-      setAllBirds(Mock.birdsData);
-    } else {
-      // All Females
-      setAllBirds(Mock.birdsData);
-    }
-  }, []);
-
-  // Only search on id, type and notes
-  const isTextSearchFound = bird => {
-    const allWordsToSearch = textToSearch.split(' ');
-    return Object.values(bird).some(fieldValue => {
-      return allWordsToSearch.some(singleTextToSearch => {
-        return fieldValue.toLowerCase().includes(singleTextToSearch.toLowerCase());
-      });
-    });
+  const getBirdsAndUpdate = () => {
+    getBirds(
+      genderToSelect,
+      ({ result: birdsMatched }) => {
+        setBirdsList(birdsMatched);
+      },
+      (ts, error) => console.log('Error', error)
+    );
   };
 
   useEffect(() => {
-    if (!textToSearch) {
-      // All List
-      setBirdsList(Mock.birdsData);
-    } else {
-      setBirdsList(
-        allBirds.filter(({ gender, photo, motherId, fatherId, ...bird }) => isTextSearchFound(bird))
-      );
-    }
-  }, [textToSearch]);
+    getBirdsAndUpdate();
+  }, []);
 
   const assigningParent = (globalId, birdId) => {
     Alert.alert(
@@ -135,7 +114,7 @@ const BirdSelectParent = ({ navigation }) => {
                 <Thumbnail
                   large
                   source={{
-                    uri: bird.photo,
+                    uri: bird.photo ? bird.photo : getDefaultAvatar(bird.gender),
                   }}
                 />
               </CenterCol>
@@ -147,12 +126,6 @@ const BirdSelectParent = ({ navigation }) => {
                   {bird.notes}
                 </TextBird>
               </InfoCol>
-              <CenterCol size={1} onPress={() => assigningParent(bird.globalId, bird.id)}>
-                <Icon
-                  type="MaterialIcons"
-                  name="chevron-right"
-                  style={{ color: Colors.defaultIcon }}></Icon>
-              </CenterCol>
             </Grid>
           </BodyBird>
         </CardItemBird>
@@ -162,7 +135,7 @@ const BirdSelectParent = ({ navigation }) => {
 
   console.log(currentBird);
 
-  const { photo, id, type, notes } = currentBird;
+  const { photo, id, type, notes, gender } = currentBird;
 
   return (
     <Container>
@@ -171,14 +144,14 @@ const BirdSelectParent = ({ navigation }) => {
           <CenterCol size={3}>
             <Thumbnail
               source={{
-                uri: photo,
+                uri: photo ? photo : getDefaultAvatar(gender),
               }}
             />
           </CenterCol>
 
           <InfoCol size={6}>
             <TextBird fontSize={16}>{id}</TextBird>
-            <TextBird>{type}</TextBird>
+            <TextBird>{`${gender}${type ? '/' + type : ''}`}</TextBird>
             <TextBird ellipsizeMode="tail" note numberOfLines={1}>
               {notes}
             </TextBird>
@@ -206,12 +179,13 @@ const BirdSelectParent = ({ navigation }) => {
 };
 
 BirdSelectParent.navigationOptions = ({ navigation }) => {
-  const genderToSelect = navigation.getParam('genderToSelect');
+  const genderParent = navigation.getParam('genderParent');
 
+  console.log('Nav', genderParent);
   return {
     ...NavStyle,
     headerLeft: () => null,
-    headerTitle: () => `Seleccionar ${genderToSelect}`,
+    headerTitle: () => <Text>{`Selecciona para asignar ${genderParent}`}</Text>,
     headerRight: () => <SearchAction></SearchAction>,
   };
 };
