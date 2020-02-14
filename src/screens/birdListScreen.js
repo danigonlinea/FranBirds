@@ -11,6 +11,8 @@ import {
   Text,
   Thumbnail,
   View,
+  Content,
+  Spinner,
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
@@ -63,6 +65,7 @@ const CardBird = styled(Card)`
 
 const BirdListScreen = ({ navigation }) => {
   const [birdsList, setBirdsList] = useState([]);
+  const [firstLoad, setFirstLoad] = useState(false);
 
   const {
     dataModal,
@@ -78,6 +81,10 @@ const BirdListScreen = ({ navigation }) => {
       strings.gender[filterSelected],
       ({ result: birdsMatched }) => {
         setBirdsList(birdsMatched);
+
+        if (!firstLoad) {
+          setFirstLoad(true);
+        }
       },
       (ts, error) => console.log('Error', error)
     );
@@ -174,6 +181,22 @@ const BirdListScreen = ({ navigation }) => {
     );
   };
 
+  if (!firstLoad) {
+    return (
+      <Container>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Spinner color={Colors.primary} />
+          <Text>Cargando pájaros...</Text>
+        </View>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <BirdPhotoDialog />
@@ -189,7 +212,14 @@ const BirdListScreen = ({ navigation }) => {
         keyExtractor={({ id }) => id}
         ListEmptyComponent={
           <Container>
-            <Text>{Strings.noBirdsRegistered}</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text>{Strings.noBirdsRegistered}</Text>
+            </View>
           </Container>
         }
       />

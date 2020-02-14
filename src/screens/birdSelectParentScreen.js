@@ -147,8 +147,6 @@ const BirdSelectParent = ({ navigation }) => {
     );
   };
 
-  console.log(currentBird);
-
   return (
     <Container>
       {!showSearchBar && (

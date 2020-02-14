@@ -11,7 +11,6 @@ const SearchIcon = styled(Icon)`
 const SearchAction = ({ iconColor }) => {
   const { showSearchBar, setSearchBar, setFilter } = useGlobalCtx();
 
-  console.log(iconColor);
   return (
     <Button
       icon
