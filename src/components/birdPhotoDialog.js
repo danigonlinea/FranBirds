@@ -37,6 +37,16 @@ const BtnText = styled(Text)`
   color: ${Colors.white};
 `;
 
+const getGenderColorSelected = gender => {
+  if (gender === 'Macho') {
+    return Colors.male;
+  } else if (gender === 'Hembra') {
+    return Colors.female;
+  }
+
+  return Colors.egg;
+};
+
 const BirdPhotoDialog = ({ navigation }) => {
   const {
     dataModal: { bird, toggleDialog },
@@ -87,7 +97,7 @@ const BirdPhotoDialog = ({ navigation }) => {
             <Text>{bird.type}</Text>
           </BirdInfo>
           <Btn
-            type={bird.gender}
+            backgroundColor={getGenderColorSelected(bird.gender)}
             onPress={() => {
               setDataModal({
                 bird: null,

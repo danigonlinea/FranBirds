@@ -350,7 +350,8 @@ const BirdDetails = ({ navigation }) => {
                           navigation.navigate(NavKeys.birdCamera, {
                             changePhoto: async photoFullPath => {
                               // Remove previous photo
-                              photosToDeleteFromStorage.add(photo);
+
+                              photosToDeleteFromStorage.add(values.photo);
 
                               setFieldValue('photo', photoFullPath);
                               setBirdData({

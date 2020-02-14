@@ -21,7 +21,6 @@ const query = (querySQL, argsArray, onSuccess, onError) => {
         querySQL,
         argsArray,
         (_, { rows, rowsAffected, insertId }) => {
-          // console.log({ rows, rowsAffected, insertId });
           result = {
             result: JSON.parse(JSON.stringify(rows._array)),
             count: rows.length,
@@ -65,7 +64,7 @@ export const searchBirds = async (textToSearch = '', onSuccess, onError) => {
   );
 };
 
-export const getBirdsForSelectAsParent = async (gender, currentBirdId, onSuccess, onError) => {
+export const getBirdsForSelectAsParent = async (gender, currentBirdId = '', onSuccess, onError) => {
   query(sentencesSQL.getBirdsForSelectAsParent, [gender, currentBirdId], onSuccess, onError);
 };
 
@@ -78,7 +77,7 @@ export const getBirdByGlobal = async (globalId, onSuccess, onError) => {
 export const searchBirdsByGender = async (
   textToSearch = '',
   gender,
-  currentBirdId,
+  currentBirdId = '',
   onSuccess,
   onError
 ) => {

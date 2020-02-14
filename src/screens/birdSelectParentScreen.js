@@ -85,6 +85,7 @@ const BirdSelectParent = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    console.log('Hey', textToSearch, genderToAssign, currentBird);
     searchBirdsByGender(
       textToSearch,
       genderToAssign,
@@ -187,7 +188,18 @@ const BirdSelectParent = ({ navigation }) => {
         keyExtractor={({ id }) => id}
         ListEmptyComponent={
           <Container>
-            <Text>{Strings.noBirdsRegistered}</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 10,
+              }}>
+              <Text>
+                No hay ningún pájaro {genderToAssign} para asignar como {genderType}, regístrelos
+                primero.
+              </Text>
+            </View>
           </Container>
         }
       />
