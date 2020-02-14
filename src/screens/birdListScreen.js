@@ -215,7 +215,7 @@ BirdListScreen.navigationOptions = {
   ...NavStyle,
   headerLeft: () => null,
   headerTitle: () => <Filter></Filter>,
-  headerRight: () => <SearchAction></SearchAction>,
+  headerRight: () => <SearchAction iconColor={Colors.textPrimary}></SearchAction>,
 };
 
 export default withNavigation(BirdListScreen);

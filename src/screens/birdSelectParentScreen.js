@@ -25,10 +25,8 @@ import strings from '../utils/strings';
 import { getBirdsForSelectAsParent } from '../db';
 import { getDefaultAvatar } from '../utils/functions';
 
-const LineBirdType = styled(View)`
-  width: 10px;
-  height: 100px;
-  background: ${props => (props.type === 'Macho' ? Colors.male : Colors.female)};
+const HeaderText = styled(Text)`
+  color: ${Colors.white};
 `;
 const TextBird = styled(Text)`
   ${({ colors, fontSize }) => css`
@@ -56,7 +54,7 @@ const InfoCol = styled(Col)`
 
 const CurrentBirdContainer = styled(View)`
   height: 90px;
-  background-color: ${Colors.primary};
+  background-color: ${({ color }) => color};
 `;
 
 const BirdSelectParent = ({ navigation }) => {
@@ -89,7 +87,7 @@ const BirdSelectParent = ({ navigation }) => {
   const assigningParent = (globalId, birdId) => {
     Alert.alert(
       `Asignar ${genderType}`,
-      `¿Quieres asignar este pájaro (${birdId}) como ${genderType}?`,
+      `¿Quieres asignar este pájaro (ID: ${birdId}) como ${genderType}?`,
       [
         {
           text: 'No',
@@ -141,7 +139,7 @@ const BirdSelectParent = ({ navigation }) => {
 
   return (
     <Container>
-      <CurrentBirdContainer>
+      <CurrentBirdContainer color={getGenderColorSelected(genderToAssign)}>
         <Grid>
           <CenterCol size={3}>
             <Thumbnail
@@ -152,9 +150,13 @@ const BirdSelectParent = ({ navigation }) => {
           </CenterCol>
 
           <InfoCol size={6}>
-            <TextBird fontSize={16}>{id}</TextBird>
-            <TextBird>{`${gender}${type ? '/' + type : ''}`}</TextBird>
-            <TextBird ellipsizeMode="tail" note numberOfLines={1}>
+            <TextBird colors={Colors.textSecundary} fontSize={16}>
+              {id}
+            </TextBird>
+            <TextBird colors={Colors.textSecundary}>{`${gender}${
+              type ? '/' + type : ''
+            }`}</TextBird>
+            <TextBird colors={Colors.textSecundary} ellipsizeMode="tail" note numberOfLines={1}>
               {notes}
             </TextBird>
           </InfoCol>
@@ -180,14 +182,31 @@ const BirdSelectParent = ({ navigation }) => {
   );
 };
 
+const getGenderColorSelected = gender => {
+  if (gender === 'Macho') {
+    return Colors.male;
+  } else if (gender === 'Hembra') {
+    return Colors.female;
+  }
+
+  return Colors.egg;
+};
+
 BirdSelectParent.navigationOptions = ({ navigation }) => {
   const parentType = navigation.getParam('parentType');
+  const genderToAssign = navigation.getParam('genderToAssign');
 
   return {
     ...NavStyle,
+    headerStyle: {
+      backgroundColor: getGenderColorSelected(genderToAssign),
+    },
+    headerTitleStyle: {
+      color: Colors.textSecundary,
+    },
     headerLeft: () => null,
-    headerTitle: () => <Text>{`Selecciona para asignar ${parentType}`}</Text>,
-    headerRight: () => <SearchAction></SearchAction>,
+    headerTitle: () => <HeaderText>{`Selecciona para asignar ${parentType}`}</HeaderText>,
+    headerRight: () => <SearchAction iconColor={Colors.textSecundary}></SearchAction>,
   };
 };
 

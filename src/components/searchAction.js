@@ -5,12 +5,13 @@ import colors from '../utils/colors';
 import styled from 'styled-components';
 
 const SearchIcon = styled(Icon)`
-  color: ${colors.black};
+  color: ${({ iconColor }) => (iconColor ? iconColor : colors.black)};
 `;
 
-const SearchAction = () => {
+const SearchAction = ({ iconColor }) => {
   const { showSearchBar, setSearchBar, setFilter } = useGlobalCtx();
 
+  console.log(iconColor);
   return (
     <Button
       icon
@@ -22,7 +23,7 @@ const SearchAction = () => {
           setFilter(0);
         }
       }}>
-      <SearchIcon type="MaterialIcons" name="search" />
+      <SearchIcon type="MaterialIcons" name="search" iconColor={iconColor} />
     </Button>
   );
 };

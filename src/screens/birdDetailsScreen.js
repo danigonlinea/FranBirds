@@ -516,9 +516,7 @@ const BirdDetails = ({ navigation }) => {
                                           transparent
                                           active
                                           mother
-                                          onPress={() =>
-                                            setFieldValue('motherId', null) && assignMother(null)
-                                          }>
+                                          onPress={() => setFieldValue('motherId', null)}>
                                           <SelectBirdIcon
                                             type="MaterialIcons"
                                             name="close"
