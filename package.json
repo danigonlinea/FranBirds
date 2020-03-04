@@ -6,6 +6,10 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
+    "expo:publish": "expo publish",
+    "production:update": "expo publish --release-channel production",
+    "build:android:apk": "expo build:android --release-channel production",
+    "build:android:app-bundle": "expo build:android -t app-bundle --release-channel production",
     "reset:cache": "expo r -c",
     "install:reset": "rm -rf /node_modules yarn.lock && yarn",
     "sqlite": "expo install expo-file-system"
