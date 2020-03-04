@@ -7,6 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "expo:publish": "expo publish",
+    "expo:clear": "expo build:android -c",
     "production:update": "expo publish --release-channel production",
     "build:android:apk": "expo build:android --release-channel production",
     "build:android:app-bundle": "expo build:android -t app-bundle --release-channel production",
