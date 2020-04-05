@@ -112,7 +112,7 @@ const BirdListScreen = ({ navigation }) => {
     );
   }, [textToSearch]);
 
-  const getGenderColorSelected = gender => {
+  const getGenderColorSelected = (gender) => {
     if (gender === 'Macho') {
       return Colors.male;
     } else if (gender === 'Hembra') {

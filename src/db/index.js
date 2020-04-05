@@ -4,7 +4,7 @@ import database from './database';
 import sentencesSQL from './sentencesSQL';
 import strings from '../utils/strings';
 
-const nullCallback = v => console.log('Null Callback');
+const nullCallback = (v) => console.log('Null Callback');
 
 const getDatabase = () => {
   return SQLite.openDatabase(info.name, info.version, info.description);
@@ -16,7 +16,7 @@ const query = (querySQL, argsArray, onSuccess, onError) => {
   let result = undefined;
 
   db.transaction(
-    tx => {
+    (tx) => {
       tx.executeSql(
         querySQL,
         argsArray,
@@ -34,7 +34,7 @@ const query = (querySQL, argsArray, onSuccess, onError) => {
         (ts, error) => onError(ts, error)
       );
     },
-    err => console.log('Query Error: ', error),
+    (err) => console.log('Query Error: ', error),
     () => onSuccess instanceof Function && onSuccess(result)
   );
 };

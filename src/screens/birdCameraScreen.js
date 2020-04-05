@@ -46,7 +46,7 @@ const BirdCameraScreen = ({ navigation }) => {
   const prepareRatio = async () => {
     if (Platform.OS === 'android' && camera) {
       const ratios = await camera.getSupportedRatiosAsync();
-      const defaultRatio = ratios.find(availRatio => availRatio === DESIRED_RATIO) || '4:3';
+      const defaultRatio = ratios.find((availRatio) => availRatio === DESIRED_RATIO) || '4:3';
       setRatio(defaultRatio);
     }
   };
@@ -69,7 +69,7 @@ const BirdCameraScreen = ({ navigation }) => {
     }
   };
 
-  const createDir = async dir => {
+  const createDir = async (dir) => {
     const newDir = await FileSystem.getInfoAsync(dir);
 
     if (newDir.exists && newDir.isDirectory) {
@@ -80,7 +80,7 @@ const BirdCameraScreen = ({ navigation }) => {
     return newDir.uri;
   };
 
-  const getPhotoName = previewUri => {
+  const getPhotoName = (previewUri) => {
     const partPhoto = previewUri.split('/');
 
     return partPhoto[partPhoto.length - 1];
@@ -111,7 +111,7 @@ const BirdCameraScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <Camera
         style={{ flex: 1 }}
-        ref={cameraRef => {
+        ref={(cameraRef) => {
           setCamera(cameraRef);
         }}
         ratio={ratio}
@@ -127,7 +127,7 @@ const BirdCameraScreen = ({ navigation }) => {
               <CameraButton color={Colors.denied} onPress={() => discardPhoto()}>
                 <Icon type="MaterialIcons" name="clear" />
               </CameraButton>
-              <CameraButton color={Colors.accept} onPress={cameraInfo => savePhoto()}>
+              <CameraButton color={Colors.accept} onPress={(cameraInfo) => savePhoto()}>
                 <Icon type="MaterialIcons" name="check" />
               </CameraButton>
             </>

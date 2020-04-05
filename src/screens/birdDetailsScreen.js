@@ -82,15 +82,15 @@ const SelectBirdContainer = styled(Grid)``;
 const SelectBirdBtn = styled(Button)`
   margin: 12px 0;
   height: 30px;
-  border-color: ${props => (props.father ? Colors.male : Colors.female)};
+  border-color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
 
 const SelectBirdIcon = styled(Icon)`
-  color: ${props => (props.father ? Colors.male : Colors.female)};
+  color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
 
 const SelectBirdText = styled(Text)`
-  color: ${props => (props.father ? Colors.male : Colors.female)};
+  color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
 
 const TextLabel = styled(Text)`
@@ -151,9 +151,7 @@ const Space = styled(View)`
 const birdValidationSchema = () => {
   return Yup.object().shape({
     globalId: Yup.number().nullable(),
-    id: Yup.string()
-      .required('El Identificador es necesario')
-      .nullable(),
+    id: Yup.string().required('El Identificador es necesario').nullable(),
     type: Yup.string().nullable(),
     notes: Yup.string().nullable(),
     gender: Yup.string(),
@@ -165,7 +163,7 @@ const birdValidationSchema = () => {
   });
 };
 
-const getGenderFromParent = parentType => (parentType === 'Padre' ? 'Macho' : 'Hembra');
+const getGenderFromParent = (parentType) => (parentType === 'Padre' ? 'Macho' : 'Hembra');
 
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState({
@@ -202,9 +200,9 @@ const BirdDetails = ({ navigation }) => {
 
   const photosToDeleteFromStorage = new Set();
 
-  const submitBird = birdData => {
+  const submitBird = (birdData) => {
     try {
-      photosToDeleteFromStorage.forEach(async photoToDelete => {
+      photosToDeleteFromStorage.forEach(async (photoToDelete) => {
         await FileSystem.deleteAsync(photoToDelete, {
           idempotent: false,
         });
@@ -235,7 +233,7 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
-  const getGenderColorSelected = gender => {
+  const getGenderColorSelected = (gender) => {
     if (gender === 'Macho' || gender === 'Padre') {
       return colors.male;
     } else if (gender === 'Hembra' || gender === 'Madre') {
@@ -348,7 +346,7 @@ const BirdDetails = ({ navigation }) => {
                         }}
                         onPress={() =>
                           navigation.navigate(NavKeys.birdCamera, {
-                            changePhoto: async photoFullPath => {
+                            changePhoto: async (photoFullPath) => {
                               // Remove previous photo
 
                               photosToDeleteFromStorage.add(values.photo);

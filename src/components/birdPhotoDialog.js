@@ -26,7 +26,7 @@ const BirdInfo = styled(View)`
 `;
 
 const Btn = styled(Button)`
-  background-color: ${props => (props.type === 'Macho' ? Colors.male : Colors.female)};
+  background-color: ${(props) => (props.type === 'Macho' ? Colors.male : Colors.female)};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,7 +37,7 @@ const BtnText = styled(Text)`
   color: ${Colors.white};
 `;
 
-const getGenderColorSelected = gender => {
+const getGenderColorSelected = (gender) => {
   if (gender === 'Macho') {
     return Colors.male;
   } else if (gender === 'Hembra') {

@@ -89,9 +89,7 @@ const TextError = styled(Text)`
 const birdValidationSchema = () => {
   return Yup.object().shape({
     globalId: Yup.number().nullable(),
-    id: Yup.string()
-      .required('El Identificador es necesario')
-      .nullable(),
+    id: Yup.string().required('El Identificador es necesario').nullable(),
     type: Yup.string().nullable(),
     notes: Yup.string().nullable(),
     gender: Yup.string(),
@@ -99,7 +97,7 @@ const birdValidationSchema = () => {
   });
 };
 
-const birdFormValues = birdGender => {
+const birdFormValues = (birdGender) => {
   return {
     globalId: null,
     id: null,
@@ -139,13 +137,13 @@ const PhotoContainer = styled(View)`
   height: 250px;
 `;
 
-const getGenderColorSelected = gender => {
+const getGenderColorSelected = (gender) => {
   if (gender === 'Macho') {
     return colors.male;
   } else return colors.female;
 };
 
-const renderGenderButton = gender => (
+const renderGenderButton = (gender) => (
   <GenderButton
     color={getGenderColorSelected(gender)}
     genderColorSelected={getGenderColorSelected(gender)}
@@ -157,9 +155,9 @@ const renderGenderButton = gender => (
 const BirdNewParent = ({ navigation }) => {
   const photosToDeleteFromStorage = new Set();
 
-  const submitBird = birdFormData => {
+  const submitBird = (birdFormData) => {
     try {
-      photosToDeleteFromStorage.forEach(async photoToDelete => {
+      photosToDeleteFromStorage.forEach(async (photoToDelete) => {
         await FileSystem.deleteAsync(photoToDelete, {
           idempotent: false,
         });
@@ -216,7 +214,7 @@ const BirdNewParent = ({ navigation }) => {
                       }}
                       onPress={() =>
                         navigation.navigate(NavKeys.birdCamera, {
-                          changePhoto: async photoFullPath => {
+                          changePhoto: async (photoFullPath) => {
                             // Remove previous photo
                             photosToDeleteFromStorage.add(values.photo);
 

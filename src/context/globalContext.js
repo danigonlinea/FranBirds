@@ -19,19 +19,19 @@ const GlobalContext = ({ children }) => {
     <GlobalCtx.Provider
       value={{
         dataModal,
-        setDataModal: data => {
+        setDataModal: (data) => {
           setDataModa(data);
         },
         filterSelected,
-        setFilter: newFilterOption => {
+        setFilter: (newFilterOption) => {
           setFilterSelected(newFilterOption);
         },
         showSearchBar,
-        setSearchBar: value => {
+        setSearchBar: (value) => {
           setShowSearchBar(value);
         },
         textToSearch,
-        searchBirdsByText: text => {
+        searchBirdsByText: (text) => {
           setTextToSearch(text);
         },
       }}>

@@ -1,28 +1,12 @@
-import { isEmpty } from 'lodash';
-import {
-  Body,
-  Card,
-  CardItem,
-  Container,
-  Content,
-  Icon,
-  Text,
-  Thumbnail,
-  View,
-  Grid,
-  Col,
-  Fab,
-} from 'native-base';
+import { Body, Card, CardItem, Col, Container, Grid, Text, Thumbnail, View } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { NavStyle, BirdPhotoDialog, Filter, SearchAction, SearchBar } from '../components';
-import { Colors, Mock, Strings, Constants } from '../utils';
+import { Alert, FlatList } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { NavKeys } from '.';
-import { FlatList, Alert } from 'react-native';
-import GlobalContext, { useGlobalCtx } from '../context/globalContext';
-import strings from '../utils/strings';
-import { getBirdsForSelectAsParent, searchBirds, searchBirdsByGender } from '../db';
+import styled, { css } from 'styled-components';
+import { NavStyle, SearchAction, SearchBar } from '../components';
+import { useGlobalCtx } from '../context/globalContext';
+import { getBirdsForSelectAsParent, searchBirdsByGender } from '../db';
+import { Colors } from '../utils';
 import { getDefaultAvatar } from '../utils/functions';
 
 const HeaderText = styled(Text)`
@@ -207,7 +191,7 @@ const BirdSelectParent = ({ navigation }) => {
   );
 };
 
-const getGenderColorSelected = gender => {
+const getGenderColorSelected = (gender) => {
   if (gender === 'Macho') {
     return Colors.male;
   } else if (gender === 'Hembra') {
