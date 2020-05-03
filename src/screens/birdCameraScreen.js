@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
 import Constants from 'expo-constants';
 import * as FileSystem from 'expo-file-system';
-import { Icon, Button } from 'native-base';
+import { Icon, Button, Spinner } from 'native-base';
 import styled, { css } from 'styled-components';
 import { Colors } from '../utils';
 import { NavStyle } from '../components';
@@ -32,6 +32,7 @@ const BirdCameraScreen = ({ navigation }) => {
   const [preview, setPreview] = useState(null);
   const [ratio, setRatio] = useState('4:3');
   const [isTakingPhoto, setTakePhoto] = useState(false);
+  const [isSavingPhoto, setSavePhoto] = useState(false);
 
   const DESIRED_RATIO = '16:9';
   // Request permission to access Camera
@@ -53,12 +54,16 @@ const BirdCameraScreen = ({ navigation }) => {
 
   const capturePhoto = async () => {
     if (camera) {
-      setTakePhoto(true);
-      const photo = await camera.takePictureAsync();
-      camera.pausePreview();
-      setTakePhoto(false);
-
-      setPreview(photo.uri);
+      try {
+        setTakePhoto(true);
+        const photo = await camera.takePictureAsync();
+        camera.pausePreview();
+        setTakePhoto(false);
+        setPreview(photo.uri);
+      } catch (e) {
+        setTakePhoto(false);
+        console.log(e);
+      }
     }
   };
 
@@ -88,6 +93,7 @@ const BirdCameraScreen = ({ navigation }) => {
 
   const savePhoto = async () => {
     if (camera) {
+      setSavePhoto(true);
       try {
         const dirDestiny = await createDir(FileSystem.documentDirectory + 'images/');
 
@@ -104,6 +110,45 @@ const BirdCameraScreen = ({ navigation }) => {
     }
   };
 
+  const getCameraActions = () => {
+    if (preview) {
+      return (
+        <>
+          <CameraButton
+            color={Colors.denied}
+            onPress={() => (!isSavingPhoto ? discardPhoto() : false)}>
+            <Icon type="MaterialIcons" name="clear" />
+          </CameraButton>
+          <CameraButton
+            color={Colors.accept}
+            onPress={(cameraInfo) => (!isSavingPhoto ? savePhoto() : false)}>
+            {!isSavingPhoto ? (
+              <Icon type="MaterialIcons" name="check" />
+            ) : (
+              <View style={{ paddingLeft: 8, paddingRight: 8 }}>
+                <Spinner color={Colors.primary} />
+              </View>
+            )}
+          </CameraButton>
+        </>
+      );
+    }
+
+    return (
+      <CameraButton
+        color={Colors.defaultBackground}
+        onPress={() => (!isTakingPhoto ? capturePhoto() : false)}>
+        {!isTakingPhoto ? (
+          <Icon type="MaterialIcons" name="camera" />
+        ) : (
+          <View style={{ paddingLeft: 8, paddingRight: 8 }}>
+            <Spinner color={Colors.primary} />
+          </View>
+        )}
+      </CameraButton>
+    );
+  };
+
   if ((hasPermission === null || hasPermission) === false) {
     return <Text>No access to camera</Text>;
   }
@@ -117,22 +162,7 @@ const BirdCameraScreen = ({ navigation }) => {
         ratio={ratio}
         onCameraReady={() => prepareRatio()}
         type={Camera.Constants.Type.back}>
-        <CameraActions>
-          {!preview ? (
-            <CameraButton color={Colors.defaultBackground} onPress={() => capturePhoto()}>
-              <Icon type="MaterialIcons" name="camera" />
-            </CameraButton>
-          ) : (
-            <>
-              <CameraButton color={Colors.denied} onPress={() => discardPhoto()}>
-                <Icon type="MaterialIcons" name="clear" />
-              </CameraButton>
-              <CameraButton color={Colors.accept} onPress={(cameraInfo) => savePhoto()}>
-                <Icon type="MaterialIcons" name="check" />
-              </CameraButton>
-            </>
-          )}
-        </CameraActions>
+        <CameraActions>{getCameraActions()}</CameraActions>
       </Camera>
     </View>
   );
