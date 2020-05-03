@@ -16,6 +16,7 @@ import {
   Row,
   Textarea,
 } from 'native-base';
+import { isEmpty } from 'lodash';
 import React, { useState, useEffect } from 'react';
 import { Image, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { withNavigation } from 'react-navigation';
@@ -26,7 +27,13 @@ import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
 import { useGlobalCtx } from '../context/globalContext';
-import { insertBird, updateBird, getBirdByGlobal } from '../db';
+import {
+  insertBird,
+  updateBird,
+  getBirdByGlobal,
+  getBirdBrothersByGlobal,
+  getBirdChildrenByGlobal,
+} from '../db';
 import colors from '../utils/colors';
 import * as FileSystem from 'expo-file-system';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -45,7 +52,7 @@ const FabIcon = styled(Icon)`
 
 const FormContainer = styled(View)`
   flex: 1;
-  padding: 22px;
+  padding: 12px;
 `;
 
 const FormItem = styled(Item)`
@@ -80,7 +87,8 @@ const VerticalSpace = styled(View)`
 const SelectBirdContainer = styled(Grid)``;
 
 const SelectBirdBtn = styled(Button)`
-  margin: 12px 0;
+  margin: 6px 0;
+  margin: ${({ bordered }) => (bordered ? '12px 0' : '6px 0')};
   height: 30px;
   border-color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
@@ -93,9 +101,13 @@ const SelectBirdText = styled(Text)`
   color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
 
-const TextLabel = styled(Text)`
-  color: #888;
+const TextInfo = styled(Text)`
   margin-top: 4px;
+`;
+
+const TextLabel = styled(TextInfo)`
+  color: #888;
+  height: 30px;
 `;
 
 const ErrorContainer = styled(View)`
@@ -178,6 +190,8 @@ const BirdDetails = ({ navigation }) => {
     motherId: null,
     motherIdGlobal: null,
   });
+  const [brothers, setBrothers] = useState([]);
+  const [children, setChildren] = useState([]);
 
   const [modal, setModal] = useState({
     isVisible: false,
@@ -185,13 +199,31 @@ const BirdDetails = ({ navigation }) => {
   });
 
   useEffect(() => {
-    console.log('queryin... ', navigation.getParam('birdGlobalId'));
+    console.log('ID: ', navigation.getParam('birdGlobalId'));
     if (birdData.globalId) {
       getBirdByGlobal(
         birdData.globalId,
         ({ result: birdInfo }) => {
-          console.log('------- Database OK:', birdInfo);
+          console.log('------- Bird:', birdInfo[0]);
           setBirdData(birdInfo[0]);
+        },
+        (ts, error) => console.log('Error', error)
+      );
+
+      getBirdBrothersByGlobal(
+        birdData.globalId,
+        ({ result: brothers }) => {
+          console.log('------- Brothers:', brothers);
+          setBrothers(brothers);
+        },
+        (ts, error) => console.log('Error', error)
+      );
+
+      getBirdChildrenByGlobal(
+        birdData.globalId,
+        ({ result: children }) => {
+          console.log('------- Children:', children);
+          setChildren(children);
         },
         (ts, error) => console.log('Error', error)
       );
@@ -199,6 +231,20 @@ const BirdDetails = ({ navigation }) => {
   }, []);
 
   const photosToDeleteFromStorage = new Set();
+
+  const areSameParents = ({ fatherId, motherId }) => {
+    if (fatherId === birdData.fatherIdGlobal && motherId === birdData.motherIdGlobal) {
+      return null;
+    }
+
+    if (fatherId === birdData.fatherIdGlobal) {
+      return 'Padre';
+    }
+
+    if (motherId === birdData.motherIdGlobal) {
+      return 'Madre';
+    }
+  };
 
   const submitBird = (birdData) => {
     try {
@@ -263,8 +309,6 @@ const BirdDetails = ({ navigation }) => {
           validationSchema={birdValidationSchema()}
           onSubmit={submitBird}>
           {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => {
-            //console.log('????', values);
-
             return (
               <>
                 <Modal
@@ -365,6 +409,7 @@ const BirdDetails = ({ navigation }) => {
                   </PhotoContainer>
 
                   <FormContainer>
+                    <VerticalSpace></VerticalSpace>
                     <GenderSwitch>
                       <GenderButton
                         first
@@ -445,14 +490,13 @@ const BirdDetails = ({ navigation }) => {
                           <FormItem stackedLabel>
                             <Label>Padres</Label>
                             <Row>
-                              <Col style={{ marginRight: 6 }}>
-                                {values.fatherId ? (
+                              <Col>
+                                {values.fatherIdGlobal ? (
                                   <>
                                     <Grid>
-                                      <Col size={50}>
+                                      <Col size={80}>
                                         <SelectBirdBtn
-                                          bordered
-                                          unded
+                                          transparent
                                           active
                                           father
                                           onPress={() =>
@@ -463,12 +507,12 @@ const BirdDetails = ({ navigation }) => {
                                           <SelectBirdText father>{values.fatherId}</SelectBirdText>
                                         </SelectBirdBtn>
                                       </Col>
-                                      <Col size={30}>
+                                      <Col size={20}>
                                         <SelectBirdBtn
                                           transparent
                                           active
                                           father
-                                          onPress={() => setFieldValue('fatherId', null)}>
+                                          onPress={() => setFieldValue('fatherIdGlobal', null)}>
                                           <SelectBirdIcon
                                             type="MaterialIcons"
                                             name="close"
@@ -492,43 +536,35 @@ const BirdDetails = ({ navigation }) => {
                                       })
                                     }>
                                     <SelectBirdIcon type="MaterialIcons" name="add" father />
-                                    <SelectBirdText father>Añadir</SelectBirdText>
+                                    <SelectBirdText father>Añadir Padre</SelectBirdText>
                                   </SelectBirdBtn>
                                 )}
-                              </Col>
-                              <Col style={{ marginLeft: 6 }}>
-                                {values.motherId ? (
-                                  <>
-                                    <Grid>
-                                      <Col size={50}>
-                                        <SelectBirdBtn
-                                          bordered
-                                          rounded
-                                          active
-                                          mother
-                                          onPress={() => {
-                                            navigation.push(NavKeys.birdDetails, {
-                                              birdGlobalId: values.motherIdGlobal,
-                                            });
-                                          }}>
-                                          <SelectBirdText mother>{values.motherId}</SelectBirdText>
-                                        </SelectBirdBtn>
-                                      </Col>
-                                      <Col size={30}>
-                                        <SelectBirdBtn
-                                          transparent
-                                          active
-                                          mother
-                                          onPress={() => setFieldValue('motherId', null)}>
-                                          <SelectBirdIcon
-                                            type="MaterialIcons"
-                                            name="close"
-                                            mother
-                                          />
-                                        </SelectBirdBtn>
-                                      </Col>
-                                    </Grid>
-                                  </>
+
+                                {values.motherIdGlobal ? (
+                                  <Grid>
+                                    <Col size={80}>
+                                      <SelectBirdBtn
+                                        transparent
+                                        active
+                                        mother
+                                        onPress={() => {
+                                          navigation.push(NavKeys.birdDetails, {
+                                            birdGlobalId: values.motherIdGlobal,
+                                          });
+                                        }}>
+                                        <SelectBirdText mother>{values.motherId}</SelectBirdText>
+                                      </SelectBirdBtn>
+                                    </Col>
+                                    <Col size={20}>
+                                      <SelectBirdBtn
+                                        transparent
+                                        active
+                                        mother
+                                        onPress={() => setFieldValue('motherIdGlobal', null)}>
+                                        <SelectBirdIcon type="MaterialIcons" name="close" mother />
+                                      </SelectBirdBtn>
+                                    </Col>
+                                  </Grid>
                                 ) : (
                                   <SelectBirdBtn
                                     bordered
@@ -543,11 +579,70 @@ const BirdDetails = ({ navigation }) => {
                                       })
                                     }>
                                     <SelectBirdIcon type="MaterialIcons" name="add" mother />
-                                    <SelectBirdText mother>Añadir</SelectBirdText>
+                                    <SelectBirdText mother>Añadir Madre</SelectBirdText>
                                   </SelectBirdBtn>
                                 )}
                               </Col>
                             </Row>
+                          </FormItem>
+                          <FormItem stackedLabel>
+                            <Label>Hermanos</Label>
+
+                            {brothers.map((bro) => {
+                              return (
+                                <Row key={bro.globalId}>
+                                  <Col size={80}>
+                                    <SelectBirdBtn
+                                      transparent
+                                      active
+                                      onPress={() => {
+                                        navigation.push(NavKeys.birdDetails, {
+                                          birdGlobalId: bro.globalId,
+                                        });
+                                      }}>
+                                      <SelectBirdText
+                                        father={bro.gender === 'Macho'}
+                                        mother={bro.gender === 'Hembra'}>
+                                        {bro.id}
+                                      </SelectBirdText>
+                                    </SelectBirdBtn>
+                                  </Col>
+                                  <Col size={20}>
+                                    <View style={{ marginTop: 12 }}>
+                                      <TextLabel>{areSameParents(bro)}</TextLabel>
+                                    </View>
+                                  </Col>
+                                </Row>
+                              );
+                            })}
+
+                            {isEmpty(brothers) && <TextInfo>No tiene hermanos</TextInfo>}
+                          </FormItem>
+                          <FormItem stackedLabel>
+                            <Label>Hijos</Label>
+                            {children.map((child) => {
+                              return (
+                                <Row key={child.globalId}>
+                                  <Col>
+                                    <SelectBirdBtn
+                                      transparent
+                                      active
+                                      onPress={() => {
+                                        navigation.push(NavKeys.birdDetails, {
+                                          birdGlobalId: child.globalId,
+                                        });
+                                      }}>
+                                      <SelectBirdText
+                                        father={child.gender === 'Macho'}
+                                        mother={child.gender === 'Hembra'}>
+                                        {child.id}
+                                      </SelectBirdText>
+                                    </SelectBirdBtn>
+                                  </Col>
+                                </Row>
+                              );
+                            })}
+                            {isEmpty(children) && <TextInfo>No tiene hijos</TextInfo>}
                           </FormItem>
                           <Row>
                             <FormItem style={{ flex: 1 }} stackedLabel>

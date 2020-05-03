@@ -74,6 +74,14 @@ export const getBirdByGlobal = async (globalId, onSuccess, onError) => {
   query(sentencesSQL.getBirdByGlobalId, [globalId, globalId, globalId], onSuccess, onError);
 };
 
+export const getBirdBrothersByGlobal = async (globalId, onSuccess, onError) => {
+  query(sentencesSQL.getBirdBrothersByGlobal, [globalId, globalId, globalId], onSuccess, onError);
+};
+
+export const getBirdChildrenByGlobal = async (globalId, onSuccess, onError) => {
+  query(sentencesSQL.getBirdChildrenByGlobal, [globalId, globalId], onSuccess, onError);
+};
+
 export const searchBirdsByGender = async (
   textToSearch = '',
   gender,
