@@ -2,11 +2,9 @@
   "expo": {
     "name": "Fran Birds",
     "slug": "fran-birds",
-    "privacy": "public",
-    "platforms": [
-      "android"
-    ],
-    "version": "1.0.0",
+    "privacy": "unlisted",
+    "platforms": ["android"],
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,15 +15,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "package": "com.danigonlinea.franbirds",
-      "versionCode": 1
+      "versionCode": 2
     }
   }
 }
