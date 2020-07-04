@@ -25,7 +25,7 @@
     "expo-sqlite": "~8.2.1",
     "formik": "^2.1.4",
     "lodash": "^4.17.15",
-    "native-base": "2.13.8",
+    "native-base": "2.13.12",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.0.tar.gz",
