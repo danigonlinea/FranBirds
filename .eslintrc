@@ -1,5 +1,12 @@
 {
   "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "prettier",
+    "prettier/react",
+    "universe/native",
+    "universe/node",
+    "universe/web",
     "plugin:prettier/recommended"
   ],
   "parser": "babel-eslint",
@@ -10,5 +17,8 @@
     "node": true,
     "jquery": true,
     "jest": true
+  },
+  "rules": {
+    "prettier/prettier": "error"
   }
 }

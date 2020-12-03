@@ -1,7 +1,6 @@
-import { Button, Icon, Picker, Form, Text } from 'native-base';
-import React, { useEffect, useState } from 'react';
+import { Form, Picker, Text } from 'native-base';
+import React from 'react';
 import styled from 'styled-components';
-import { Colors } from '../utils';
 import { useGlobalCtx } from '../context/globalContext';
 
 const FilterBirds = styled(Form)`

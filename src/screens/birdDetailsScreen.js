@@ -1,42 +1,41 @@
+import * as FileSystem from 'expo-file-system';
+import { Formik } from 'formik';
+import { isEmpty } from 'lodash';
 import {
-  Container,
-  Content,
-  Input,
   Button,
-  Item,
-  Label,
-  Text,
-  Fab,
-  Icon,
-  Segment,
-  Grid,
-  Col,
   Card,
   CardItem,
+  Col,
+  Container,
+  Content,
+  Fab,
+  Grid,
+  Icon,
+  Input,
+  Item,
+  Label,
   Row,
+  Segment,
+  Text,
   Textarea,
 } from 'native-base';
-import { isEmpty } from 'lodash';
-import React, { useState, useEffect } from 'react';
-import { Image, View, ScrollView, KeyboardAvoidingView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, KeyboardAvoidingView, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { withNavigation } from 'react-navigation';
 import styled, { css } from 'styled-components';
-import { Back, HeaderDetailsRight, NavStyle, BirdPhotoDialog, Modal } from '../components';
-import { Formik, useFormik } from 'formik';
-import { Colors, Constants } from '../utils';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
-import { useGlobalCtx } from '../context/globalContext';
+import { Back, HeaderDetailsRight, Modal, NavStyle } from '../components';
 import {
+  getBirdBrothersByGlobal,
+  getBirdByGlobal,
+  getBirdChildrenByGlobal,
   insertBird,
   updateBird,
-  getBirdByGlobal,
-  getBirdBrothersByGlobal,
-  getBirdChildrenByGlobal,
 } from '../db';
+import { Colors } from '../utils';
 import colors from '../utils/colors';
-import * as FileSystem from 'expo-file-system';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getDefaultAvatar } from '../utils/functions';
 
 const DetailsContainer = styled(Container)``;
@@ -90,15 +89,15 @@ const SelectBirdBtn = styled(Button)`
   margin: 6px 0;
   margin: ${({ bordered }) => (bordered ? '12px 0' : '6px 0')};
   height: 30px;
-  border-color: ${(props) => (props.father ? Colors.male : Colors.female)};
+  border-color: ${props => (props.father ? Colors.male : Colors.female)};
 `;
 
 const SelectBirdIcon = styled(Icon)`
-  color: ${(props) => (props.father ? Colors.male : Colors.female)};
+  color: ${props => (props.father ? Colors.male : Colors.female)};
 `;
 
 const SelectBirdText = styled(Text)`
-  color: ${(props) => (props.father ? Colors.male : Colors.female)};
+  color: ${props => (props.father ? Colors.male : Colors.female)};
 `;
 
 const TextInfo = styled(Text)`
@@ -175,7 +174,7 @@ const birdValidationSchema = () => {
   });
 };
 
-const getGenderFromParent = (parentType) => (parentType === 'Padre' ? 'Macho' : 'Hembra');
+const getGenderFromParent = parentType => (parentType === 'Padre' ? 'Macho' : 'Hembra');
 
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState({
@@ -246,9 +245,9 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
-  const submitBird = (birdData) => {
+  const submitBird = birdData => {
     try {
-      photosToDeleteFromStorage.forEach(async (photoToDelete) => {
+      photosToDeleteFromStorage.forEach(async photoToDelete => {
         await FileSystem.deleteAsync(photoToDelete, {
           idempotent: false,
         });
@@ -279,7 +278,7 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
-  const getGenderColorSelected = (gender) => {
+  const getGenderColorSelected = gender => {
     if (gender === 'Macho' || gender === 'Padre') {
       return colors.male;
     } else if (gender === 'Hembra' || gender === 'Madre') {
@@ -310,6 +309,7 @@ const BirdDetails = ({ navigation }) => {
               <>
                 <Modal
                   title={`Asignar ${modal.parentGenderToSelect}`}
+                  useNativeDriver={true}
                   backgroundColor={getGenderColorSelected(modal.parentGenderToSelect)}
                   isVisible={modal.isVisible}
                   orientation="row"
@@ -387,7 +387,7 @@ const BirdDetails = ({ navigation }) => {
                         }}
                         onPress={() =>
                           navigation.navigate(NavKeys.birdCamera, {
-                            changePhoto: async (photoFullPath) => {
+                            changePhoto: async photoFullPath => {
                               // Remove previous photo
 
                               photosToDeleteFromStorage.add(values.photo);
@@ -585,7 +585,7 @@ const BirdDetails = ({ navigation }) => {
                           <FormItem stackedLabel>
                             <Label>Hermanos</Label>
 
-                            {brothers.map((bro) => {
+                            {brothers.map(bro => {
                               return (
                                 <Row key={bro.globalId}>
                                   <Col size={80}>
@@ -617,7 +617,7 @@ const BirdDetails = ({ navigation }) => {
                           </FormItem>
                           <FormItem stackedLabel>
                             <Label>Hijos</Label>
-                            {children.map((child) => {
+                            {children.map(child => {
                               return (
                                 <Row key={child.globalId}>
                                   <Col>

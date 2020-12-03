@@ -1,11 +1,10 @@
+import { Text } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
 import Modal from 'react-native-modal';
 import { withNavigation } from 'react-navigation';
 import styled from 'styled-components';
-import { Colors } from '../utils';
 import colors from '../utils/colors';
-import { Text } from 'native-base';
 
 const Header = styled(View)`
   height: 48px;
