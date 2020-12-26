@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { AppLoading } from 'expo';
-import { Container, Text, Header } from 'native-base';
-import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { AppNavigation } from './src/navigation';
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
+import { Container } from 'native-base';
+import React, { useEffect, useState } from 'react';
 import GlobalContext from './src/context/globalContext';
 import { createDatabase } from './src/db';
-import * as FileSystem from 'expo-file-system';
+import { AppNavigation } from './src/navigation';
 
 const App = props => {
   const [isReady, setReady] = useState(false);
