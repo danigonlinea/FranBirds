@@ -11,9 +11,12 @@ export default {
    AND a.globalId != ?`,
   getBirdChildrenByGlobal:
     'SELECT globalId, id, gender, fatherId, motherId FROM bird WHERE fatherId = ? OR motherId = ?',
-  searchBirds: `SELECT * FROM bird WHERE id LIKE ? OR type LIKE ? OR notes LIKE ?`,
-  searchBirdsByGender: `SELECT * FROM bird WHERE globalId != ? AND gender = ? AND (id LIKE ? OR type LIKE ? OR notes LIKE ?)`,
-  insertBird: `INSERT INTO bird (id, type, gender, fatherId, motherId, notes, photo) values (?, ?, ?, ?, ?, ?, ?)`,
-  updateBird: `UPDATE bird SET id = ?, type = ?, gender = ?, fatherId = ?, motherId = ?, notes = ?, photo = ? WHERE globalId = ?`,
-  deleteBird: `DELETE FROM bird WHERE globalId = ?`,
+  searchBirds: 'SELECT * FROM bird WHERE id LIKE ? OR type LIKE ? OR notes LIKE ?',
+  searchBirdsByGender:
+    'SELECT * FROM bird WHERE globalId != ? AND gender = ? AND (id LIKE ? OR type LIKE ? OR notes LIKE ?)',
+  insertBird:
+    'INSERT INTO bird (id, type, gender, fatherId, motherId, notes, photo) values (?, ?, ?, ?, ?, ?, ?)',
+  updateBird:
+    'UPDATE bird SET id = ?, type = ?, gender = ?, fatherId = ?, motherId = ?, notes = ?, photo = ? WHERE globalId = ?',
+  deleteBird: 'DELETE FROM bird WHERE globalId = ?',
 };

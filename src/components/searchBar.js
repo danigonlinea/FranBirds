@@ -1,4 +1,4 @@
-import { Button, Form, Input, View, Item, Icon } from 'native-base';
+import { Button, Icon, Input, Item, View } from 'native-base';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useGlobalCtx } from '../context/globalContext';

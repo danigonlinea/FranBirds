@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, Image } from 'react-native';
 import { Button } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { Image, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
-import { useGlobalCtx } from '../context/globalContext';
-import styled from 'styled-components';
-import NavKeys from '../screens/navKeys';
 import { withNavigation } from 'react-navigation';
-import { Colors, Constants } from '../utils';
+import styled from 'styled-components';
+import { useGlobalCtx } from '../context/globalContext';
+import NavKeys from '../screens/navKeys';
+import { Colors } from '../utils';
 import { getDefaultAvatar } from '../utils/functions';
 
 const Photo = styled(Image)`
@@ -40,7 +40,8 @@ const BtnText = styled(Text)`
 const getGenderColorSelected = (gender) => {
   if (gender === 'Macho') {
     return Colors.male;
-  } else if (gender === 'Hembra') {
+  }
+  if (gender === 'Hembra') {
     return Colors.female;
   }
 
@@ -82,7 +83,7 @@ const BirdPhotoDialog = ({ navigation }) => {
       animationOut="zoomOut"
       animationOutTiming={230}
       backdropTransitionOutTiming={230}
-      useNativeDriver={true}
+      useNativeDriver
       onBackButtonPress={() => {
         setShowModal(false);
       }}

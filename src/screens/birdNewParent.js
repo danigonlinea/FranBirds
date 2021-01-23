@@ -18,7 +18,7 @@ import {
   Text,
   Textarea,
 } from 'native-base';
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, KeyboardAvoidingView, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { withNavigation } from 'react-navigation';
@@ -97,7 +97,7 @@ const birdValidationSchema = () => {
   });
 };
 
-const birdFormValues = (birdGender) => {
+const birdFormValues = birdGender => {
   return {
     globalId: null,
     id: null,
@@ -137,13 +137,14 @@ const PhotoContainer = styled(View)`
   height: 250px;
 `;
 
-const getGenderColorSelected = (gender) => {
+const getGenderColorSelected = gender => {
   if (gender === 'Macho') {
     return colors.male;
-  } else return colors.female;
+  }
+  return colors.female;
 };
 
-const renderGenderButton = (gender) => (
+const renderGenderButton = gender => (
   <GenderButton
     color={getGenderColorSelected(gender)}
     genderColorSelected={getGenderColorSelected(gender)}
@@ -155,9 +156,9 @@ const renderGenderButton = (gender) => (
 const BirdNewParent = ({ navigation }) => {
   const photosToDeleteFromStorage = new Set();
 
-  const submitBird = (birdFormData) => {
+  const submitBird = birdFormData => {
     try {
-      photosToDeleteFromStorage.forEach(async (photoToDelete) => {
+      photosToDeleteFromStorage.forEach(async photoToDelete => {
         await FileSystem.deleteAsync(photoToDelete, {
           idempotent: false,
         });
@@ -214,7 +215,7 @@ const BirdNewParent = ({ navigation }) => {
                       }}
                       onPress={() =>
                         navigation.navigate(NavKeys.birdCamera, {
-                          changePhoto: async (photoFullPath) => {
+                          changePhoto: async photoFullPath => {
                             // Remove previous photo
                             photosToDeleteFromStorage.add(values.photo);
 
@@ -229,7 +230,7 @@ const BirdNewParent = ({ navigation }) => {
 
                 <FormContainer>
                   <GenderSwitch>{renderGenderButton(values.gender)}</GenderSwitch>
-                  <VerticalSpace></VerticalSpace>
+                  <VerticalSpace />
                   <Card>
                     <CardItem>
                       <Grid>
@@ -272,7 +273,7 @@ const BirdNewParent = ({ navigation }) => {
                             <Label>Notas</Label>
                             <NotasField
                               rowSpan={3}
-                              multiline={true}
+                              multiline
                               onChangeText={handleChange('notes')}
                               onBlur={handleBlur('notes')}
                               value={values.notes}
@@ -307,7 +308,7 @@ BirdNewParent.navigationOptions = () => {
       position: 'absolute',
     },
     headerTitle: () => null,
-    headerLeft: () => <Back></Back>,
+    headerLeft: () => <Back />,
     headerRight: () => null,
   };
 };

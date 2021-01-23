@@ -1,6 +1,6 @@
 import { Constants } from '.';
 
-export const getDefaultAvatar = (type) => {
+export const getDefaultAvatar = type => {
   const {
     defaultAvatar: { egg, bird },
   } = Constants;

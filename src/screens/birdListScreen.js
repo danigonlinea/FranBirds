@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import {
   Body,
   Card,
@@ -8,11 +7,10 @@ import {
   Fab,
   Grid,
   Icon,
+  Spinner,
   Text,
   Thumbnail,
   View,
-  Content,
-  Spinner,
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
@@ -21,10 +19,10 @@ import styled, { css } from 'styled-components';
 import { NavKeys } from '.';
 import { BirdPhotoDialog, Filter, NavStyle, SearchAction, SearchBar } from '../components';
 import { useGlobalCtx } from '../context/globalContext';
-import { searchBirds, getBirds } from '../db';
-import { Colors, Strings, Constants } from '../utils';
-import strings from '../utils/strings';
+import { getBirds, searchBirds } from '../db';
+import { Colors, Strings } from '../utils';
 import { getDefaultAvatar } from '../utils/functions';
+import strings from '../utils/strings';
 
 const LineBirdType = styled(View)`
   width: 10px;
@@ -33,8 +31,8 @@ const LineBirdType = styled(View)`
 `;
 const TextBird = styled(Text)`
   ${({ color, fontSize }) => css`
-    color: ${color ? color : Colors.textPrimary};
-    font-size: ${fontSize ? fontSize : 14}px;
+    color: ${color || Colors.textPrimary};
+    font-size: ${fontSize || 14}px;
   `}
 `;
 
@@ -112,10 +110,11 @@ const BirdListScreen = ({ navigation }) => {
     );
   }, [textToSearch]);
 
-  const getGenderColorSelected = (gender) => {
+  const getGenderColorSelected = gender => {
     if (gender === 'Macho') {
       return Colors.male;
-    } else if (gender === 'Hembra') {
+    }
+    if (gender === 'Hembra') {
       return Colors.female;
     }
 
@@ -172,7 +171,8 @@ const BirdListScreen = ({ navigation }) => {
                 <Icon
                   type="MaterialIcons"
                   name="chevron-right"
-                  style={{ color: Colors.defaultIcon }}></Icon>
+                  style={{ color: Colors.defaultIcon }}
+                />
               </CenterCol>
             </Grid>
           </BodyBird>
@@ -200,7 +200,7 @@ const BirdListScreen = ({ navigation }) => {
   return (
     <Container>
       <BirdPhotoDialog />
-      <SearchBar></SearchBar>
+      <SearchBar />
 
       <FlatList
         enableAutomaticScroll
@@ -244,8 +244,8 @@ const BirdListScreen = ({ navigation }) => {
 BirdListScreen.navigationOptions = {
   ...NavStyle,
   headerLeft: () => null,
-  headerTitle: () => <Filter></Filter>,
-  headerRight: () => <SearchAction iconColor={Colors.textPrimary}></SearchAction>,
+  headerTitle: () => <Filter />,
+  headerRight: () => <SearchAction iconColor={Colors.textPrimary} />,
 };
 
 export default withNavigation(BirdListScreen);

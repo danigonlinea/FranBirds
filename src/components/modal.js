@@ -35,7 +35,7 @@ const CustomModal = withNavigation(
         animationOut="zoomOut"
         animationOutTiming={230}
         backdropTransitionOutTiming={230}
-        useNativeDriver={true}
+        useNativeDriver
         onBackButtonPress={() => {
           onClose();
         }}

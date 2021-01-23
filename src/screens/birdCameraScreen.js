@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
-import Constants from 'expo-constants';
 import * as FileSystem from 'expo-file-system';
-import { Icon, Button, Spinner } from 'native-base';
-import styled, { css } from 'styled-components';
-import { Colors } from '../utils';
-import { NavStyle } from '../components';
+import { Button, Icon, Spinner } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import styled from 'styled-components';
+import { NavStyle } from '../components';
+import { Colors } from '../utils';
 
 const CameraActions = styled(View)`
   flex-direction: row;
@@ -47,7 +46,7 @@ const BirdCameraScreen = ({ navigation }) => {
   const prepareRatio = async () => {
     if (Platform.OS === 'android' && camera) {
       const ratios = await camera.getSupportedRatiosAsync();
-      const defaultRatio = ratios.find((availRatio) => availRatio === DESIRED_RATIO) || '4:3';
+      const defaultRatio = ratios.find(availRatio => availRatio === DESIRED_RATIO) || '4:3';
       setRatio(defaultRatio);
     }
   };
@@ -74,7 +73,7 @@ const BirdCameraScreen = ({ navigation }) => {
     }
   };
 
-  const createDir = async (dir) => {
+  const createDir = async dir => {
     const newDir = await FileSystem.getInfoAsync(dir);
 
     if (newDir.exists && newDir.isDirectory) {
@@ -85,7 +84,7 @@ const BirdCameraScreen = ({ navigation }) => {
     return newDir.uri;
   };
 
-  const getPhotoName = (previewUri) => {
+  const getPhotoName = previewUri => {
     const partPhoto = previewUri.split('/');
 
     return partPhoto[partPhoto.length - 1];
@@ -95,7 +94,7 @@ const BirdCameraScreen = ({ navigation }) => {
     if (camera) {
       setSavePhoto(true);
       try {
-        const dirDestiny = await createDir(FileSystem.documentDirectory + 'images/');
+        const dirDestiny = await createDir(`${FileSystem.documentDirectory}images/`);
 
         await FileSystem.moveAsync({
           from: preview,
@@ -121,7 +120,7 @@ const BirdCameraScreen = ({ navigation }) => {
           </CameraButton>
           <CameraButton
             color={Colors.accept}
-            onPress={(cameraInfo) => (!isSavingPhoto ? savePhoto() : false)}>
+            onPress={cameraInfo => (!isSavingPhoto ? savePhoto() : false)}>
             {!isSavingPhoto ? (
               <Icon type="MaterialIcons" name="check" />
             ) : (
@@ -156,7 +155,7 @@ const BirdCameraScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <Camera
         style={{ flex: 1 }}
-        ref={(cameraRef) => {
+        ref={cameraRef => {
           setCamera(cameraRef);
         }}
         ratio={ratio}

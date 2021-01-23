@@ -17,7 +17,7 @@ import {
   Row,
   Segment,
   Text,
-  Textarea,
+  Textarea
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { Image, KeyboardAvoidingView, View } from 'react-native';
@@ -32,7 +32,7 @@ import {
   getBirdByGlobal,
   getBirdChildrenByGlobal,
   insertBird,
-  updateBird,
+  updateBird
 } from '../db';
 import { Colors } from '../utils';
 import colors from '../utils/colors';
@@ -89,15 +89,15 @@ const SelectBirdBtn = styled(Button)`
   margin: 6px 0;
   margin: ${({ bordered }) => (bordered ? '12px 0' : '6px 0')};
   height: 30px;
-  border-color: ${props => (props.father ? Colors.male : Colors.female)};
+  border-color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
 
 const SelectBirdIcon = styled(Icon)`
-  color: ${props => (props.father ? Colors.male : Colors.female)};
+  color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
 
 const SelectBirdText = styled(Text)`
-  color: ${props => (props.father ? Colors.male : Colors.female)};
+  color: ${(props) => (props.father ? Colors.male : Colors.female)};
 `;
 
 const TextInfo = styled(Text)`
@@ -174,7 +174,7 @@ const birdValidationSchema = () => {
   });
 };
 
-const getGenderFromParent = parentType => (parentType === 'Padre' ? 'Macho' : 'Hembra');
+const getGenderFromParent = (parentType) => (parentType === 'Padre' ? 'Macho' : 'Hembra');
 
 const BirdDetails = ({ navigation }) => {
   const [birdData, setBirdData] = useState({
@@ -245,9 +245,9 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
-  const submitBird = birdData => {
+  const submitBird = (birdData) => {
     try {
-      photosToDeleteFromStorage.forEach(async photoToDelete => {
+      photosToDeleteFromStorage.forEach(async (photoToDelete) => {
         await FileSystem.deleteAsync(photoToDelete, {
           idempotent: false,
         });
@@ -278,10 +278,10 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
-  const getGenderColorSelected = gender => {
+  const getGenderColorSelected = (gender) => {
     if (gender === 'Macho' || gender === 'Padre') {
       return colors.male;
-    } else if (gender === 'Hembra' || gender === 'Madre') {
+    } if (gender === 'Hembra' || gender === 'Madre') {
       return colors.female;
     }
 
@@ -297,19 +297,21 @@ const BirdDetails = ({ navigation }) => {
       style={{
         flex: 1,
       }}
-      enabled>
+      enabled
+    >
       <DetailsContainer>
         <Formik
           enableReinitialize
           initialValues={birdData}
           validationSchema={birdValidationSchema()}
-          onSubmit={submitBird}>
+          onSubmit={submitBird}
+        >
           {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => {
             return (
               <>
                 <Modal
                   title={`Asignar ${modal.parentGenderToSelect}`}
-                  useNativeDriver={true}
+                  useNativeDriver
                   backgroundColor={getGenderColorSelected(modal.parentGenderToSelect)}
                   isVisible={modal.isVisible}
                   orientation="row"
@@ -318,7 +320,8 @@ const BirdDetails = ({ navigation }) => {
                       isVisible: false,
                       title: null,
                     });
-                  }}>
+                  }}
+                >
                   <ModalBody>
                     <Button
                       backgroundColor={getGenderColorSelected(modal.parentGenderToSelect)}
@@ -336,10 +339,15 @@ const BirdDetails = ({ navigation }) => {
                             }
                           },
                         });
-                      }}>
-                      <Text>Registrar {modal.parentGenderToSelect}</Text>
+                      }}
+                    >
+                      <Text>
+                        Registrar
+                        {' '}
+                        {modal.parentGenderToSelect}
+                      </Text>
                     </Button>
-                    <Space></Space>
+                    <Space />
                     <Button
                       transparent
                       onPress={() => {
@@ -358,9 +366,14 @@ const BirdDetails = ({ navigation }) => {
                             }
                           },
                         });
-                      }}>
+                      }}
+                    >
                       <Text style={{ color: getGenderColorSelected(modal.parentGenderToSelect) }}>
-                        Seleccionar {modal.parentGenderToSelect} ya existente
+                        Seleccionar
+                        {' '}
+                        {modal.parentGenderToSelect}
+                        {' '}
+                        ya existente
                       </Text>
                     </Button>
                   </ModalBody>
@@ -385,39 +398,40 @@ const BirdDetails = ({ navigation }) => {
                           },
                           elevation: 10,
                         }}
-                        onPress={() =>
-                          navigation.navigate(NavKeys.birdCamera, {
-                            changePhoto: async photoFullPath => {
-                              // Remove previous photo
+                        onPress={() => navigation.navigate(NavKeys.birdCamera, {
+                          changePhoto: async (photoFullPath) => {
+                            // Remove previous photo
 
-                              photosToDeleteFromStorage.add(values.photo);
+                            photosToDeleteFromStorage.add(values.photo);
 
-                              setFieldValue('photo', photoFullPath);
-                              setBirdData({
-                                ...birdData,
-                                photo: photoFullPath,
-                              });
-                            },
-                          })
-                        }>
+                            setFieldValue('photo', photoFullPath);
+                            setBirdData({
+                              ...birdData,
+                              photo: photoFullPath,
+                            });
+                          },
+                        })}
+                      >
                         <TakePhotoIcon name="ios-camera" type="Ionicons" />
                       </TakePhotoBtn>
                     </TakePhotoContainer>
                   </PhotoContainer>
 
                   <FormContainer>
-                    <VerticalSpace></VerticalSpace>
+                    <VerticalSpace />
                     <GenderSwitch>
                       <GenderButton
                         first
                         color={colors.egg}
                         genderColorSelected={getGenderColorSelected(values.gender)}
                         active={values.gender === 'Huevo'}
-                        onPress={() => setFieldValue('gender', 'Huevo')}>
+                        onPress={() => setFieldValue('gender', 'Huevo')}
+                      >
                         <GenderText
                           color={colors.egg}
                           genderColorSelected={getGenderColorSelected(values.gender)}
-                          active={values.gender === 'Huevo'}>
+                          active={values.gender === 'Huevo'}
+                        >
                           Huevo
                         </GenderText>
                       </GenderButton>
@@ -425,11 +439,13 @@ const BirdDetails = ({ navigation }) => {
                         color={colors.male}
                         genderColorSelected={getGenderColorSelected(values.gender)}
                         active={values.gender === 'Macho'}
-                        onPress={() => setFieldValue('gender', 'Macho')}>
+                        onPress={() => setFieldValue('gender', 'Macho')}
+                      >
                         <GenderText
                           color={colors.male}
                           genderColorSelected={getGenderColorSelected(values.gender)}
-                          active={values.gender === 'Macho'}>
+                          active={values.gender === 'Macho'}
+                        >
                           Macho
                         </GenderText>
                       </GenderButton>
@@ -438,16 +454,18 @@ const BirdDetails = ({ navigation }) => {
                         color={colors.female}
                         genderColorSelected={getGenderColorSelected(values.gender)}
                         active={values.gender === 'Hembra'}
-                        onPress={() => setFieldValue('gender', 'Hembra')}>
+                        onPress={() => setFieldValue('gender', 'Hembra')}
+                      >
                         <GenderText
                           color={colors.female}
                           genderColorSelected={getGenderColorSelected(values.gender)}
-                          active={values.gender === 'Hembra'}>
+                          active={values.gender === 'Hembra'}
+                        >
                           Hembra
                         </GenderText>
                       </GenderButton>
                     </GenderSwitch>
-                    <VerticalSpace></VerticalSpace>
+                    <VerticalSpace />
                     <Card>
                       <CardItem>
                         <Grid>
@@ -496,11 +514,10 @@ const BirdDetails = ({ navigation }) => {
                                           transparent
                                           active
                                           father
-                                          onPress={() =>
-                                            navigation.push(NavKeys.birdDetails, {
-                                              birdGlobalId: values.fatherIdGlobal,
-                                            })
-                                          }>
+                                          onPress={() => navigation.push(NavKeys.birdDetails, {
+                                            birdGlobalId: values.fatherIdGlobal,
+                                          })}
+                                        >
                                           <SelectBirdText father>{values.fatherId}</SelectBirdText>
                                         </SelectBirdBtn>
                                       </Col>
@@ -509,7 +526,8 @@ const BirdDetails = ({ navigation }) => {
                                           transparent
                                           active
                                           father
-                                          onPress={() => setFieldValue('fatherIdGlobal', null)}>
+                                          onPress={() => setFieldValue('fatherIdGlobal', null)}
+                                        >
                                           <SelectBirdIcon
                                             type="MaterialIcons"
                                             name="close"
@@ -526,12 +544,11 @@ const BirdDetails = ({ navigation }) => {
                                     rounded
                                     active
                                     father
-                                    onPress={() =>
-                                      setModal({
-                                        isVisible: true,
-                                        parentGenderToSelect: 'Padre',
-                                      })
-                                    }>
+                                    onPress={() => setModal({
+                                      isVisible: true,
+                                      parentGenderToSelect: 'Padre',
+                                    })}
+                                  >
                                     <SelectBirdIcon type="MaterialIcons" name="add" father />
                                     <SelectBirdText father>Añadir Padre</SelectBirdText>
                                   </SelectBirdBtn>
@@ -548,7 +565,8 @@ const BirdDetails = ({ navigation }) => {
                                           navigation.push(NavKeys.birdDetails, {
                                             birdGlobalId: values.motherIdGlobal,
                                           });
-                                        }}>
+                                        }}
+                                      >
                                         <SelectBirdText mother>{values.motherId}</SelectBirdText>
                                       </SelectBirdBtn>
                                     </Col>
@@ -557,7 +575,8 @@ const BirdDetails = ({ navigation }) => {
                                         transparent
                                         active
                                         mother
-                                        onPress={() => setFieldValue('motherIdGlobal', null)}>
+                                        onPress={() => setFieldValue('motherIdGlobal', null)}
+                                      >
                                         <SelectBirdIcon type="MaterialIcons" name="close" mother />
                                       </SelectBirdBtn>
                                     </Col>
@@ -569,12 +588,11 @@ const BirdDetails = ({ navigation }) => {
                                     rounded
                                     active
                                     mother
-                                    onPress={() =>
-                                      setModal({
-                                        isVisible: true,
-                                        parentGenderToSelect: 'Madre',
-                                      })
-                                    }>
+                                    onPress={() => setModal({
+                                      isVisible: true,
+                                      parentGenderToSelect: 'Madre',
+                                    })}
+                                  >
                                     <SelectBirdIcon type="MaterialIcons" name="add" mother />
                                     <SelectBirdText mother>Añadir Madre</SelectBirdText>
                                   </SelectBirdBtn>
@@ -585,7 +603,7 @@ const BirdDetails = ({ navigation }) => {
                           <FormItem stackedLabel>
                             <Label>Hermanos</Label>
 
-                            {brothers.map(bro => {
+                            {brothers.map((bro) => {
                               return (
                                 <Row key={bro.globalId}>
                                   <Col size={80}>
@@ -596,10 +614,12 @@ const BirdDetails = ({ navigation }) => {
                                         navigation.push(NavKeys.birdDetails, {
                                           birdGlobalId: bro.globalId,
                                         });
-                                      }}>
+                                      }}
+                                    >
                                       <SelectBirdText
                                         father={bro.gender === 'Macho'}
-                                        mother={bro.gender === 'Hembra'}>
+                                        mother={bro.gender === 'Hembra'}
+                                      >
                                         {bro.id}
                                       </SelectBirdText>
                                     </SelectBirdBtn>
@@ -617,7 +637,7 @@ const BirdDetails = ({ navigation }) => {
                           </FormItem>
                           <FormItem stackedLabel>
                             <Label>Hijos</Label>
-                            {children.map(child => {
+                            {children.map((child) => {
                               return (
                                 <Row key={child.globalId}>
                                   <Col>
@@ -628,10 +648,12 @@ const BirdDetails = ({ navigation }) => {
                                         navigation.push(NavKeys.birdDetails, {
                                           birdGlobalId: child.globalId,
                                         });
-                                      }}>
+                                      }}
+                                    >
                                       <SelectBirdText
                                         father={child.gender === 'Macho'}
-                                        mother={child.gender === 'Hembra'}>
+                                        mother={child.gender === 'Hembra'}
+                                      >
                                         {child.id}
                                       </SelectBirdText>
                                     </SelectBirdBtn>
@@ -646,7 +668,7 @@ const BirdDetails = ({ navigation }) => {
                               <Label>Notas</Label>
                               <NotasField
                                 rowSpan={3}
-                                multiline={true}
+                                multiline
                                 onChangeText={handleChange('notes')}
                                 onBlur={handleBlur('notes')}
                                 value={values.notes}
@@ -682,8 +704,8 @@ BirdDetails.navigationOptions = ({ navigation }) => {
       position: 'absolute',
     },
     headerTitle: () => null,
-    headerLeft: () => <Back></Back>,
-    headerRight: () => <HeaderDetailsRight></HeaderDetailsRight>,
+    headerLeft: () => <Back />,
+    headerRight: () => <HeaderDetailsRight />,
   };
 };
 

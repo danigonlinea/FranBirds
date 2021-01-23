@@ -1,12 +1,10 @@
-import { Icon, View, Button } from 'native-base';
+import { Button, Icon, View } from 'native-base';
 import React from 'react';
 import { Alert } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Colors } from '../utils';
-import styled, { css } from 'styled-components';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import styled from 'styled-components';
 import { deleteBird } from '../db';
-import { NavKeys } from '../screens';
+import { Colors } from '../utils';
 
 const HorizontalContainer = styled(View)`
   display: flex;

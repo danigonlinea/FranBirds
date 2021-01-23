@@ -14,8 +14,8 @@ const HeaderText = styled(Text)`
 `;
 const TextBird = styled(Text)`
   ${({ colors, fontSize }) => css`
-    color: ${colors ? colors : Colors.textPrimary};
-    font-size: ${fontSize ? fontSize : 14}px;
+    color: ${colors || Colors.textPrimary};
+    font-size: ${fontSize || 14}px;
   `}
 `;
 
@@ -120,7 +120,7 @@ const BirdSelectParent = ({ navigation }) => {
 
               <InfoCol size={6} onPress={() => assigningParent(bird.globalId, bird.id)}>
                 <TextBird fontSize={16}>{bird.id}</TextBird>
-                <TextBird>{`${bird.gender}${bird.type ? '/' + bird.type : ''}`}</TextBird>
+                <TextBird>{`${bird.gender}${bird.type ? `/${bird.type}` : ''}`}</TextBird>
                 <TextBird ellipsizeMode="tail" note numberOfLines={1}>
                   {bird.notes}
                 </TextBird>
@@ -140,7 +140,7 @@ const BirdSelectParent = ({ navigation }) => {
             <CenterCol size={3}>
               <Thumbnail
                 source={{
-                  uri: photo ? photo : getDefaultAvatar(gender),
+                  uri: photo || getDefaultAvatar(gender),
                 }}
               />
             </CenterCol>
@@ -149,9 +149,9 @@ const BirdSelectParent = ({ navigation }) => {
               <TextBird colors={Colors.textSecundary} fontSize={16}>
                 {id}
               </TextBird>
-              <TextBird colors={Colors.textSecundary}>{`${gender}${
-                type ? '/' + type : ''
-              }`}</TextBird>
+              <TextBird colors={Colors.textSecundary}>
+                {`${gender}${type ? `/${type}` : ''}`}
+              </TextBird>
               <TextBird colors={Colors.textSecundary} ellipsizeMode="tail" note numberOfLines={1}>
                 {notes}
               </TextBird>
@@ -160,7 +160,7 @@ const BirdSelectParent = ({ navigation }) => {
         </CurrentBirdContainer>
       )}
 
-      <SearchBar></SearchBar>
+      <SearchBar />
 
       <FlatList
         enableAutomaticScroll
@@ -191,10 +191,11 @@ const BirdSelectParent = ({ navigation }) => {
   );
 };
 
-const getGenderColorSelected = (gender) => {
+const getGenderColorSelected = gender => {
   if (gender === 'Macho') {
     return Colors.male;
-  } else if (gender === 'Hembra') {
+  }
+  if (gender === 'Hembra') {
     return Colors.female;
   }
 
@@ -215,7 +216,7 @@ BirdSelectParent.navigationOptions = ({ navigation }) => {
     },
     headerLeft: () => null,
     headerTitle: () => <HeaderText>{`Selecciona para asignar ${parentType}`}</HeaderText>,
-    headerRight: () => <SearchAction iconColor={Colors.textSecundary}></SearchAction>,
+    headerRight: () => <SearchAction iconColor={Colors.textSecundary} />,
   };
 };
 

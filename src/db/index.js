@@ -13,7 +13,7 @@ const getDatabase = () => {
 const query = (querySQL, argsArray, onSuccess, onError) => {
   const db = getDatabase();
 
-  let result = undefined;
+  let result;
 
   db.transaction(
     (tx) => {
