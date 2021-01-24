@@ -97,7 +97,7 @@ const birdValidationSchema = () => {
   });
 };
 
-const birdFormValues = birdGender => {
+const birdFormValues = (birdGender) => {
   return {
     globalId: null,
     id: null,
@@ -137,18 +137,19 @@ const PhotoContainer = styled(View)`
   height: 250px;
 `;
 
-const getGenderColorSelected = gender => {
+const getGenderColorSelected = (gender) => {
   if (gender === 'Macho') {
     return colors.male;
   }
   return colors.female;
 };
 
-const renderGenderButton = gender => (
+const renderGenderButton = (gender) => (
   <GenderButton
     color={getGenderColorSelected(gender)}
     genderColorSelected={getGenderColorSelected(gender)}
-    active>
+    active
+  >
     <GenderText active>{gender}</GenderText>
   </GenderButton>
 );
@@ -156,9 +157,9 @@ const renderGenderButton = gender => (
 const BirdNewParent = ({ navigation }) => {
   const photosToDeleteFromStorage = new Set();
 
-  const submitBird = birdFormData => {
+  const submitBird = (birdFormData) => {
     try {
-      photosToDeleteFromStorage.forEach(async photoToDelete => {
+      photosToDeleteFromStorage.forEach(async (photoToDelete) => {
         await FileSystem.deleteAsync(photoToDelete, {
           idempotent: false,
         });
@@ -185,12 +186,14 @@ const BirdNewParent = ({ navigation }) => {
       }}
       keyboardVerticalOffset={0}
       behavior="padding"
-      enabled>
+      enabled
+    >
       <DetailsContainer>
         <Formik
           initialValues={birdFormValues(navigation.getParam('genderParent'))}
           validationSchema={birdValidationSchema()}
-          onSubmit={submitBird}>
+          onSubmit={submitBird}
+        >
           {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
             <>
               <Content style={{ flex: 1 }}>
@@ -213,16 +216,15 @@ const BirdNewParent = ({ navigation }) => {
                         },
                         elevation: 10,
                       }}
-                      onPress={() =>
-                        navigation.navigate(NavKeys.birdCamera, {
-                          changePhoto: async photoFullPath => {
-                            // Remove previous photo
-                            photosToDeleteFromStorage.add(values.photo);
+                      onPress={() => navigation.navigate(NavKeys.birdCamera, {
+                        changePhoto: async (photoFullPath) => {
+                          // Remove previous photo
+                          photosToDeleteFromStorage.add(values.photo);
 
-                            setFieldValue('photo', photoFullPath);
-                          },
-                        })
-                      }>
+                          setFieldValue('photo', photoFullPath);
+                        },
+                      })}
+                    >
                       <TakePhotoIcon name="ios-camera" type="Ionicons" />
                     </TakePhotoBtn>
                   </TakePhotoContainer>

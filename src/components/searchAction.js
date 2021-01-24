@@ -21,7 +21,8 @@ const SearchAction = ({ iconColor }) => {
         if (!showSearchBar) {
           setFilter(0);
         }
-      }}>
+      }}
+    >
       <SearchIcon type="MaterialIcons" name="search" iconColor={iconColor} />
     </Button>
   );

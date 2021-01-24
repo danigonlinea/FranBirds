@@ -17,7 +17,7 @@ import {
   Row,
   Segment,
   Text,
-  Textarea
+  Textarea,
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { Image, KeyboardAvoidingView, View } from 'react-native';
@@ -32,7 +32,7 @@ import {
   getBirdByGlobal,
   getBirdChildrenByGlobal,
   insertBird,
-  updateBird
+  updateBird,
 } from '../db';
 import { Colors } from '../utils';
 import colors from '../utils/colors';
@@ -82,8 +82,6 @@ const NotasField = styled(Textarea)`
 const VerticalSpace = styled(View)`
   padding: 8px;
 `;
-
-const SelectBirdContainer = styled(Grid)``;
 
 const SelectBirdBtn = styled(Button)`
   margin: 6px 0;
@@ -245,7 +243,7 @@ const BirdDetails = ({ navigation }) => {
     }
   };
 
-  const submitBird = (birdData) => {
+  const submitBird = (birdInfo) => {
     try {
       photosToDeleteFromStorage.forEach(async (photoToDelete) => {
         await FileSystem.deleteAsync(photoToDelete, {
@@ -256,9 +254,9 @@ const BirdDetails = ({ navigation }) => {
       console.log('Error: ', e);
     }
 
-    if (birdData.globalId) {
+    if (birdInfo.globalId) {
       updateBird(
-        birdData,
+        birdInfo,
         () => {
           navigation.goBack();
           navigation.getParam('refreshBirdList')();
@@ -267,7 +265,7 @@ const BirdDetails = ({ navigation }) => {
       );
     } else {
       insertBird(
-        birdData,
+        birdInfo,
         ({ insertId }) => {
           navigation.goBack();
           navigation.getParam('refreshBirdList')();
@@ -281,7 +279,8 @@ const BirdDetails = ({ navigation }) => {
   const getGenderColorSelected = (gender) => {
     if (gender === 'Macho' || gender === 'Padre') {
       return colors.male;
-    } if (gender === 'Hembra' || gender === 'Madre') {
+    }
+    if (gender === 'Hembra' || gender === 'Madre') {
       return colors.female;
     }
 

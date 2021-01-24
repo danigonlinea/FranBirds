@@ -12,7 +12,7 @@ import {
   Thumbnail,
   View,
 } from 'native-base';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import styled, { css } from 'styled-components';
@@ -65,16 +65,9 @@ const BirdListScreen = ({ navigation }) => {
   const [birdsList, setBirdsList] = useState([]);
   const [firstLoad, setFirstLoad] = useState(false);
 
-  const {
-    dataModal,
-    setDataModal,
-    filterSelected,
-    setFilter,
-    textToSearch,
-    showSearchBar,
-  } = useGlobalCtx();
+  const { dataModal, setDataModal, filterSelected, setFilter, textToSearch } = useGlobalCtx();
 
-  const getBirdsAndUpdate = () => {
+  const getBirdsAndUpdate = useCallback(() => {
     getBirds(
       strings.gender[filterSelected],
       ({ result: birdsMatched }) => {
@@ -86,7 +79,7 @@ const BirdListScreen = ({ navigation }) => {
       },
       (ts, error) => console.log('Error', error)
     );
-  };
+  }, [filterSelected, firstLoad]);
 
   const getBirdListRefreshed = () => {
     if (filterSelected) {
@@ -98,7 +91,7 @@ const BirdListScreen = ({ navigation }) => {
 
   useEffect(() => {
     getBirdsAndUpdate();
-  }, [filterSelected]);
+  }, [filterSelected, getBirdsAndUpdate]);
 
   useEffect(() => {
     searchBirds(
@@ -110,7 +103,7 @@ const BirdListScreen = ({ navigation }) => {
     );
   }, [textToSearch]);
 
-  const getGenderColorSelected = gender => {
+  const getGenderColorSelected = (gender) => {
     if (gender === 'Macho') {
       return Colors.male;
     }
@@ -121,7 +114,7 @@ const BirdListScreen = ({ navigation }) => {
     return Colors.egg;
   };
 
-  const _renderItem = ({ item: bird }) => {
+  const renderItemForFlatList = ({ item: bird }) => {
     return (
       <CardBird key={bird.id}>
         <CardItemBird>
@@ -181,6 +174,21 @@ const BirdListScreen = ({ navigation }) => {
     );
   };
 
+  const renderEmptyList = () => {
+    return (
+      <Container>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text>{Strings.noBirdsRegistered}</Text>
+        </View>
+      </Container>
+    );
+  };
+
   if (!firstLoad) {
     return (
       <Container>
@@ -208,20 +216,9 @@ const BirdListScreen = ({ navigation }) => {
         scrollEnabled
         key={birdsList.length}
         data={birdsList}
-        renderItem={_renderItem}
+        renderItem={renderItemForFlatList}
         keyExtractor={({ id }) => id}
-        ListEmptyComponent={
-          <Container>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text>{Strings.noBirdsRegistered}</Text>
-            </View>
-          </Container>
-        }
+        ListEmptyComponent={renderEmptyList}
       />
       <View>
         <FabPlus

@@ -50,7 +50,7 @@ const BirdSelectParent = ({ navigation }) => {
   const [birdsList, setBirdsList] = useState([]);
   const { textToSearch, showSearchBar } = useGlobalCtx();
 
-  const { photo, id, type, notes, gender, globalId } = currentBird;
+  const { photo, id: birdId, type, notes, gender, globalId } = currentBird;
 
   const getBirdsAndUpdate = () => {
     console.log(genderToAssign, globalId);
@@ -81,10 +81,10 @@ const BirdSelectParent = ({ navigation }) => {
     );
   }, [textToSearch]);
 
-  const assigningParent = (globalId, birdId) => {
+  const assigningParent = (globalIdBird, birdIdBird) => {
     Alert.alert(
       `Asignar ${genderType}`,
-      `¿Quieres asignar este pájaro (ID: ${birdId}) como ${genderType}?`,
+      `¿Quieres asignar este pájaro (ID: ${birdIdBird}) como ${genderType}?`,
       [
         {
           text: 'No',
@@ -94,7 +94,7 @@ const BirdSelectParent = ({ navigation }) => {
         {
           text: 'Si',
           onPress: () => {
-            assignParent(globalId, birdId);
+            assignParent(globalIdBird, birdIdBird);
             navigation.goBack(null);
           },
         },
@@ -102,8 +102,27 @@ const BirdSelectParent = ({ navigation }) => {
       { cancelable: false }
     );
   };
+  const renderItemForEmpty = () => {
+    return (
+      <Container>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 10,
+          }}
+        >
+          <Text>
+            No hay ningún pájaro {genderToAssign} para asignar como {genderType}, regístrelos
+            primero.
+          </Text>
+        </View>
+      </Container>
+    );
+  };
 
-  const _renderItem = ({ item: bird }) => {
+  const renderItemForParent = ({ item: bird }) => {
     return (
       <Card key={bird.id}>
         <CardItemBird>
@@ -147,7 +166,7 @@ const BirdSelectParent = ({ navigation }) => {
 
             <InfoCol size={6}>
               <TextBird colors={Colors.textSecundary} fontSize={16}>
-                {id}
+                {birdId}
               </TextBird>
               <TextBird colors={Colors.textSecundary}>
                 {`${gender}${type ? `/${type}` : ''}`}
@@ -168,30 +187,15 @@ const BirdSelectParent = ({ navigation }) => {
         scrollEnabled
         key={birdsList.length}
         data={birdsList}
-        renderItem={_renderItem}
+        renderItem={renderItemForParent}
         keyExtractor={({ id }) => id}
-        ListEmptyComponent={
-          <Container>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 10,
-              }}>
-              <Text>
-                No hay ningún pájaro {genderToAssign} para asignar como {genderType}, regístrelos
-                primero.
-              </Text>
-            </View>
-          </Container>
-        }
+        ListEmptyComponent={renderItemForEmpty}
       />
     </Container>
   );
 };
 
-const getGenderColorSelected = gender => {
+const getGenderColorSelected = (gender) => {
   if (gender === 'Macho') {
     return Colors.male;
   }

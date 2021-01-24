@@ -2,7 +2,7 @@ import { Camera } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
 import { Button, Icon, Spinner } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Platform } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import styled from 'styled-components';
 import { NavStyle } from '../components';
@@ -46,7 +46,7 @@ const BirdCameraScreen = ({ navigation }) => {
   const prepareRatio = async () => {
     if (Platform.OS === 'android' && camera) {
       const ratios = await camera.getSupportedRatiosAsync();
-      const defaultRatio = ratios.find(availRatio => availRatio === DESIRED_RATIO) || '4:3';
+      const defaultRatio = ratios.find((availRatio) => availRatio === DESIRED_RATIO) || '4:3';
       setRatio(defaultRatio);
     }
   };
@@ -73,7 +73,7 @@ const BirdCameraScreen = ({ navigation }) => {
     }
   };
 
-  const createDir = async dir => {
+  const createDir = async (dir) => {
     const newDir = await FileSystem.getInfoAsync(dir);
 
     if (newDir.exists && newDir.isDirectory) {
@@ -84,7 +84,7 @@ const BirdCameraScreen = ({ navigation }) => {
     return newDir.uri;
   };
 
-  const getPhotoName = previewUri => {
+  const getPhotoName = (previewUri) => {
     const partPhoto = previewUri.split('/');
 
     return partPhoto[partPhoto.length - 1];
@@ -115,12 +115,14 @@ const BirdCameraScreen = ({ navigation }) => {
         <>
           <CameraButton
             color={Colors.denied}
-            onPress={() => (!isSavingPhoto ? discardPhoto() : false)}>
+            onPress={() => (!isSavingPhoto ? discardPhoto() : false)}
+          >
             <Icon type="MaterialIcons" name="clear" />
           </CameraButton>
           <CameraButton
             color={Colors.accept}
-            onPress={cameraInfo => (!isSavingPhoto ? savePhoto() : false)}>
+            onPress={() => (!isSavingPhoto ? savePhoto() : false)}
+          >
             {!isSavingPhoto ? (
               <Icon type="MaterialIcons" name="check" />
             ) : (
@@ -136,7 +138,8 @@ const BirdCameraScreen = ({ navigation }) => {
     return (
       <CameraButton
         color={Colors.defaultBackground}
-        onPress={() => (!isTakingPhoto ? capturePhoto() : false)}>
+        onPress={() => (!isTakingPhoto ? capturePhoto() : false)}
+      >
         {!isTakingPhoto ? (
           <Icon type="MaterialIcons" name="camera" />
         ) : (
@@ -155,12 +158,13 @@ const BirdCameraScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <Camera
         style={{ flex: 1 }}
-        ref={cameraRef => {
+        ref={(cameraRef) => {
           setCamera(cameraRef);
         }}
         ratio={ratio}
         onCameraReady={() => prepareRatio()}
-        type={Camera.Constants.Type.back}>
+        type={Camera.Constants.Type.back}
+      >
         <CameraActions>{getCameraActions()}</CameraActions>
       </Camera>
     </View>
