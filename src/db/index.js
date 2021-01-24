@@ -40,7 +40,8 @@ const query = (querySQL, argsArray, onSuccess, onError) => {
 };
 
 export const createDatabase = () => {
-  query(database.create, [], nullCallback, nullCallback);
+  query(database.createJailTable, [], nullCallback, nullCallback);
+  query(database.createBirdTable, [], nullCallback, nullCallback);
 };
 
 export const getAllBirds = async (onSuccess, onError) => {

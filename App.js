@@ -29,6 +29,7 @@ const App = () => {
 
     if (!isReady) {
       loadFonts();
+
       createDatabase();
       setReady(true);
     }
