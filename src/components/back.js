@@ -1,13 +1,15 @@
 import React from 'react';
-import { withNavigation } from 'react-navigation';
-import { HeaderBackButton } from 'react-navigation-stack';
+import { HeaderBackButton } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
-const HeaderBack = withNavigation(({ navigation }) => {
+const HeaderBack = () => {
+  const navigation = useNavigation();
+
   if (!navigation) {
     return null;
   }
 
   return <HeaderBackButton onPress={() => navigation.goBack(null)} />;
-});
+};
 
 export default HeaderBack;

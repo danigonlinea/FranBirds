@@ -2,7 +2,7 @@ import { Text } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
 import Modal from 'react-native-modal';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components';
 import colors from '../utils/colors';
 
@@ -19,38 +19,37 @@ const Title = styled(Text)`
   font-size: 18px;
 `;
 
-const CustomModal = withNavigation(
-  ({ navigation, title, backgroundColor, isVisible, onClose, children }) => {
-    if (!navigation) {
-      return null;
-    }
-
-    return (
-      <Modal
-        backdropOpacity={0.5}
-        isVisible={isVisible}
-        animationIn="zoomIn"
-        animationInTiming={230}
-        backdropTransitionInTiming={230}
-        animationOut="zoomOut"
-        animationOutTiming={230}
-        backdropTransitionOutTiming={230}
-        useNativeDriver
-        onBackButtonPress={() => {
-          onClose();
-        }}
-        onBackdropPress={() => {
-          onClose();
-        }}>
-        {title && (
-          <Header backgroundColor={backgroundColor}>
-            <Title>{title}</Title>
-          </Header>
-        )}
-        {children}
-      </Modal>
-    );
+const CustomModal = ({ title, backgroundColor, isVisible, onClose, children }) => {
+  const navigation = useNavigation();
+  if (!navigation) {
+    return null;
   }
-);
 
+  return (
+    <Modal
+      backdropOpacity={0.5}
+      isVisible={isVisible}
+      animationIn="zoomIn"
+      animationInTiming={230}
+      backdropTransitionInTiming={230}
+      animationOut="zoomOut"
+      animationOutTiming={230}
+      backdropTransitionOutTiming={230}
+      useNativeDriver
+      onBackButtonPress={() => {
+        onClose();
+      }}
+      onBackdropPress={() => {
+        onClose();
+      }}
+    >
+      {title && (
+        <Header backgroundColor={backgroundColor}>
+          <Title>{title}</Title>
+        </Header>
+      )}
+      {children}
+    </Modal>
+  );
+};
 export default CustomModal;

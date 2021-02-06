@@ -2,7 +2,9 @@ import { Button } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
-import { withNavigation } from 'react-navigation';
+
+import { useNavigation } from '@react-navigation/native';
+
 import styled from 'styled-components';
 import { useGlobalCtx } from '../context/globalContext';
 import NavKeys from '../screens/navKeys';
@@ -48,7 +50,8 @@ const getGenderColorSelected = (gender) => {
   return Colors.egg;
 };
 
-const BirdPhotoDialog = ({ navigation }) => {
+const BirdPhotoDialog = () => {
+  const navigation = useNavigation();
   const {
     dataModal: { bird, toggleDialog },
     setDataModal,
@@ -89,7 +92,8 @@ const BirdPhotoDialog = ({ navigation }) => {
       }}
       onBackdropPress={() => {
         setShowModal(false);
-      }}>
+      }}
+    >
       <ModalBody>
         <Photo source={{ uri: bird.photo ? bird.photo : getDefaultAvatar(bird.gender) }} />
         <View>
@@ -106,7 +110,8 @@ const BirdPhotoDialog = ({ navigation }) => {
               });
               // setShowModal(false);
               navigation.navigate(NavKeys.birdDetails, { birdGlobalId: bird.globalId });
-            }}>
+            }}
+          >
             <BtnText>Ver Más Detalles</BtnText>
           </Btn>
         </View>
@@ -115,4 +120,4 @@ const BirdPhotoDialog = ({ navigation }) => {
   );
 };
 
-export default withNavigation(BirdPhotoDialog);
+export default BirdPhotoDialog;

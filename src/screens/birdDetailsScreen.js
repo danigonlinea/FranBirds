@@ -22,7 +22,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Image, KeyboardAvoidingView, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
+
 import styled, { css } from 'styled-components';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
@@ -174,7 +175,9 @@ const birdValidationSchema = () => {
 
 const getGenderFromParent = (parentType) => (parentType === 'Padre' ? 'Macho' : 'Hembra');
 
-const BirdDetails = ({ navigation }) => {
+const BirdDetails = () => {
+  const navigation = useNavigation();
+
   const [birdData, setBirdData] = useState({
     globalId: navigation.getParam('birdGlobalId'),
     id: null,
@@ -340,11 +343,7 @@ const BirdDetails = ({ navigation }) => {
                         });
                       }}
                     >
-                      <Text>
-                        Registrar
-                        {' '}
-                        {modal.parentGenderToSelect}
-                      </Text>
+                      <Text>Registrar {modal.parentGenderToSelect}</Text>
                     </Button>
                     <Space />
                     <Button
@@ -368,11 +367,7 @@ const BirdDetails = ({ navigation }) => {
                       }}
                     >
                       <Text style={{ color: getGenderColorSelected(modal.parentGenderToSelect) }}>
-                        Seleccionar
-                        {' '}
-                        {modal.parentGenderToSelect}
-                        {' '}
-                        ya existente
+                        Seleccionar {modal.parentGenderToSelect} ya existente
                       </Text>
                     </Button>
                   </ModalBody>
@@ -397,19 +392,21 @@ const BirdDetails = ({ navigation }) => {
                           },
                           elevation: 10,
                         }}
-                        onPress={() => navigation.navigate(NavKeys.birdCamera, {
-                          changePhoto: async (photoFullPath) => {
-                            // Remove previous photo
+                        onPress={() =>
+                          navigation.navigate(NavKeys.birdCamera, {
+                            changePhoto: async (photoFullPath) => {
+                              // Remove previous photo
 
-                            photosToDeleteFromStorage.add(values.photo);
+                              photosToDeleteFromStorage.add(values.photo);
 
-                            setFieldValue('photo', photoFullPath);
-                            setBirdData({
-                              ...birdData,
-                              photo: photoFullPath,
-                            });
-                          },
-                        })}
+                              setFieldValue('photo', photoFullPath);
+                              setBirdData({
+                                ...birdData,
+                                photo: photoFullPath,
+                              });
+                            },
+                          })
+                        }
                       >
                         <TakePhotoIcon name="ios-camera" type="Ionicons" />
                       </TakePhotoBtn>
@@ -513,9 +510,11 @@ const BirdDetails = ({ navigation }) => {
                                           transparent
                                           active
                                           father
-                                          onPress={() => navigation.push(NavKeys.birdDetails, {
-                                            birdGlobalId: values.fatherIdGlobal,
-                                          })}
+                                          onPress={() =>
+                                            navigation.push(NavKeys.birdDetails, {
+                                              birdGlobalId: values.fatherIdGlobal,
+                                            })
+                                          }
                                         >
                                           <SelectBirdText father>{values.fatherId}</SelectBirdText>
                                         </SelectBirdBtn>
@@ -543,10 +542,12 @@ const BirdDetails = ({ navigation }) => {
                                     rounded
                                     active
                                     father
-                                    onPress={() => setModal({
-                                      isVisible: true,
-                                      parentGenderToSelect: 'Padre',
-                                    })}
+                                    onPress={() =>
+                                      setModal({
+                                        isVisible: true,
+                                        parentGenderToSelect: 'Padre',
+                                      })
+                                    }
                                   >
                                     <SelectBirdIcon type="MaterialIcons" name="add" father />
                                     <SelectBirdText father>Añadir Padre</SelectBirdText>
@@ -587,10 +588,12 @@ const BirdDetails = ({ navigation }) => {
                                     rounded
                                     active
                                     mother
-                                    onPress={() => setModal({
-                                      isVisible: true,
-                                      parentGenderToSelect: 'Madre',
-                                    })}
+                                    onPress={() =>
+                                      setModal({
+                                        isVisible: true,
+                                        parentGenderToSelect: 'Madre',
+                                      })
+                                    }
                                   >
                                     <SelectBirdIcon type="MaterialIcons" name="add" mother />
                                     <SelectBirdText mother>Añadir Madre</SelectBirdText>
@@ -693,7 +696,7 @@ const BirdDetails = ({ navigation }) => {
   );
 };
 
-BirdDetails.navigationOptions = ({ navigation }) => {
+BirdDetails.navigationOptions = () => {
   return {
     ...NavStyle,
     headerStyle: {
@@ -708,4 +711,4 @@ BirdDetails.navigationOptions = ({ navigation }) => {
   };
 };
 
-export default withNavigation(BirdDetails);
+export default BirdDetails;

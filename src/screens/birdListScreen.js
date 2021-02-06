@@ -14,7 +14,8 @@ import {
 } from 'native-base';
 import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
+
 import styled, { css } from 'styled-components';
 import { NavKeys } from '.';
 import { BirdPhotoDialog, Filter, NavStyle, SearchAction, SearchBar } from '../components';
@@ -61,7 +62,8 @@ const CardBird = styled(Card)`
   margin: 8px;
 `;
 
-const BirdListScreen = ({ navigation }) => {
+const BirdListScreen = () => {
+  const navigation = useNavigation();
   const [birdsList, setBirdsList] = useState([]);
   const [firstLoad, setFirstLoad] = useState(false);
 
@@ -130,7 +132,8 @@ const BirdListScreen = ({ navigation }) => {
                     bird,
                     toggleDialog: !dataModal.toggleDialog,
                   });
-                }}>
+                }}
+              >
                 <Thumbnail
                   large
                   source={{
@@ -146,7 +149,8 @@ const BirdListScreen = ({ navigation }) => {
                     birdGlobalId: bird.globalId,
                     refreshBirdList: () => getBirdListRefreshed(),
                   });
-                }}>
+                }}
+              >
                 <TextBird fontSize={16}>{bird.id}</TextBird>
                 <TextBird>{bird.type}</TextBird>
                 <TextBird ellipsizeMode="tail" note numberOfLines={1}>
@@ -160,7 +164,8 @@ const BirdListScreen = ({ navigation }) => {
                     birdGlobalId: bird.globalId,
                     refreshBirdList: () => getBirdListRefreshed(),
                   });
-                }}>
+                }}
+              >
                 <Icon
                   type="MaterialIcons"
                   name="chevron-right"
@@ -182,7 +187,8 @@ const BirdListScreen = ({ navigation }) => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
+          }}
+        >
           <Text>{Strings.noBirdsRegistered}</Text>
         </View>
       </Container>
@@ -197,7 +203,8 @@ const BirdListScreen = ({ navigation }) => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
+          }}
+        >
           <Spinner color={Colors.primary} />
           <Text>Cargando pájaros...</Text>
         </View>
@@ -230,7 +237,8 @@ const BirdListScreen = ({ navigation }) => {
               bird: { gender: 'Macho' },
               refreshBirdList: () => getBirdListRefreshed(),
             })
-          }>
+          }
+        >
           <Icon type="MaterialIcons" name="add" />
         </FabPlus>
       </View>
@@ -245,4 +253,4 @@ BirdListScreen.navigationOptions = {
   headerRight: () => <SearchAction iconColor={Colors.textPrimary} />,
 };
 
-export default withNavigation(BirdListScreen);
+export default BirdListScreen;

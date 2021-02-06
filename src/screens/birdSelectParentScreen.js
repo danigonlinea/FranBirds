@@ -1,7 +1,7 @@
 import { Body, Card, CardItem, Col, Container, Grid, Text, Thumbnail, View } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import styled, { css } from 'styled-components';
 import { NavStyle, SearchAction, SearchBar } from '../components';
 import { useGlobalCtx } from '../context/globalContext';
@@ -41,7 +41,8 @@ const CurrentBirdContainer = styled(View)`
   background-color: ${({ color }) => color};
 `;
 
-const BirdSelectParent = ({ navigation }) => {
+const BirdSelectParent = () => {
+  const navigation = useNavigation();
   const currentBird = navigation.getParam('currentBird');
   const genderType = navigation.getParam('parentType');
   const genderToAssign = navigation.getParam('genderToAssign');
@@ -224,4 +225,4 @@ BirdSelectParent.navigationOptions = ({ navigation }) => {
   };
 };
 
-export default withNavigation(BirdSelectParent);
+export default BirdSelectParent;

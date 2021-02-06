@@ -3,7 +3,8 @@ import * as FileSystem from 'expo-file-system';
 import { Button, Icon, Spinner } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { Text, View, Platform } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
+
 import styled from 'styled-components';
 import { NavStyle } from '../components';
 import { Colors } from '../utils';
@@ -24,7 +25,8 @@ const CameraButton = styled(Button)`
   align-items: center;
 `;
 
-const BirdCameraScreen = ({ navigation }) => {
+const BirdCameraScreen = () => {
+  const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
 
   const [camera, setCamera] = useState(null);
@@ -178,4 +180,4 @@ BirdCameraScreen.navigationOptions = () => {
   };
 };
 
-export default withNavigation(BirdCameraScreen);
+export default BirdCameraScreen;

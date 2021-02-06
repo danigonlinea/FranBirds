@@ -21,7 +21,7 @@ import {
 import React from 'react';
 import { Image, KeyboardAvoidingView, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import styled, { css } from 'styled-components';
 import * as Yup from 'yup';
 import { NavKeys } from '.';
@@ -154,7 +154,8 @@ const renderGenderButton = (gender) => (
   </GenderButton>
 );
 
-const BirdNewParent = ({ navigation }) => {
+const BirdNewParent = () => {
+  const navigation = useNavigation();
   const photosToDeleteFromStorage = new Set();
 
   const submitBird = (birdFormData) => {
@@ -216,14 +217,16 @@ const BirdNewParent = ({ navigation }) => {
                         },
                         elevation: 10,
                       }}
-                      onPress={() => navigation.navigate(NavKeys.birdCamera, {
-                        changePhoto: async (photoFullPath) => {
-                          // Remove previous photo
-                          photosToDeleteFromStorage.add(values.photo);
+                      onPress={() =>
+                        navigation.navigate(NavKeys.birdCamera, {
+                          changePhoto: async (photoFullPath) => {
+                            // Remove previous photo
+                            photosToDeleteFromStorage.add(values.photo);
 
-                          setFieldValue('photo', photoFullPath);
-                        },
-                      })}
+                            setFieldValue('photo', photoFullPath);
+                          },
+                        })
+                      }
                     >
                       <TakePhotoIcon name="ios-camera" type="Ionicons" />
                     </TakePhotoBtn>
@@ -315,4 +318,4 @@ BirdNewParent.navigationOptions = () => {
   };
 };
 
-export default withNavigation(BirdNewParent);
+export default BirdNewParent;

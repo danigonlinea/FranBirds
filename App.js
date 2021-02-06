@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import GlobalContext from './src/context/globalContext';
 import { createDatabase } from './src/db';
-import { AppNavigation } from './src/navigation';
+import AppNavigation from './src/navigation';
 import RobotoRegular from './assets/fonts/Roboto-Regular.ttf';
 import RobotoMedium from './assets/fonts/Roboto-Medium.ttf';
 

@@ -1,7 +1,7 @@
 import { Button, Icon, View } from 'native-base';
 import React from 'react';
 import { Alert } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components';
 import { deleteBird } from '../db';
 import { Colors } from '../utils';
@@ -26,7 +26,8 @@ const HeaderIconBtn = styled(Button)`
   justify-content: center;
 `;
 
-const HeaderDetailsRight = withNavigation(({ navigation }) => {
+const HeaderDetailsRight = () => {
+  const navigation = useNavigation();
   if (!navigation) {
     return null;
   }
@@ -61,11 +62,12 @@ const HeaderDetailsRight = withNavigation(({ navigation }) => {
             ],
             { cancelable: false }
           )
-        }>
+        }
+      >
         <HeaderIcon name="ios-trash" />
       </HeaderIconBtn>
     </HorizontalContainer>
   );
-});
+};
 
 export default HeaderDetailsRight;
