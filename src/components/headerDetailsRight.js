@@ -36,33 +36,31 @@ const HeaderDetailsRight = () => {
     <HorizontalContainer>
       <HeaderIconBtn
         transparent
-        onPress={() =>
-          Alert.alert(
-            'Eliminar Pájaro',
-            '¿Estás seguro de eliminar este pájaro?',
-            [
-              {
-                text: 'No',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
+        onPress={() => Alert.alert(
+          'Eliminar Pájaro',
+          '¿Estás seguro de eliminar este pájaro?',
+          [
+            {
+              text: 'No',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Si',
+              onPress: () => {
+                deleteBird(
+                  navigation.getParam('birdGlobalId'),
+                  () => {
+                    navigation.goBack();
+                    navigation.getParam('refreshBirdList')();
+                  },
+                  (ts, error) => console.log('Error Deleting', error)
+                );
               },
-              {
-                text: 'Si',
-                onPress: () => {
-                  deleteBird(
-                    navigation.getParam('birdGlobalId'),
-                    () => {
-                      navigation.goBack();
-                      navigation.getParam('refreshBirdList')();
-                    },
-                    (ts, error) => console.log('Error Deleting', error)
-                  );
-                },
-              },
-            ],
-            { cancelable: false }
-          )
-        }
+            },
+          ],
+          { cancelable: false }
+        )}
       >
         <HeaderIcon name="ios-trash" />
       </HeaderIconBtn>

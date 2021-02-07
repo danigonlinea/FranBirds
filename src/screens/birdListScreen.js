@@ -232,12 +232,10 @@ const BirdListScreen = () => {
           active
           containerStyle={{}}
           position="bottomRight"
-          onPress={() =>
-            navigation.navigate(NavKeys.birdDetails, {
-              bird: { gender: 'Macho' },
-              refreshBirdList: () => getBirdListRefreshed(),
-            })
-          }
+          onPress={() => navigation.navigate(NavKeys.birdDetails, {
+            bird: { gender: 'Macho' },
+            refreshBirdList: () => getBirdListRefreshed(),
+          })}
         >
           <Icon type="MaterialIcons" name="add" />
         </FabPlus>
